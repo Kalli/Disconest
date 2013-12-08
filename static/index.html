@@ -31,10 +31,12 @@
       background-color: #eee;
       background-image: url("http://www.karltryggvason.com/img/background/creampaper.png");
     }
-    tbody tr td{
+    td.center{
       text-align: center;
     }
-
+    thead{
+      font-weight: bold;
+    }
     .form-disconest {
       max-width: 500px;
       padding: 15px;
@@ -46,6 +48,7 @@
     }
 
     .form-disconest .form-control {
+      margin-bottom: 10px;
       position: relative;
       font-size: 16px;
       height: auto;
@@ -121,7 +124,7 @@
           <img src="/pixogs?img={{uri150}}">
         {{/if}}{{/each}}
         </div>
-        <div class="release col-xs-6">
+        <div class="release col-xs-8">
           <h1>
           {{#if artists}}
             {{#each artists}}

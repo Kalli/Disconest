@@ -57,13 +57,15 @@ $(document).ready ->
 			if response.songs.length > 0 
 				audio_summary = response.songs[0].audio_summary
 				if audio_summary
-					minutes = Math.floor(audio_summary.duration / 60)
-					seconds = Math.floor(audio_summary.duration % 60)
-					$('#tltable tbody tr').eq(index).find(".duration").text(String(minutes)+":"+String(seconds))
+					minutes = String(Math.floor(audio_summary.duration / 60))
+					seconds = String(Math.floor(audio_summary.duration % 60))
+					if seconds.length == 1
+						seconds += "0"
+					$('#tltable tbody tr').eq(index).find(".duration").text(minutes+":"+seconds)
 					html = ""
-					html += '<td>'+audio_summary.key+'</td>'
-					html += '<td>'+audio_summary.time_signature+'</td>'
-					html += '<td>'+audio_summary.tempo+'</td>'
+					html += '<td class="center">'+audio_summary.key+'</td>'
+					html += '<td class="center">'+audio_summary.time_signature+'</td>'
+					html += '<td class="center">'+audio_summary.tempo+'</td>'
 					$('#tltable tbody tr').eq(index).append(html)
 				@addStreamingLinks(index)
 
@@ -80,8 +82,7 @@ $(document).ready ->
 					url = "http://www.deezer.com/track/"+track.foreign_id.split("deezer:track:")[1]
 					link = $('<a>').attr('href',url).attr('target', '_blank').addClass("de").text("Deezer")
 					de = true
-					$(@tldomelement+' tbody').find('tr').eq(index).find('.link').append(link)
-					
+					$(@tldomelement+' tbody').find('tr').eq(index).find('.link').append(link)		
 
 
 		# Handlebars template stuff
@@ -89,7 +90,8 @@ $(document).ready ->
 			out = "<h3>Tracklist</h3>"
 			out += '<table id="tltable" class="table">'
 			header = '<thead>'
-			header += '<td>'+h+'</td>' for h in ['Position', 'Duration', 'Artist', 'Title', 'Links', 'Key', 'Time signature', 'BPM']
+			header += '<td>'+h+'</td>' for h in ['Position', 'Duration', 'Artist', 'Title', 'Links']
+			header += '<td class="center">'+h+'</td>' for h in ['Key', 'Time signature', 'BPM']
 			out += header+'</thead>'
 			for track in tracks
 				trackartist = ''
@@ -113,7 +115,7 @@ $(document).ready ->
 			return out
 		)
 
-		$('#getmetadata').click(()->
+		$('#getmetadata').click(()=>
 			url = $('#discogsurl').val()
 			regexp = /(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/(release|master)\/(\d+)/
 			matches = url.match(regexp)
@@ -122,9 +124,8 @@ $(document).ready ->
 			else
 				renderError(url)
 		)
-
-		renderError: (url) ->
-			source = $("#error-template").html()
-			template = Handlebars.compile(source)
-			html = template({"url":url,"error":" is not a valid Discogs release url!"})
-			$("#error").html(html)
+	renderError = (url) ->
+		source = $("#error-template").html()
+		template = Handlebars.compile(source)
+		html = template({"url":url,"error":" is not a valid Discogs release url!"})
+		$("#error").html(html)	
