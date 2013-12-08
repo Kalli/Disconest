@@ -22,4 +22,5 @@ app.get('/pixogs', function(req,res) {
 		res.send(404, 'Sorry cant find that!');
 	}
 });
-app.listen(8000);
+var port = process.env.PORT || 3000;
+app.listen(port);
