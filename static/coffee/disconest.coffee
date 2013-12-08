@@ -64,7 +64,6 @@ $(document).ready ->
 				@addStreamingLinks(index)
 
 		addStreamingLinks: (index) ->
-			console.log(@discogsinfo.tracklist[index].echonestinfo)
 			sp = false
 			de = false
 			for track in @discogsinfo.tracklist[index].echonestinfo.tracks
@@ -73,7 +72,7 @@ $(document).ready ->
 					link = $('<a>').attr('href',url).attr('target', '_blank').addClass("sp").text("Spotify")
 					sp = true
 					$(@tldomelement+' tbody').find('tr').eq(index).find('.link').append(link)
-				if track.catalog == "deezer" and not sp
+				if track.catalog == "deezer" and not de
 					url = "http://www.deezer.com/track/"+track.foreign_id.split("deezer:track:")[1]
 					link = $('<a>').attr('href',url).attr('target', '_blank').addClass("de").text("Deezer")
 					de = true
@@ -86,7 +85,7 @@ $(document).ready ->
 			out = "<h3>Tracklist</h3>"
 			out += '<table id="tltable" class="table">'
 			header = '<thead>'
-			header += '<td>'+h+'</td>' for h in ['position', 'duration', 'artist', 'title', 'links', 'key', 'time signature', 'bpm']
+			header += '<td>'+h+'</td>' for h in ['Position', 'Duration', 'Artist', 'Title', 'Links', 'Key', 'Time signature', 'BPM']
 			out += header+'</thead>'
 			for track in tracks
 				trackartist = ''

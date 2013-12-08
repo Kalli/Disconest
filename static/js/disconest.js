@@ -105,7 +105,6 @@
 
       Disconest.prototype.addStreamingLinks = function(index) {
         var de, link, sp, track, url, _i, _len, _ref, _results;
-        console.log(this.discogsinfo.tracklist[index].echonestinfo);
         sp = false;
         de = false;
         _ref = this.discogsinfo.tracklist[index].echonestinfo.tracks;
@@ -118,7 +117,7 @@
             sp = true;
             $(this.tldomelement + ' tbody').find('tr').eq(index).find('.link').append(link);
           }
-          if (track.catalog === "deezer" && !sp) {
+          if (track.catalog === "deezer" && !de) {
             url = "http://www.deezer.com/track/" + track.foreign_id.split("deezer:track:")[1];
             link = $('<a>').attr('href', url).attr('target', '_blank').addClass("de").text("Deezer");
             de = true;
@@ -135,7 +134,7 @@
         out = "<h3>Tracklist</h3>";
         out += '<table id="tltable" class="table">';
         header = '<thead>';
-        _ref = ['position', 'duration', 'artist', 'title', 'links', 'key', 'time signature', 'bpm'];
+        _ref = ['Position', 'Duration', 'Artist', 'Title', 'Links', 'Key', 'Time signature', 'BPM'];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           h = _ref[_i];
           header += '<td>' + h + '</td>';
