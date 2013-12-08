@@ -10,7 +10,7 @@ Disconest uses the [The Echonest](http://the.echonest.com/) and [Discogs](http:/
 Disconest comes in two flavors: 
 
 1. Web version  - Demo at [disconest.com](http://www.disconest.com)
-  * Fetches and displays version about a single release
+  * Fetches and displays information about a single release at a time.
   
 2. Command Line version
   * Fetches information from and saves information to an xml file
@@ -22,3 +22,4 @@ Disconest comes in two flavors:
   >pip install requirements.txt
   >python disconest.py -x "/full/path/to/discogs-collection.xml" -e "echonest api key"
   ```
+  * be aware that this might take a while as Echonest must be queried for every song on every release.
