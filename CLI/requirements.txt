@@ -1,0 +1,4 @@
+lxml==3.2.3
+pyechonest==8.0.1
+requests==2.1.0
+wsgiref==0.1.2

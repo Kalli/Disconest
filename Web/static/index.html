@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disconest</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Get metadata for your records.">
+    <meta name="author" content="Karl Tryggvason">
+    <script src="/bower_components/jquery/jquery.min.js" ></script>
+    <script src="/bower_components/bootstrap/js/alert.js" ></script>
+    <script src="/bower_components/handlebars/handlebars.min.js" ></script>
+    <script src="/js/disconest.js" ></script>
+    <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+</head>
+<style>
+    body {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #eee;
+    }
+
+    .form-disconest {
+      max-width: 500px;
+      padding: 15px;
+      margin: 0 auto;
+    }
+
+    .form-disconest .form-disconest-heading{
+      margin-bottom: 10px;
+    }
+
+    .form-disconest .form-control {
+      position: relative;
+      font-size: 16px;
+      height: auto;
+      padding: 10px;
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    .form-disconest .form-control:focus {
+      z-index: 2;
+    }
+</style>
+<body>
+    <div class="container">
+      <div class="jumbotron">
+        <div class="form-disconest">
+          <img alt="Disconest" title="Disconest" src="/img/disconest-1.png">
+          <p>Get all the metadata for your records!</p> 
+          <h4 class="form-signin-heading">Enter a Discogs Release URL</h4>
+          <input id="discogsurl" type="text" class="form-control" placeholder="Discogs Release URL" required autofocus>
+          <button id="getmetadata" class="btn btn-lg btn-primary btn-block" type="submit">Get metadata!</button>
+          <span id="error"></span>
+        </div>
+      </div>
+    <div id="release" class="row">
+    </div>
+    <div id="info" class="row">      
+      <p>
+        Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the key, tempo and other data for your records would be useful!
+      </p>
+      <p>
+        Disconest uses the <a target="_blank" href="http://the.echonest.com/">The Echonest</a> and <a target="_blank" href="www.discogs.com/developers/">Discogs</a> apis to find this information about records and cds registered on Discogs. Enter a Discogs url in the box above to try it out!
+      </p>
+      <p>
+        If you want to use Disconest to get this information for your entire <a target="_blank" href="http://www.discogs.com/users/export?w=collection">Discogs collection</a> you can use the <a target="_blank" href="http://www.github.com/kalli/disconest">command line version</a> .
+      </p>
+      <p>
+        Made by <a href="http://www.karltryggvason.com">Karl Tryggvason</a> at <a href="http://www.london.musichackday.org/2013/">Music Hack Day London 2013</a>
+      </p>
+    </div>
+    </div>
+    <script id="error-template" type="text/x-handlebars-template">
+      <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>{{url}}</strong>{{error}}
+      </div>
+    </script>
+    <script id="release-template" type="text/x-handlebars-template">
+      <div class="row">
+        <div class="col-xs-2">
+        {{#each images}}{{#if @first}}
+          <img src="/pixogs?img={{uri150}}">
+        {{/if}}{{/each}}
+        </div>
+        <div class="release col-xs-4">
+          <h1>
+          {{#if artists}}
+            {{#each artists}}
+              {{name}} {{join}}
+            {{/each}}        
+          {{else}}
+            Various
+          {{/if}}
+          - {{title}}
+          </h1>
+          <table class="table">
+          <tr>
+            <td>
+            Genres &amp; styles:
+            </td>
+            <td>
+              {{#each genres}}<span class="badge">{{this}}</span>{{/each}}
+              {{#each styles}}<span class="badge">{{this}}</span>{{/each}}
+            </td>
+          </tr>
+          <tr>
+          <td>Year</td><td>{{year}}</td>
+          </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        {{#tracklist tracklist artists videos}}{{/tracklist}}
+      </div>
+    </script>
+</body>
+</html>
