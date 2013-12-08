@@ -41,27 +41,29 @@
 
       Disconest.prototype.addVideoLinks = function() {
         var index, link, track, video, _i, _len, _ref, _results;
-        _ref = this.discogsinfo.videos;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          video = _ref[_i];
-          _results.push((function() {
-            var _j, _len1, _ref1, _results1;
-            _ref1 = this.discogsinfo.tracklist;
-            _results1 = [];
-            for (index = _j = 0, _len1 = _ref1.length; _j < _len1; index = ++_j) {
-              track = _ref1[index];
-              if (video.description.toLowerCase().indexOf(track.title.toLowerCase()) !== -1) {
-                link = $('<a>').attr('href', video.uri).attr('target', '_blank').addClass("yt").text("Youtube");
-                _results1.push($(this.tldomelement + ' tbody').find('tr').eq(index).find('.link').append(link));
-              } else {
-                _results1.push(void 0);
+        if (this.discogsinfo.videos) {
+          _ref = this.discogsinfo.videos;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            video = _ref[_i];
+            _results.push((function() {
+              var _j, _len1, _ref1, _results1;
+              _ref1 = this.discogsinfo.tracklist;
+              _results1 = [];
+              for (index = _j = 0, _len1 = _ref1.length; _j < _len1; index = ++_j) {
+                track = _ref1[index];
+                if (video.description.toLowerCase().indexOf(track.title.toLowerCase()) !== -1) {
+                  link = $('<a>').attr('href', video.uri).attr('target', '_blank').addClass("yt").text("Youtube");
+                  _results1.push($(this.tldomelement + ' tbody').find('tr').eq(index).find('.link').append(link));
+                } else {
+                  _results1.push(void 0);
+                }
               }
-            }
-            return _results1;
-          }).call(this));
+              return _results1;
+            }).call(this));
+          }
+          return _results;
         }
-        return _results;
       };
 
       Disconest.prototype.getTracklist = function(tltable) {
@@ -88,11 +90,14 @@
       };
 
       Disconest.prototype.echonestCallback = function(index, response) {
-        var audio_summary, html;
+        var audio_summary, html, minutes, seconds;
         this.discogsinfo.tracklist[index].echonestinfo = response.songs[0];
         if (response.songs.length > 0) {
           audio_summary = response.songs[0].audio_summary;
           if (audio_summary) {
+            minutes = Math.floor(audio_summary.duration / 60);
+            seconds = Math.floor(audio_summary.duration % 60);
+            $('#tltable tbody tr').eq(index).find(".duration").text(String(minutes) + ":" + String(seconds));
             html = "";
             html += '<td>' + audio_summary.key + '</td>';
             html += '<td>' + audio_summary.time_signature + '</td>';
@@ -160,7 +165,7 @@
           }
           out += '<tr data-artistid="' + trackartistid + '" data-title="' + track.title + '">';
           out += '<td>' + track.position + '</td>';
-          out += '<td>' + track.duration + '</td>';
+          out += '<td class="duration">' + track.duration + '</td>';
           out += '<td >' + trackartist + '</td>';
           out += '<td >' + track.title + '</td>';
           out += '<td class="link"></td>';

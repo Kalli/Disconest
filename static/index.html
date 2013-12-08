@@ -29,6 +29,10 @@
       padding-top: 40px;
       padding-bottom: 40px;
       background-color: #eee;
+      background-image: url("http://www.karltryggvason.com/img/background/creampaper.png");
+    }
+    tbody tr td{
+      text-align: center;
     }
 
     .form-disconest {
@@ -53,6 +57,9 @@
     .form-disconest .form-control:focus {
       z-index: 2;
     }
+    .jumbotron{
+      background: transparent!important;
+    }
     .link a{ 
       height: 16px;
       width: 16px;
@@ -69,6 +76,9 @@
     .link a.de{
       background: url('img/deezer.png') no-repeat 0 0;
     }
+    .form-disconest{
+      text-align: center;
+    }
 </style>
 <body>
     <div class="container">
@@ -76,7 +86,7 @@
         <div class="form-disconest">
           <img alt="Disconest" title="Disconest" src="/img/disconest-1.png">
           <p>Get all the metadata for your records!</p> 
-          <h4 class="form-signin-heading">Enter a Discogs Release URL</h4>
+          <h4 class="form-signin-heading">Enter a <a target="_blank" href="http://www.discogs.com">Discogs</a> Release URL</h4>
           <input id="discogsurl" type="text" class="form-control" placeholder="Discogs Release URL" required autofocus>
           <button id="getmetadata" class="btn btn-lg btn-primary btn-block" type="submit">Get metadata!</button>
           <span id="error"></span>
@@ -86,16 +96,15 @@
     </div>
     <div id="info" class="row">      
       <p>
-        Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the key, tempo and other data for your records would be useful!
+        Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the key, tempo and other data for your records would be useful! Disconest uses the <a target="_blank" href="http://the.echonest.com/">The Echonest</a> and <a target="_blank" href="www.discogs.com/developers/">Discogs</a> apis to find this information about records and cds registered on Discogs. Enter a Discogs url in the box above to try it out!
       </p>
       <p>
-        Disconest uses the <a target="_blank" href="http://the.echonest.com/">The Echonest</a> and <a target="_blank" href="www.discogs.com/developers/">Discogs</a> apis to find this information about records and cds registered on Discogs. Enter a Discogs url in the box above to try it out!
+        If you want to use Disconest to get this information for your entire <a target="_blank" href="http://www.discogs.com/users/export?w=collection">Discogs collection</a> you can use the <a target="_blank" href="http://www.github.com/kalli/disconest">command line version</a>.
       </p>
       <p>
-        If you want to use Disconest to get this information for your entire <a target="_blank" href="http://www.discogs.com/users/export?w=collection">Discogs collection</a> you can use the <a target="_blank" href="http://www.github.com/kalli/disconest">command line version</a> .
-      </p>
-      <p>
-        Made by <a href="http://www.karltryggvason.com">Karl Tryggvason</a> at <a href="http://www.london.musichackday.org/2013/">Music Hack Day London 2013</a>
+        Made by <a href="http://www.karltryggvason.com">Karl Tryggvason</a> (<a href="http://www.twitter.com/karltryggvason">@karltryggvason</a>) at <a href="http://www.london.musichackday.org/2013/">Music Hack Day London 2013</a>. Using: 
+        <a target="_blank" title="Echonest" href="http://the.echonest.com/"><img src="/img/echonest.png" alt="Echonest"></a>
+        <a target="_blank" title="Echonest" href="http://www.discogs.com/developers/"><img src="/img/discogs.png" alt="Discogs"></a>
       </p>
     </div>
     </div>
@@ -112,7 +121,7 @@
           <img src="/pixogs?img={{uri150}}">
         {{/if}}{{/each}}
         </div>
-        <div class="release col-xs-4">
+        <div class="release col-xs-6">
           <h1>
           {{#if artists}}
             {{#each artists}}

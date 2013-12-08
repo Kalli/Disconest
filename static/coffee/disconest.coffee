@@ -28,11 +28,12 @@ $(document).ready ->
 			@addVideoLinks()
 
 		addVideoLinks: () ->
-			for video in @discogsinfo.videos
-				for track, index in @discogsinfo.tracklist
-					if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1
-						link = $('<a>').attr('href',video.uri).attr('target', '_blank').addClass("yt").text("Youtube")
-						$(@tldomelement+' tbody').find('tr').eq(index).find('.link').append(link)
+			if @discogsinfo.videos
+				for video in @discogsinfo.videos
+					for track, index in @discogsinfo.tracklist
+						if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1
+							link = $('<a>').attr('href',video.uri).attr('target', '_blank').addClass("yt").text("Youtube")
+							$(@tldomelement+' tbody').find('tr').eq(index).find('.link').append(link)
 
 		# echonest stuff
 		getTracklist: (tltable) ->
@@ -56,6 +57,9 @@ $(document).ready ->
 			if response.songs.length > 0 
 				audio_summary = response.songs[0].audio_summary
 				if audio_summary
+					minutes = Math.floor(audio_summary.duration / 60)
+					seconds = Math.floor(audio_summary.duration % 60)
+					$('#tltable tbody tr').eq(index).find(".duration").text(String(minutes)+":"+String(seconds))
 					html = ""
 					html += '<td>'+audio_summary.key+'</td>'
 					html += '<td>'+audio_summary.time_signature+'</td>'
@@ -100,7 +104,7 @@ $(document).ready ->
 						trackartistid = artist.id
 				out += '<tr data-artistid="'+trackartistid+'" data-title="'+track.title+'">'
 				out += '<td>'+track.position+'</td>'
-				out += '<td>'+track.duration+'</td>'
+				out += '<td class="duration">'+track.duration+'</td>'
 				out += '<td >'+trackartist+'</td>'
 				out += '<td >'+track.title+'</td>'
 				out += '<td class="link"></td>'
