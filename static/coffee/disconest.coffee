@@ -137,7 +137,17 @@ $(document).ready ->
 			discogsparams.valid = false
 		return discogsparams
 
+	$('#discogsurl').keypress((e)=>
+		if e.which == 13
+			getMetaData()
+		return false
+	)
+
 	$('#getmetadata').click(()=>
+		getMetaData()
+	)
+
+	getMetaData = () ->
 		url = $('#discogsurl').val()
 		regexp = /(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/(release|master)\/(\d+)/
 		matches = url.match(regexp)
@@ -146,7 +156,6 @@ $(document).ready ->
 			disconest = new Disconest(discogsparams.id, discogsparams.type)
 		else
 			renderError(url)
-	)
 
 	renderError = (url) ->
 		source = $("#error-template").html()
