@@ -22,7 +22,9 @@ app.get('/discogs', function(req,res) {
 
 app.get('/pixogs', function(req,res) {
 	var discogsimg = url.parse(req.url, true).query["img"];
-	if (discogsimg.indexOf("http://api.discogs.com/image/")===0 && (discogsimg.substring(discogsimg.length-4) == "jpeg" || discogsimg.substring(discogsimg.length-3) == "png" )){
+	var urlending = discogsimg.substring(discogsimg.length-3);
+	var isimg = ["png", "jpg", "peg"].indexOf(urlending)!==-1;
+	if (discogsimg.indexOf("http://api.discogs.com/image/")===0 && isimg){
 		discogsimg = discogsimg.replace("api.discogs.com","s.pixogs.com");
 		var options = {
 			url: discogsimg,
