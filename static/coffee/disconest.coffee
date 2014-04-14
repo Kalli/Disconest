@@ -45,7 +45,7 @@ class Disconest
 		)
 
 	getEchonestInformation: (index, data) ->
-		url = 'http://developer.echonest.com/api/v4/song/search?api_key=BB7QVYHAMYUOT4ESL&format=json&results=1&artist_id=discogs:artist:'+data.artistid+'&title='+data.title
+		url = 'http://developer.echonest.com/api/v4/song/search?api_key=BB7QVYHAMYUOT4ESL&format=json&results=1&artist_id=discogs:artist:'+data.artistid+'&title='+escape(data.title)
 		buckets = '&bucket=audio_summary&bucket=tracks&bucket=id:deezer&bucket=id:spotify-WW'
 		url += buckets
 		$.ajax 
@@ -171,6 +171,7 @@ $(document).ready ->
 			if kv.length == 2 and kv[0] =="discogsurl"
 				discogsparams = ValidateDiscogsUrl(kv[1])
 				if discogsparams.valid
+					$('#discogsurl').val(kv[1])
 					disconest = new Disconest(discogsparams.id, discogsparams.type)
 
 window.onpopstate = (e)->
