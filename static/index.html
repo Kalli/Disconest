@@ -12,7 +12,10 @@
     <link href="/img/favicon.ico" rel="shortcut icon" />
     <script src="/bower_components/jquery/jquery.min.js" ></script>
     <script src="/bower_components/bootstrap/js/alert.js" ></script>
-    <script src="/bower_components/handlebars/handlebars.min.js" ></script>
+    <script src="/bower_components/underscore/underscore.js" ></script>
+    <script src="/bower_components/backbone/backbone.js" ></script>
+    <script src="/js/release.js" ></script>
+    <script src="/js/song.js" ></script>
     <script src="/js/disconest.js" ></script>
     <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.css">
     <script>
@@ -92,9 +95,12 @@
           <img alt="Disconest" title="Disconest" src="/img/disconest-1.png">
           <p>Get all the metadata for your records!</p> 
           <h4 class="form-signin-heading">Enter a <a target="_blank" href="http://www.discogs.com">Discogs</a> Release URL</h4>
+          <div id="error" class="alert alert-danger alert-dismissable fade in" style="display:none;">
+            <button type="button" class="close" aria-hidden="true">&times;</button>
+            <strong>Not a valid Discogs URL</strong>
+          </div>
           <input id="discogsurl" type="text" class="form-control" placeholder="Discogs Release URL" required autofocus>
           <button id="getmetadata" class="btn btn-lg btn-primary btn-block" type="submit">Get metadata!</button>
-          <span id="error"></span>
         </div>
       </div>
     <div id="release" class="row">
@@ -116,51 +122,5 @@
       </p>
     </div>
     </div>
-    <script id="error-template" type="text/x-handlebars-template">
-      <div class="alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>{{url}}</strong>{{error}}
-      </div>
-    </script>
-    <script id="release-template" type="text/x-handlebars-template">
-      <div class="row">
-        <div class="col-xs-2">
-        {{#each images}}{{#if @first}}
-        <a target="_blank" href="{{uri}}">
-          <img src="/pixogs?img={{uri150}}">
-        </a>
-        {{/if}}{{/each}}
-        </div>
-        <div class="release col-xs-8">
-          <h1><a target="_blank" href="{{uri}}">
-          {{#if artists}}
-            {{#each artists}}
-              {{name}} {{join}}
-            {{/each}}        
-          {{else}}
-            Various
-          {{/if}}
-          - {{title}}
-          </a></h1>
-          <table class="table">
-          <tr>
-            <td>
-            Genres &amp; styles:
-            </td>
-            <td>
-              {{#each genres}}<span class="badge">{{this}}</span>{{/each}}
-              {{#each styles}}<span class="badge">{{this}}</span>{{/each}}
-            </td>
-          </tr>
-          <tr>
-          <td>Year</td><td>{{year}}</td>
-          </tr>
-          </table>
-        </div>
-      </div>
-      <div class="row">
-        {{#tracklist tracklist artists videos}}{{/tracklist}}
-      </div>
-    </script>
 </body>
 </html>
