@@ -96,10 +96,7 @@ describe('The song model', function() {
     }));
   });
   return it('Correctly stores Echonest information in the model', function() {
-    console.log(songModel.toJSON());
-    expect(songModel.attributes.response.songs).toEqual(echonestresponse.response.songs);
-    console.log(songModel.attributes.response.songs);
-    return console.log(echonestresponse.response.songs);
+    return expect(songModel.attributes.response.songs).toEqual(echonestresponse.response.songs);
   });
 });
 
