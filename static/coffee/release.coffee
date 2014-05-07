@@ -87,8 +87,8 @@ ReleaseView = Backbone.View.extend({
                 <span class="scrobble icon-lastfm2"> </span>
                 Scrobble to Last.fm
             </a>
-            <a class="btn btn-info" http://twitter.com/intent/tweet?hashtags=#Disconest&url=http://www.disconest.com/?discogsurl=http://www.discogs.com/<%= type %>/<%= id %>" target="_blank">
-                <span id="fb" class="icon-twitter2"></span>
+            <a class="btn btn-info" href="http://twitter.com/intent/tweet?hashtags=#Disconest&url=http://www.disconest.com/?discogsurl=http://www.discogs.com/<%= type %>/<%= id %>" target="_blank">
+                <span class="icon-twitter2"></span>
                 Tweet
             </a>
             <a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://www.disconest.com/?discogsurl=http://www.discogs.com/<%= type %>/<%= id %>" target="_blank">
