@@ -55,7 +55,7 @@ app.post('/scrobble', function(req,res) {
 			handlers: {
 				success: function(session) {
 					for (var i = 0; i<tracks.length; i++){
-						lastfm.update('scrobble', session, tracks[i]);						
+						lastfm.update('scrobble', session, tracks[i]);			
 					}
                     res.json({"user": session.user, "tracks": tracks.length});
 				},
@@ -64,7 +64,6 @@ app.post('/scrobble', function(req,res) {
 				}
 			}
 		});
-
 	}else{
 		res.send(400, 'No token provided');
 	}

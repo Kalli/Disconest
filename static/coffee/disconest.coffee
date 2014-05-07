@@ -1,4 +1,16 @@
 $(document).ready ->
+    releaseModel = new ReleaseModel()
+    releaseView = new ReleaseView({model:releaseModel, el: $('body')})
+    getParams = () ->
+        query = window.location.search.substring(1)
+        raw_vars = query.split("&")
+        params = {}
+        for v in raw_vars
+            [key, val] = v.split("=")
+            params[key] = decodeURIComponent(val)
+        return params
+    urlparams = getParams()
+
     ValidateDiscogsUrl = (url) ->
         discogsparams = {}
         regexp = /(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/?(release|master)\/(\d+)/
@@ -26,10 +38,20 @@ $(document).ready ->
         matches = url.match(regexp)
         discogsparams = ValidateDiscogsUrl(url)
         if discogsparams.valid
-            releaseModel = new ReleaseModel({type: discogsparams.type, id: discogsparams.id})
+            releaseparameters = 
+                type: discogsparams.type
+                id: discogsparams.id
+                lastfm_apikey: "608dd6c15b85a6abcd794f1b01c0438e"
+            if urlparams.token
+                releaseparameters.lastfmtoken = urlparams.token
+            releaseModel = new ReleaseModel(releaseparameters)
             releaseModel.fetch(
                 success: () ->
-                    releaseView = new ReleaseView({model:releaseModel})
+                    title = "Disconest - Musical metadata for "+releaseModel.attributes.title
+                    window.history.pushState(null, title, location.protocol+"//"+location.host+"/?discogsurl="+$('#discogsurl').val())
+                    document.title = title
+                    releaseView.undelegateEvents()
+                    releaseView = new ReleaseView({model:releaseModel, el: $('body')})
                     releaseView.render()
                     for track, index in releaseModel.attributes.tracklist
                         if !track.artists
@@ -51,17 +73,16 @@ $(document).ready ->
             renderError(url)
 
     renderError = (url) ->
+        $("#error strong").html(url + " is not a valid Discogs URL")
         $("#error").show()
         $('.alert .close').click (e) ->
             $(@).parent().hide()
 
-    params = document.URL.split("?")
-    if params.length > 1
-        params = params[1].split("&")
-        for param in params
-            kv = param.split("=")
-            if kv.length == 2 and kv[0] =="discogsurl"
-                discogsparams = ValidateDiscogsUrl(kv[1])
-                if discogsparams.valid
-                    $('#discogsurl').val(kv[1])
-                    getMetaData()
+    if urlparams.discogsurl
+        url = unescape(urlparams.discogsurl)
+        discogsparams = ValidateDiscogsUrl(url)
+        if discogsparams.valid
+            $('#discogsurl').val(url)
+            getMetaData()            
+
+

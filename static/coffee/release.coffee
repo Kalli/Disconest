@@ -3,7 +3,52 @@ ReleaseModel = Backbone.Model.extend({
     url: () ->
         "/discogs?url=http://api.discogs.com/"+@attributes.type+"/"+@id
     })
+
 ReleaseView = Backbone.View.extend({
+    events:
+        "click #scrobble": "scrobble"
+      
+    scrobble: () ->
+        if @model.attributes.lastfmtoken
+            scrobbledata = @createScrobbleData()
+            $.ajax
+                url: '/scrobble'
+                type: 'post'
+                data: scrobbledata
+                error: (jqXHR, textStatus, errorThrown) ->
+                    $("#scrobbleerror strong").html("Scrobbling failed. Sorry about that!")
+                    $("#scrobbleerror").show()
+                    $('.alert .close').click (e) ->
+                        $(@).parent().hide()
+
+                success: (data, textStatus, jqXHR) ->
+                    $("#scrobblesuccess strong").html("Scrobbled "+data.tracks+" tracks to the "+data.user+" Last.fm account")
+                    $("#scrobblesuccess").show()
+                    $('.alert .close').click (e) ->
+                        $(@).parent().hide()
+        else
+            open("http://www.last.fm/api/auth/?api_key="+@model.attributes.lastfm_apikey+"&cb="+document.URL, '_self')
+
+    createScrobbleData: () ->
+        tracks = []
+        timestamp = Math.round(new Date().getTime()/1000)
+        for track, index in @model.attributes.tracklist
+            tracklistlength = @model.attributes.tracklist.length
+            if track.title 
+                artistname = ""
+                artists = if track.artists then track.artists else @model.attributes.artists
+                for artist in artists
+                    artistname += artist.name+artist.join
+                scrobbletrack =
+                    artist: artistname
+                    track: track.title
+                    timestamp: String(timestamp-(300*(tracklistlength-index)))
+                tracks.push(scrobbletrack)
+        scrobbledata = 
+            tracks: tracks
+            token: @model.attributes.lastfmtoken
+        return scrobbledata
+
     tagName: 'div'
     id: 'release'
     template: _.template("""
@@ -38,6 +83,26 @@ ReleaseView = Backbone.View.extend({
             <td>Year</td><td><%= year %></td>
             </tr>
             </table>
+            <a id="scrobble" type="button" class="btn btn-danger">
+                <span class="scrobble icon-lastfm2"> </span>
+                Scrobble to Last.fm
+            </a>
+            <a class="btn btn-info" http://twitter.com/intent/tweet?hashtags=#Disconest&url=http://www.disconest.com/?discogsurl=http://www.discogs.com/<%= type %>/<%= id %>" target="_blank">
+                <span id="fb" class="icon-twitter2"></span>
+                Tweet
+            </a>
+            <a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=http://www.disconest.com/?discogsurl=http://www.discogs.com/<%= type %>/<%= id %>" target="_blank">
+                <span id="fb" class="icon-facebook2"> </span>
+                Share on Facebook
+            </a>
+            <div id="scrobbleerror" class="alert alert-danger alert-dismissable fade in" style="display:none;">
+              <button type="button" class="close" aria-hidden="true">&times;</button>
+              <strong>Error scrobbling. Sorry about that!</strong>
+            </div>
+            <div id="scrobblesuccess" class="alert alert-success alert-dismissable fade in" style="display:none;">
+              <button type="button" class="close" aria-hidden="true">&times;</button>
+              <strong>Success!</strong>
+            </div>
           </div>
         </div>
         <div id="tracklist" class="row">
@@ -64,7 +129,11 @@ ReleaseView = Backbone.View.extend({
                     <% } %>
                     </td>
                     <td ><%= track.title %> </td>
-                    <td class="link"></td>
+                    <td class="link">
+                        <% if (track.video) { %>
+                           <a href="<%= track.video %> target="_blank" class="yt">Youtube</a>
+                        <% }; %>
+                    </td>
                 </tr>
             <% }); %>
             </tbody>
@@ -72,14 +141,14 @@ ReleaseView = Backbone.View.extend({
         </div>
         """)
     render: () ->
-        $("#release").html(@template(@model.toJSON()))
         @addVideoLinks()
+        $('#'+@id).html(@template(@model.toJSON()))
+        return @
 
     addVideoLinks: () ->
       if @model.attributes.videos
         for video in @model.attributes.videos
           for track, index in @model.attributes.tracklist
-            if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1
-              link = $('<a>').attr('href',video.uri).attr('target', '_blank').addClass("yt").text("Youtube")
-              $('#tltable tbody').find('tr').eq(index).find('.link').append(link)
+            if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1 && !track.video
+                track.video = video.uri
     })

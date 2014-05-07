@@ -54,3 +54,28 @@ describe 'The release model', () ->
     it 'Correctly stores Discogs information in the model', () ->
         expect(releaseModel.attributes.artists).toEqual(discogsresponse.artists)
         expect(releaseModel.attributes.tracklist).toEqual(discogsresponse.tracklist)
+
+lastfmresponse = {"user":"user"}
+describe 'Scrobbling model', () ->
+    type = 'releases'
+    id = 2281630
+    token = "mocktoken"
+    releaseModel = new ReleaseModel({type: type, id: id, lastfmtoken: token})
+
+    releaseView = new ReleaseView({model:releaseModel, el: $('body')})
+
+    beforeEach () ->
+        spyOn($, "ajax").and.callFake (params) ->
+            if /discogs/.test(params.url)
+                params.success(discogsresponse)
+            if /scrobble/.test(params.url)
+                params.success(lastfmresponse)
+
+    it 'Makes the correct ajax calls when scrobbling', () ->
+        releaseModel.fetch()
+        releaseView.scrobble()
+        expect($.ajax).toHaveBeenCalledWith(
+            jasmine.objectContaining(
+                url: '/scrobble'
+            )
+        )
