@@ -5,6 +5,8 @@ describe 'The song model', () ->
     artistid = 211501
     title = 'Casanova'
     songModel = new SongModel({id:artistid, title: title})
+    artists = [{"join": "&","name": "Pinch (2)","anv": "","tracks": "","role": "","resource_url": "http://api.discogs.com/artists/462816","id": 462816},{"join": "","name": "Shackleton","anv": "","tracks": "","role": "","resource_url": "http://api.discogs.com/artists/342363","id": 342363}]
+    artistSongModel = new SongModel({artists:artists, title: title})
 
     beforeEach () ->
         spyOn($, "ajax").and.callFake (params) ->
@@ -21,6 +23,11 @@ describe 'The song model', () ->
                 url: songModel.url()
             )
         )
+
+    it 'Correctly uses artist names instead of ids if a song has more than one artist', () ->
+        url = artistSongModel.url()
+        artistname = artist.name+artist.join for artist in artists
+        expect(url).toContain(escape(artistname))
 
     it 'Correctly stores Echonest information in the model', () ->
         expect(songModel.attributes.response.songs).toEqual(echonestresponse.response.songs)

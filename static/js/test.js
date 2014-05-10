@@ -73,11 +73,34 @@ echonestresponse = {
 };
 
 describe('The song model', function() {
-  var artistid, songModel, title;
+  var artistSongModel, artistid, artists, songModel, title;
   artistid = 211501;
   title = 'Casanova';
   songModel = new SongModel({
     id: artistid,
+    title: title
+  });
+  artists = [
+    {
+      "join": "&",
+      "name": "Pinch (2)",
+      "anv": "",
+      "tracks": "",
+      "role": "",
+      "resource_url": "http://api.discogs.com/artists/462816",
+      "id": 462816
+    }, {
+      "join": "",
+      "name": "Shackleton",
+      "anv": "",
+      "tracks": "",
+      "role": "",
+      "resource_url": "http://api.discogs.com/artists/342363",
+      "id": 342363
+    }
+  ];
+  artistSongModel = new SongModel({
+    artists: artists,
     title: title
   });
   beforeEach(function() {
@@ -94,6 +117,15 @@ describe('The song model', function() {
     return expect($.ajax).toHaveBeenCalledWith(jasmine.objectContaining({
       url: songModel.url()
     }));
+  });
+  it('Correctly uses artist names instead of ids if a song has more than one artist', function() {
+    var artist, artistname, url, _i, _len;
+    url = artistSongModel.url();
+    for (_i = 0, _len = artists.length; _i < _len; _i++) {
+      artist = artists[_i];
+      artistname = artist.name + artist.join;
+    }
+    return expect(url).toContain(escape(artistname));
   });
   return it('Correctly stores Echonest information in the model', function() {
     return expect(songModel.attributes.response.songs).toEqual(echonestresponse.response.songs);

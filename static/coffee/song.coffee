@@ -1,9 +1,14 @@
 # Backbone model and view for a track on a release, fetches Echonest information for the track
 SongModel = Backbone.Model.extend({
     url: () ->
-        url = 'http://developer.echonest.com/api/v4/song/search?api_key=BB7QVYHAMYUOT4ESL&format=json&results=1&artist_id=discogs:artist:'+@id+'&title='+escape(@attributes.title)
-        buckets = '&bucket=audio_summary&bucket=tracks&bucket=id:deezer&bucket=id:spotify-WW'
-        url += buckets
+        url = 'http://developer.echonest.com/api/v4/song/search?api_key=BB7QVYHAMYUOT4ESL&format=json&results=1'
+        if @attributes.artists and @attributes.artists.length > 1
+            artists = artist.name+artist.join for artist in @attributes.artists
+            url += '&artist='+escape(artists)            
+        else
+            url += '&artist_id=discogs:artist:'+@id
+        url += '&title='+escape(@attributes.title)
+        url += '&bucket=audio_summary&bucket=tracks&bucket=id:deezer&bucket=id:spotify-WW'
         return url
     })
 SongView = Backbone.View.extend({

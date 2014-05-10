@@ -3,10 +3,20 @@ var SongModel, SongView;
 
 SongModel = Backbone.Model.extend({
   url: function() {
-    var buckets, url;
-    url = 'http://developer.echonest.com/api/v4/song/search?api_key=BB7QVYHAMYUOT4ESL&format=json&results=1&artist_id=discogs:artist:' + this.id + '&title=' + escape(this.attributes.title);
-    buckets = '&bucket=audio_summary&bucket=tracks&bucket=id:deezer&bucket=id:spotify-WW';
-    url += buckets;
+    var artist, artists, url, _i, _len, _ref;
+    url = 'http://developer.echonest.com/api/v4/song/search?api_key=BB7QVYHAMYUOT4ESL&format=json&results=1';
+    if (this.attributes.artists && this.attributes.artists.length > 1) {
+      _ref = this.attributes.artists;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        artist = _ref[_i];
+        artists = artist.name + artist.join;
+      }
+      url += '&artist=' + escape(artists);
+    } else {
+      url += '&artist_id=discogs:artist:' + this.id;
+    }
+    url += '&title=' + escape(this.attributes.title);
+    url += '&bucket=audio_summary&bucket=tracks&bucket=id:deezer&bucket=id:spotify-WW';
     return url;
   }
 });
