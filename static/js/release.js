@@ -4,6 +4,28 @@ var ReleaseModel, ReleaseView;
 ReleaseModel = Backbone.Model.extend({
   url: function() {
     return "/discogs?url=http://api.discogs.com/" + this.attributes.type + "/" + this.id;
+  },
+  parse: function(response) {
+    var artist, track, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+    _ref = response.artists;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      artist = _ref[_i];
+      artist.name = artist.name.replace(/\s\(\d+\)/, "");
+    }
+    _ref1 = response.tracklist;
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      track = _ref1[_j];
+      if (!track.artists) {
+        track.artists = response.artists;
+      } else {
+        _ref2 = track.artists;
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          artist = _ref2[_k];
+          artist.name = artist.name.replace(/\s\(\d+\)/, "");
+        }
+      }
+    }
+    return response;
   }
 });
 

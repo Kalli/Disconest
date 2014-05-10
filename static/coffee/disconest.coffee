@@ -47,9 +47,6 @@ $(document).ready ->
             releaseModel = new ReleaseModel(releaseparameters)
             releaseModel.fetch(
                 success: () ->
-                    for track in releaseModel.attributes.tracklist
-                        if !track.artists
-                            track.artists = releaseModel.attributes.artists
                     title = "Disconest - Musical metadata for "+releaseModel.attributes.title
                     window.history.pushState(null, title, location.protocol+"//"+location.host+"/?discogsurl="+$('#discogsurl').val())
                     document.title = title

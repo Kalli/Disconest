@@ -2,7 +2,18 @@
 ReleaseModel = Backbone.Model.extend({
     url: () ->
         "/discogs?url=http://api.discogs.com/"+@attributes.type+"/"+@id
-    })
+
+    parse: (response) ->
+        for artist in response.artists
+            artist.name = artist.name.replace(/\s\(\d+\)/,"")
+        for track in response.tracklist
+            if !track.artists
+                track.artists = response.artists
+            else
+                for artist in track.artists
+                    artist.name = artist.name.replace(/\s\(\d+\)/,"")
+        return response
+})
 
 ReleaseView = Backbone.View.extend({
     events:

@@ -63,14 +63,7 @@ $(document).ready(function() {
       releaseModel = new ReleaseModel(releaseparameters);
       return releaseModel.fetch({
         success: function() {
-          var html, index, title, track, _i, _j, _len, _len1, _ref, _ref1, _results;
-          _ref = releaseModel.attributes.tracklist;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            track = _ref[_i];
-            if (!track.artists) {
-              track.artists = releaseModel.attributes.artists;
-            }
-          }
+          var html, index, title, track, _i, _len, _ref, _results;
           title = "Disconest - Musical metadata for " + releaseModel.attributes.title;
           window.history.pushState(null, title, location.protocol + "//" + location.host + "/?discogsurl=" + $('#discogsurl').val());
           document.title = title;
@@ -80,10 +73,10 @@ $(document).ready(function() {
             el: $('body')
           });
           releaseView.render();
-          _ref1 = releaseModel.attributes.tracklist;
+          _ref = releaseModel.attributes.tracklist;
           _results = [];
-          for (index = _j = 0, _len1 = _ref1.length; _j < _len1; index = ++_j) {
-            track = _ref1[index];
+          for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+            track = _ref[index];
             if (track.artists[0].id !== 194) {
               _results.push((function() {
                 var songModel;
