@@ -13,7 +13,7 @@ $(document).ready ->
 
     ValidateDiscogsUrl = (url) ->
         discogsparams = {}
-        regexp = /(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/?(release|master)\/(\d+)/
+        regexp = /(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/?(release|master)s?\/(\d+)/
         matches = url.match(regexp)
         if matches and matches.length == 3
             discogsparams.valid = true
