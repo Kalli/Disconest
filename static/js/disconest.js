@@ -22,7 +22,7 @@ $(document).ready(function() {
   ValidateDiscogsUrl = function(url) {
     var discogsparams, matches, regexp;
     discogsparams = {};
-    regexp = /(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/?(release|master)\/(\d+)/;
+    regexp = /(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/?(release|master)s?\/(\d+)/;
     matches = url.match(regexp);
     if (matches && matches.length === 3) {
       discogsparams.valid = true;
