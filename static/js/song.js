@@ -23,17 +23,22 @@ SongModel = Backbone.Model.extend({
 
 SongView = Backbone.View.extend({
   render: function() {
-    var html, minutes, seconds, song;
+    var html, keys, minutes, mode, seconds, song;
     if (this.model.attributes.response.songs && this.model.attributes.response.songs.length > 0) {
       song = this.model.attributes.response.songs[0];
+      if (song.audio_summary.tempo) {
+        song.audio_summary.tempo = +song.audio_summary.tempo.toFixed(1);
+      }
       if (song.audio_summary) {
         minutes = String(Math.floor(song.audio_summary.duration / 60));
         seconds = String(Math.floor(song.audio_summary.duration % 60));
         if (seconds.length === 1) {
           seconds += "0";
         }
+        mode = ['Minor', 'Major'];
+        keys = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
         $('#tltable tbody tr').eq(this.model.attributes.index).find(".duration").text(minutes + ":" + seconds);
-        html = '<td class="center">' + song.audio_summary.key + '</td>';
+        html = '<td class="center">' + keys[song.audio_summary.key] + ' ' + mode[song.audio_summary.mode] + '</td>';
         html += '<td class="center">' + song.audio_summary.time_signature + '</td>';
         html += '<td class="center">' + song.audio_summary.tempo + '</td>';
       }
