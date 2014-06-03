@@ -64,7 +64,7 @@ ReleaseView = Backbone.View.extend({
     id: 'release'
     template: _.template("""
         <div class="row">
-          <div class="col-xs-2">
+          <div class="col-xs-2 img">
           <a target="_blank" href="<%=uri%>">
             <img src="/pixogs?img=<%=images[0]["uri150"]%>">
           </a>
@@ -91,9 +91,20 @@ ReleaseView = Backbone.View.extend({
               </td>
             </tr>
             <tr>
-            <td>Year</td><td><%= year %></td>
-            </tr>
+                <td>Year:</td><td><%= year %></td>
+            <tr>
+            <% if (typeof(labels) !== "undefined"){ %> 
+                <tr>
+                    <td>Cat. no / Label:</td>
+                    <td>
+                    <% _.each(labels, function(label) { %> 
+                        <%= label.catno %>  / <%= label.name %>
+                    <% }); %>
+                    </td>
+                </tr>
+            <% }; %>
             </table>
+            <div class="social">
             <a id="scrobble" type="button" class="btn btn-danger">
                 <span class="scrobble icon-lastfm2"> </span>
                 Scrobble to Last.fm
@@ -114,6 +125,7 @@ ReleaseView = Backbone.View.extend({
               <button type="button" class="close" aria-hidden="true">&times;</button>
               <strong>Success!</strong>
             </div>
+            </div>
           </div>
         </div>
         <div id="tracklist" class="row">
@@ -121,10 +133,10 @@ ReleaseView = Backbone.View.extend({
             <table id="tltable" class="table">
             <thead>
             <% _.each(["Position", "Duration", "Artist", "Title", "Links"], function(heading) { %> 
-                <td><%=heading %></td> 
+                <td class="<%=heading %>" ><%=heading %></td> 
             <% }); %>
-            <% _.each(["Key", "Time signature", "BPM"], function(heading) { %> 
-                <td class="center"><%=heading %></td> 
+            <% _.each(["Key", "TS", "BPM"], function(heading) { %> 
+                <td class="<%=heading %> center"><%=heading %></td> 
             <% }); %>
             </thead>
             <tbody>
