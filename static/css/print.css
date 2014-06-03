@@ -1,0 +1,27 @@
+.link, .jumbotron, .social, #info, .img, .Links{
+    display:none;
+}
+
+#tracklist table thead{
+
+}
+
+#tracklist table tr{
+    outline: thin solid black;
+}
+#tracklist table td{
+    padding: 5px;
+}
+
+h1 {
+    font-size: 18px
+}
+
+h3{
+    font-size: 14px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
