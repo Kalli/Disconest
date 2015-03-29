@@ -1,7 +1,7 @@
 # Backbone model and view for a Discogs release
 ReleaseModel = Backbone.Model.extend({
     url: () ->
-        "/discogs?url=http://api.discogs.com/"+@attributes.type+"/"+@id
+        "/discogs?url=https://api.discogs.com/"+@attributes.type+"/"+@id
 
     parse: (response) ->
         for artist in response.artists
@@ -66,7 +66,7 @@ ReleaseView = Backbone.View.extend({
         <div class="row">
           <div class="col-xs-2 img">
           <a target="_blank" href="<%=uri%>">
-            <img src="/pixogs?img=<%=images[0]["uri150"]%>">
+            <img src="<%=images[0]["uri150"]%>">
           </a>
           </div>
           <div class="release col-xs-8">

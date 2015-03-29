@@ -11,9 +11,10 @@ app.use(express.bodyParser());
 
 app.get('/discogs', function(req,res) {
 	var discogsurl = url.parse(req.url, true).query["url"];
-	if (discogsurl.indexOf("http://api.discogs.com") === 0){
+	var token = process.env.DISCOGS_TOKEN;
+	if (discogsurl.indexOf("https://api.discogs.com") === 0){
 		var options = {
-			url: discogsurl,
+			url: discogsurl+"?token="+token,
 			headers: {
 				'User-Agent': 'Disconest/1.0 +http://www.disconest.com'
 			}
