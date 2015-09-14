@@ -66,7 +66,11 @@ ReleaseView = Backbone.View.extend({
         <div class="row">
           <div class="col-xs-2 img">
           <a target="_blank" href="<%=uri%>">
+          <% if (typeof(images) !== "undefined"){ %>   
             <img src="<%=images[0]["uri150"]%>">
+          <% }else{ %>
+            <img src="/img/rekid-150.png">
+          <% }; %>
           </a>
           </div>
           <div class="release col-xs-8">
