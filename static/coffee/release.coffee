@@ -18,6 +18,9 @@ ReleaseModel = Backbone.Model.extend({
 ReleaseView = Backbone.View.extend({
     events:
         "click #scrobble": "scrobble"
+        "click #print": "print"
+    print : () ->
+        window.print()
       
     scrobble: () ->
         if @model.attributes.lastfmtoken
@@ -48,8 +51,13 @@ ReleaseView = Backbone.View.extend({
             if track.title 
                 artistname = ""
                 artists = if track.artists then track.artists else @model.attributes.artists
-                for artist in artists
-                    artistname += artist.name+artist.join
+                for artist, index in artists
+                    artistname += artist.name
+                    if index+1 < artists.length
+                        if artist.join = ","
+                            artistname += ", "
+                        else
+                            artistname += " "+artist.join+" "
                 scrobbletrack =
                     artist: artistname
                     track: track.title
@@ -109,6 +117,10 @@ ReleaseView = Backbone.View.extend({
             <% }; %>
             </table>
             <div class="social">
+            <a id="print" type="button" class="btn btn-default">
+                <span class="print icon-printer"> </span>
+                Print one sheet
+            </a>
             <a id="scrobble" type="button" class="btn btn-danger">
                 <span class="scrobble icon-lastfm2"> </span>
                 Scrobble to Last.fm
@@ -150,8 +162,11 @@ ReleaseView = Backbone.View.extend({
                     <td class="duration"><%= track.duration %></td>
                     <td>
                     <% if (track.artists) { %>
-                        <% _.each(track.artists, function(artist){ %>
-                            <%= artist.name %> <%= artist.join %>
+                        <% _.each(track.artists, function(artist, index){ %>
+                            <%= artist.name %> 
+                            <% if (index+1 < track.artists.length) { %>
+                                <%= artist.join %>
+                            <% } %>
                         <% }); %>
                     <% } %>
                     </td>
