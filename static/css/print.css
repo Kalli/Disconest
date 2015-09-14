@@ -25,3 +25,6 @@ a{
     text-decoration: none;
     color: black;
 }
+.no-data{
+    display: none;
+}

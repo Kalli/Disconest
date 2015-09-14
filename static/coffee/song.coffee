@@ -30,7 +30,7 @@ SongView = Backbone.View.extend({
                 html += '<td class="center">'+song.audio_summary.tempo+'</td>'
             @addStreamingLinks(song, @model.attributes.index)
         else
-            html = '<td></td><td></td><td></td>'
+            html = '<td colspan="3" class="no-data center">Sorry - No metadata found!</td>'
         $('#tltable tbody tr').eq(@model.attributes.index).append(html)
 
     addStreamingLinks: (song, index) ->
