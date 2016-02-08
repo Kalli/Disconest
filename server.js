@@ -12,13 +12,16 @@ app.use(express.bodyParser());
 app.get('/discogs', function(req,res) {
 	var discogsurl = url.parse(req.url, true).query["url"];
 	var token = process.env.DISCOGS_TOKEN;
+	discogsurl += (discogsurl.indexOf("?") !== -1 ? "&" : "?");
+	discogsurl += "token="+token;
 	if (discogsurl.indexOf("https://api.discogs.com") === 0){
 		var options = {
-			url: discogsurl+"?token="+token,
+			url: discogsurl,
 			headers: {
 				'User-Agent': 'Disconest/1.0 +http://www.disconest.com'
 			}
 		};
+		// todo add error handling
 		request(options).pipe(res);
 	}else{
 		res.send(404, 'Sorry cant find that!');
