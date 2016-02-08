@@ -8,7 +8,7 @@ SongModel = Backbone.Model.extend({
         else
             url += '&artist_id=discogs:artist:'+@id
         url += '&title='+escape(@attributes.title)
-        url += '&bucket=audio_summary&bucket=tracks&bucket=id:deezer&bucket=id:spotify-WW'
+        url += '&bucket=audio_summary&bucket=tracks&bucket=id:spotify-WW'
         return url
     })
 SongView = Backbone.View.extend({
@@ -43,11 +43,6 @@ SongView = Backbone.View.extend({
                     url = "http://open.spotify.com/track/"+track.foreign_id.split("spotify-WW:track:")[1]
                     link = $('<a>').attr('href',url).attr('target', '_blank').addClass("sp").text("Spotify")
                     spotify = true
-                if track.catalog == "deezer" and not deezer
-                    url = "http://www.deezer.com/track/"+track.foreign_id.split("deezer:track:")[1]
-                    link = $('<a>').attr('href',url).attr('target', '_blank').addClass("de").text("Deezer")
-                    deezer = true
-                    $('#tltable tbody tr').eq(@model.attributes.index).find('.link').append(link)
                 $('#tltable tbody tr').eq(@model.attributes.index).find('.link').append(link)
 })
 

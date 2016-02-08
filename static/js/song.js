@@ -16,7 +16,7 @@ SongModel = Backbone.Model.extend({
       url += '&artist_id=discogs:artist:' + this.id;
     }
     url += '&title=' + escape(this.attributes.title);
-    url += '&bucket=audio_summary&bucket=tracks&bucket=id:deezer&bucket=id:spotify-WW';
+    url += '&bucket=audio_summary&bucket=tracks&bucket=id:spotify-WW';
     return url;
   }
 });
@@ -62,12 +62,6 @@ SongView = Backbone.View.extend({
         url = "http://open.spotify.com/track/" + track.foreign_id.split("spotify-WW:track:")[1];
         link = $('<a>').attr('href', url).attr('target', '_blank').addClass("sp").text("Spotify");
         spotify = true;
-      }
-      if (track.catalog === "deezer" && !deezer) {
-        url = "http://www.deezer.com/track/" + track.foreign_id.split("deezer:track:")[1];
-        link = $('<a>').attr('href', url).attr('target', '_blank').addClass("de").text("Deezer");
-        deezer = true;
-        $('#tltable tbody tr').eq(this.model.attributes.index).find('.link').append(link);
       }
       _results.push($('#tltable tbody tr').eq(this.model.attributes.index).find('.link').append(link));
     }

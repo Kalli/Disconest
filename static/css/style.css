@@ -89,9 +89,6 @@ thead{
 .link a.sp{
   background: url('/img/spotify.png') no-repeat 0 0;
 }
-.link a.de{
-  background: url('/img/deezer.png') no-repeat 0 0;
-}    
 .link a.scrobble{
   background: url('/img/lastfm.png') no-repeat 0 0;
 }
