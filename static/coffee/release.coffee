@@ -83,8 +83,11 @@ ReleaseView = Backbone.View.extend({
           </div>
           <div class="release col-xs-8">
             <h1><a target="_blank" href="<%= uri %>">
-                <% _.each(artists, function(artist){ %>
-                    <%= artist.name %> <%= artist.join %>
+                <% _.each(artists, function(artist, index){ %>
+                    <%= artist.name %>
+                    <% if (index+1 < artists.length){ %>   
+                        <%= artist.join %>
+                    <% } %>
                 <% }); %>
                 - <%= title%>
             </a></h1>
@@ -173,7 +176,7 @@ ReleaseView = Backbone.View.extend({
                     <td ><%= track.title %> </td>
                     <td class="link">
                         <% if (track.video) { %>
-                           <a href="<%= track.video %> target="_blank" class="yt">Youtube</a>
+                           <a href="<%= track.video %>" target="_blank" class="yt">Youtube</a>
                         <% }; %>
                     </td>
                 </tr>
