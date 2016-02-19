@@ -54,7 +54,7 @@ describe 'The release model', () ->
         releaseModel.fetch()
         expect($.ajax).toHaveBeenCalledWith(
             jasmine.objectContaining(
-                url: '/discogs?url=http://api.discogs.com/'+type+'/'+id
+                url: '/discogs?url=https://api.discogs.com/'+type+'/'+id
             )
         )
     

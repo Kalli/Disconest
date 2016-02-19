@@ -7,7 +7,7 @@ SongModel = Backbone.Model.extend({
             url += '&artist='+escape(artists)            
         else
             url += '&artist_id=discogs:artist:'+@id
-        url += '&title='+escape(@attributes.title)
+        url += '&title='+encodeURIComponent(@attributes.title)
         url += '&bucket=audio_summary&bucket=tracks&bucket=id:spotify-WW'
         return url
     })
@@ -45,4 +45,3 @@ SongView = Backbone.View.extend({
                     spotify = true
                 $('#tltable tbody tr').eq(@model.attributes.index).find('.link').append(link)
 })
-
