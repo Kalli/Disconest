@@ -15,7 +15,7 @@ SongModel = Backbone.Model.extend({
     } else {
       url += '&artist_id=discogs:artist:' + this.id;
     }
-    url += '&title=' + escape(this.attributes.title);
+    url += '&title=' + encodeURIComponent(this.attributes.title);
     url += '&bucket=audio_summary&bucket=tracks&bucket=id:spotify-WW';
     return url;
   }

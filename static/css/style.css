@@ -101,3 +101,30 @@ thead{
 .logo{
   padding: 15px;
 }
+
+.dropdown-menu{
+  display: block !important;
+}
+
+#info{
+  padding-top: 50px;
+}
+
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to { 
+    -webkit-transform: rotate(359deg);
+  }
+}
+.loading img{
+  -webkit-animation-name: rotate; 
+  -webkit-animation-duration: 1s; 
+  -webkit-animation-iteration-count: infinite;
+  -webkit-ANIMATION-timing-function: linear;
+}
+.loading{
+  display: none;
+}

@@ -16,6 +16,7 @@
     <script src="/bower_components/backbone/backbone.js" ></script>
     <script src="/js/release.js" ></script>
     <script src="/js/song.js" ></script>
+    <script src="/js/search.js" ></script>
     <script src="/js/disconest.js" ></script>
     <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.css" media="screen">
     <link rel="stylesheet" type="text/css" href="/css/style.css" media="screen">
@@ -38,27 +39,32 @@
         <div class="form-disconest">
           <img alt="Disconest" class="logo" title="Disconest" src="/img/disconest-1.png">
           <p>Find musical metadata for your records!<br>
-          Keys, bpm's and more.</p> 
-          <h4 class="form-signin-heading">Enter a <a target="_blank" href="http://www.discogs.com">Discogs</a> Release URL</h4>
-          <div id="error" class="alert alert-danger alert-dismissable fade in" style="display:none;">
-            <button type="button" class="close" aria-hidden="true">&times;</button>
-            <strong>Not a valid Discogs URL</strong>
-          </div>
-          <input id="discogsurl" type="text" class="form-control" placeholder="Discogs Release URL" required autofocus>
-          <button id="getmetadata" class="btn btn-lg btn-primary btn-block" type="submit">Get metadata!</button>
+          Keys, bpm's and more.</p>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3" id="searchform">
+            <div class="input-group">
+              <input type="text" class="form-control" id="searchbox" placeholder="Search term or Discogs URL...">
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="searchbutton" type="button">Go!</button>
+              </span>
+              <div id="results">
+              </div>
+            </div>
+          </div>
+        </div>
+    <div class="row loading ">
+      <img class="center-block" src="/img/rekid.png" alt="Loading..." />
+      <p class="text-center">Loading...</p>
+    </div>
     <div id="release" class="row">
     </div>
     <div id="info" class="row">      
       <p>
-        Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and <em>other data</em> for your records would be useful! Disconest uses the <a target="_blank" href="http://the.echonest.com/">The Echonest</a> and <a target="_blank" href="www.discogs.com/developers/">Discogs</a> apis to find this information about records and cds registered on Discogs. 
+        Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having <em>key</em> and <em>tempo</em> and data for your records at a glance would be useful! Disconest uses the <a target="_blank" href="http://the.echonest.com/">The Echonest</a> and <a target="_blank" href="www.discogs.com/developers/">Discogs</a> apis to find this information about records and cds registered on Discogs. 
       </p>  
       <p>  
-        Enter a Discogs url in the box above to try it out or drag this <span class="badge"><a href="javascript:(function(){var matches,regexp,url;url=document.URL;regexp=/(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/?(release|master)\/(\d+)/;matches=url.match(regexp);if(matches&&matches.length===3){open('http://www.disconest.com/?discogsurl='+url,'_blank','resizable,location,menubar,toolbar,scrollbars,status');}else{alert(&quot;This is not a valid Discogs url&quot;);}})();">Disconest!</a></span> bookmarklet to your bookmarks bar and click it when you are on a Discogs release page.
-      </p>
-      <p>
-        If you want to use Disconest to get this information for your entire <a target="_blank" href="http://www.discogs.com/users/export?w=collection">Discogs collection</a> you can use the <a target="_blank" href="http://www.github.com/kalli/disconest">command line version</a>.
+        Enter a search term or a Discogs url in the box above to try it out or drag this <span class="badge"><a href="javascript:(function(){var matches,regexp,url;url=document.URL;regexp=/(?:https?:\/\/)?(?:www.)?discogs.com\/.*?\/?(release|master)\/(\d+)/;matches=url.match(regexp);if(matches&&matches.length===3){open('http://www.disconest.com/?discogsurl='+url,'_blank','resizable,location,menubar,toolbar,scrollbars,status');}else{alert(&quot;This is not a valid Discogs url&quot;);}})();">Disconest!</a></span> bookmarklet to your bookmarks bar and click it when you are on a Discogs release page.
       </p>
       <p>
         Made by <a href="http://www.karltryggvason.com">Karl Tryggvason</a> (<a href="http://www.twitter.com/karltryggvason">@karltryggvason</a>) at <a href="http://www.london.musichackday.org/2013/">Music Hack Day London 2013</a>. Using: 
