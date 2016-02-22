@@ -50,10 +50,21 @@ td.center{
 thead{
   font-weight: bold;
 }
-.form-disconest {
+.form-disconest{
   max-width: 500px;
   padding: 15px;
   margin: 0 auto;
+}
+
+.about img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.caption{
+  text-align: center;
+  font-size: 14px;
 }
 
 .form-disconest .form-disconest-heading{
