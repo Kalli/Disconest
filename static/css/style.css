@@ -121,6 +121,13 @@ thead{
   padding-top: 50px;
 }
 
+.img{
+  margin-top: 20px;
+}
+
+.release h1{
+  font-size: 35px;
+}
 
 @-webkit-keyframes rotate {
   from {
