@@ -143,6 +143,6 @@ thead{
   -webkit-animation-iteration-count: infinite;
   -webkit-ANIMATION-timing-function: linear;
 }
-.loading, #printinfo{
+.loading, .error, #printinfo{
   display: none;
 }

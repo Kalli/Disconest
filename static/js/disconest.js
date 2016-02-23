@@ -43,6 +43,7 @@ $(document).ready(function() {
       return getMetaData(discogsparams);
     } else {
       $('#results').html("");
+      $(".error").hide();
       $(".loading").show();
       searchCollectionView.undelegateEvents();
       searchCollection = new SearchCollection({
@@ -51,11 +52,16 @@ $(document).ready(function() {
       return searchCollection.fetch({
         success: function() {
           $(".loading").hide();
+          $(".error").hide();
           searchCollectionView = new SearchCollectionView({
             collection: searchCollection,
             el: $('#results')
           });
           return searchCollectionView.render();
+        },
+        error: function() {
+          $('.loading').hide();
+          return $('.error').show();
         }
       });
     }
@@ -94,6 +100,7 @@ ValidateDiscogsUrl = function(url) {
 
 getMetaData = function(discogsparams) {
   var releaseModel, releaseparameters;
+  $(".error").hide();
   $(".loading").show();
   releaseparameters = {
     type: discogsparams.type,
@@ -117,6 +124,7 @@ getMetaData = function(discogsparams) {
       });
       releaseView.render();
       $(".loading").hide();
+      $(".error").hide();
       $('#release').show();
       _ref = releaseModel.attributes.tracklist;
       _results = [];
@@ -154,6 +162,10 @@ getMetaData = function(discogsparams) {
         }
       }
       return _results;
+    },
+    error: function() {
+      $('.loading').hide();
+      return $('.error').show();
     }
   });
 };

@@ -28,14 +28,19 @@ $(document).ready ->
             getMetaData(discogsparams)
         else
             $('#results').html("")
+            $(".error").hide()
             $(".loading").show()
             searchCollectionView.undelegateEvents()
             searchCollection = new SearchCollection({"query" : query})
             searchCollection.fetch(
                 success: () ->
                     $(".loading").hide()
+                    $(".error").hide()
                     searchCollectionView = new SearchCollectionView({collection:searchCollection, el: $('#results')})
                     searchCollectionView.render()
+                error: () -> 
+                    $('.loading').hide() 
+                    $('.error').show() 
                 )
 getParams = () ->
     query = window.location.search.substring(1)
@@ -61,6 +66,7 @@ ValidateDiscogsUrl = (url) ->
     return discogsparams
 
 getMetaData = (discogsparams) ->
+    $(".error").hide()
     $(".loading").show()
     releaseparameters = 
         type: discogsparams.type
@@ -78,6 +84,7 @@ getMetaData = (discogsparams) ->
             releaseView = new ReleaseView({model:releaseModel, el: $('body')})
             releaseView.render()
             $(".loading").hide()
+            $(".error").hide()
             $('#release').show()
             for track, index in releaseModel.attributes.tracklist
                 if track.artists[0].id != 194 #194 is the dreaded various
@@ -95,4 +102,7 @@ getMetaData = (discogsparams) ->
                 else 
                     html = '<td></td><td></td><td></td>'
                     $('#tltable tbody tr').eq(index).append(html)
+        error: () ->
+            $('.loading').hide() 
+            $('.error').show() 
     )
