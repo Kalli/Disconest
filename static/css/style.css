@@ -129,6 +129,28 @@ thead{
   font-size: 35px;
 }
 
+.dropdown{
+  position: static;
+}
+
+.dropdown-menu > li {
+  overflow: auto;
+}
+.dropdown-menu > li:hover{
+  background-color: #f5f5f5;
+}
+
+.dropdown-menu > li > a {
+  white-space: normal;
+  padding: 5px 10px;
+}
+
+.dropdown-menu > li > a > img{
+  display: inline-block;
+  float: left;
+  padding-right: 5px;
+}
+
 @-webkit-keyframes rotate {
   from {
     -webkit-transform: rotate(0deg);

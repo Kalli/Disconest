@@ -5,18 +5,22 @@ SearchResultModel = Backbone.Model.extend({});
 
 SearchResultView = Backbone.View.extend({
   tagName: "li",
+  attributes: {
+    tabindex: -1
+  },
   initialize: function() {
     return this.render();
   },
   render: function() {
     return this.$el.html(this.template(this.model.toJSON()));
   },
-  template: _.template("<img width=\"50\" height=\"50\" src=\"<%= thumb %>\" />\n<%= title %>"),
+  template: _.template("<a href=\"\">\n    <img width=\"50\" height=\"50\" src=\"<%= thumb %>\" />\n    <%= title %>\n</a>"),
   events: {
     "click": "release"
   },
-  release: function(a) {
+  release: function(e) {
     var parameters;
+    e.preventDefault();
     $('#release').hide();
     $('#results').hide(1000);
     parameters = {
@@ -50,26 +54,30 @@ SearchCollection = Backbone.Collection.extend({
 
 SearchCollectionView = Backbone.View.extend({
   events: {
-    "click .showmore": "showmore"
+    "click .showmore": "showmore",
+    "keydown .showmore": "showmore"
   },
-  showmore: function() {
+  showmore: function(e) {
     var hidden, index, release, _i, _len, _results;
-    hidden = $(".hidden");
-    _results = [];
-    for (index = _i = 0, _len = hidden.length; _i < _len; index = ++_i) {
-      release = hidden[index];
-      if (index < 10) {
-        $(release).show();
-        _results.push($(release).removeClass("hidden"));
-      } else {
-        _results.push(void 0);
+    e.preventDefault();
+    if (e.which === 13 || e.which === 1) {
+      hidden = $(".hidden");
+      _results = [];
+      for (index = _i = 0, _len = hidden.length; _i < _len; index = ++_i) {
+        release = hidden[index];
+        if (index < 10) {
+          $(release).show();
+          _results.push($(release).removeClass("hidden"));
+        } else {
+          _results.push(void 0);
+        }
       }
+      return _results;
     }
-    return _results;
   },
   tagName: 'div',
   id: 'results',
-  template: _.template("<ul id=\"searchCollection\" class=\"col-md-12 dropdown-menu \" aria-labelledby=\"searchform\">\n</ul>"),
+  template: _.template("<ul id=\"searchCollection\" class=\"col-md-12 dropdown-menu\" role=\"menu\" tabindex=\"1\" aria-labelledby=\"searchform\">\n</ul>"),
   render: function() {
     $('#' + this.id).html(this.template({}));
     this.collection.each((function(_this) {
@@ -85,7 +93,8 @@ SearchCollectionView = Backbone.View.extend({
       };
     })(this));
     if (this.collection.length > 4) {
-      this.$el.find("#searchCollection").append('<li><a class="showmore">Show more</a></li>');
+      this.$el.find("#searchCollection").append('<li class="divider"></li>');
+      this.$el.find("#searchCollection").append('<li><a class="showmore" href="">Show more</a></li>');
     }
     $('#' + this.id).show();
     return this;

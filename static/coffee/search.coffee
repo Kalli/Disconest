@@ -2,18 +2,23 @@
 SearchResultModel = Backbone.Model.extend({})
 SearchResultView = Backbone.View.extend({
     tagName: "li"
+    attributes:
+        tabindex: -1
     initialize: () ->
         @render()
     render: () ->
         this.$el.html(@template(this.model.toJSON()));
 
     template: _.template("""
-        <img width="50" height="50" src="<%= thumb %>" />
-        <%= title %>
+        <a href="">
+            <img width="50" height="50" src="<%= thumb %>" />
+            <%= title %>
+        </a>
     """)
     events:
         "click": "release"
-    release: (a) ->
+    release: (e) ->
+        e.preventDefault()
         $('#release').hide()
         $('#results').hide(1000)
         parameters = 
@@ -40,18 +45,21 @@ SearchCollection = Backbone.Collection.extend({
 SearchCollectionView = Backbone.View.extend({
     events:
         "click .showmore" : "showmore"
-
-    showmore: () ->
-        hidden = $(".hidden")
-        for release, index in hidden
-            if index < 10
-                $(release).show()
-                $(release).removeClass("hidden")
+        "keydown .showmore" : "showmore"
+>
+    showmore: (e) ->
+        e.preventDefault()
+        if e.which == 13 or e.which == 1
+            hidden = $(".hidden")
+            for release, index in hidden
+                if index < 10
+                    $(release).show()
+                    $(release).removeClass("hidden")
 
     tagName: 'div'
     id: 'results'
     template: _.template("""
-        <ul id="searchCollection" class="col-md-12 dropdown-menu " aria-labelledby="searchform">
+        <ul id="searchCollection" class="col-md-12 dropdown-menu" role="menu" tabindex="1" aria-labelledby="searchform">
         </ul>
     """)
     render: () ->
@@ -64,7 +72,8 @@ SearchCollectionView = Backbone.View.extend({
             @.$el.find("#searchCollection").append(searchResultView.$el);
         )
         if @collection.length > 4
-            @.$el.find("#searchCollection").append('<li><a class="showmore">Show more</a></li>')
+            @.$el.find("#searchCollection").append('<li class="divider"></li>')
+            @.$el.find("#searchCollection").append('<li><a class="showmore" href="">Show more</a></li>')
         $('#'+@id).show()
         return @
 })
