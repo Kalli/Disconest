@@ -46,7 +46,7 @@ SearchCollectionView = Backbone.View.extend({
     events:
         "click .showmore" : "showmore"
         "keydown .showmore" : "showmore"
->
+
     showmore: (e) ->
         e.preventDefault()
         if e.which == 13 or e.which == 1
