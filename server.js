@@ -28,24 +28,6 @@ app.get('/discogs', function(req,res) {
 	}
 });
 
-app.get('/pixogs', function(req,res) {
-	var discogsimg = url.parse(req.url, true).query["img"];
-	var urlending = discogsimg.substring(discogsimg.length-3);
-	var isimg = ["png", "jpg", "peg"].indexOf(urlending)!==-1;
-	if (discogsimg.indexOf("http://api.discogs.com/image/")===0 && isimg){
-		discogsimg = discogsimg.replace("api.discogs.com","s.pixogs.com");
-		var options = {
-			url: discogsimg,
-			headers: {
-				'User-Agent': 'Disconest/1.0 +http://www.disconest.com'
-			}
-		};
-		request(options).pipe(res);
-	}else{
-		res.send(404, 'Sorry cant find that!');
-	}
-});
-
 app.post('/scrobble', function(req,res) {
 	if(req.body.token){
 		var token = req.body.token;
