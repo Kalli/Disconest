@@ -39,9 +39,9 @@ SongView = Backbone.View.extend({
             spotify = false
             deezer = false
            for track in song.tracks
-                if track.catalog == "spotify-WW" and not spotify
-                    url = "http://open.spotify.com/track/"+track.foreign_id.split("spotify-WW:track:")[1]
-                    link = $('<a>').attr('href',url).attr('target', '_blank').addClass("sp").text("Spotify")
+                if track.catalog == "spotify" and not spotify
+                    url = "http://open.spotify.com/track/"+track.foreign_id.split("spotify:track:")[1]
+                    link = $('<a>').attr('href', url).attr('target', '_blank').addClass("sp").text("Spotify")
                     spotify = true
                 $('#tltable tbody tr').eq(@model.attributes.index).find('.link').append(link)
 })

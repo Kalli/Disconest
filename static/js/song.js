@@ -58,8 +58,8 @@ SongView = Backbone.View.extend({
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       track = _ref[_i];
-      if (track.catalog === "spotify-WW" && !spotify) {
-        url = "http://open.spotify.com/track/" + track.foreign_id.split("spotify-WW:track:")[1];
+      if (track.catalog === "spotify" && !spotify) {
+        url = "http://open.spotify.com/track/" + track.foreign_id.split("spotify:track:")[1];
         link = $('<a>').attr('href', url).attr('target', '_blank').addClass("sp").text("Spotify");
         spotify = true;
       }

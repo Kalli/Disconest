@@ -108,11 +108,12 @@ thead{
   background: transparent!important;
 }
 .link a{ 
-  height: 16px;
+  height: 100%;
   width: 16px;
   font-size: 0;
-  margin:5px;
+  margin:0 5px 0 5px;
   display: inline-block;
+  vertical-align: middle;
 }
 .link a.yt{
   background: url('/img/youtube.png') no-repeat 0 0;
