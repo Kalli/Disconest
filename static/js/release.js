@@ -25,7 +25,69 @@ ReleaseModel = Backbone.Model.extend({
         }
       }
     }
+    if (response.styles == null) {
+      response.styles = [];
+    }
+    if (response.genres == null) {
+      response.genres = [];
+    }
+    response.banner = _.sample([
+      {
+        link: "http://www.junodownload.com/plus/2010/06/11/10-best-dj-headphones/?ref=bbis",
+        img: "https://affiliate.juno.co.uk/accounts/default1/banners/b2189b79.gif",
+        alt: "10 Best: DJ Headphones 2013"
+      }, {
+        link: "http://www.junodownload.com/plus/2010/09/21/10-best-dj-mixers-2/?ref=bbis",
+        img: "https://affiliate.juno.co.uk/accounts/default1/banners/1d1ac0e1.gif",
+        alt: "10 Best: DJ Mixers"
+      }, {
+        link: "http://www.junodownload.com/plus/2011/05/03/10-best-audio-interfaces-for-home-studios/?ref=bbis",
+        img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif",
+        alt: "10 Best: Audio Interfaces"
+      }, {
+        link: "http://www.junodownload.com/plus/2011/05/03/10-best-audio-interfaces-for-home-studios/?ref=bbis",
+        img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif",
+        alt: "10 Best: Audio Interfaces"
+      }, {
+        link: "http://www.juno.co.uk/promotions/DJ_Equipment_Deals/?ref=bbis",
+        img: "https://affiliate.juno.co.uk/accounts/default1/banners/ef6086b3.gif",
+        alt: "DJ Equipment deals"
+      }
+    ]);
     return response;
+  },
+  createJunoLinks: function() {
+    var artist, artists, index, searchprefix, _i, _len, _ref;
+    searchprefix = "http://www.juno.co.uk/search/?q";
+    this.attributes.junolabellink = "";
+    if (this.attributes.labels) {
+      this.attributes.junolabellink = '<a target="_blank" href="';
+      this.attributes.junolabellink += searchprefix + "%5Blabel%5D%5B%5D=";
+      this.attributes.junolabellink += encodeURIComponent(this.attributes.labels[0].name) + '&ref=bbis">';
+      this.attributes.junolabellink += 'Releases on ' + this.attributes.labels[0].name + '</a>';
+    }
+    this.attributes.junoartistlink = "";
+    this.attributes.junolink = "";
+    if (this.attributes.artists) {
+      artists = "";
+      _ref = this.attributes.artists;
+      for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+        artist = _ref[index];
+        artists += artist.name;
+        if (index + 1 < this.attributes.artists.length) {
+          if (artist.join = ",") {
+            artists += ", ";
+          } else {
+            artists += " " + artist.join + " ";
+          }
+        }
+      }
+      this.attributes.junolink = searchprefix + "%5Bartist%5D%5B%5D=" + encodeURIComponent(artists) + '&ref=bbis';
+      this.attributes.junoartistlink = '<a target="_blank" href="';
+      this.attributes.junoartistlink += this.attributes.junolink;
+      this.attributes.junoartistlink += '">Releases by ' + artists;
+      return this.attributes.junoartistlink += '</a>';
+    }
   }
 });
 
@@ -102,7 +164,7 @@ ReleaseView = Backbone.View.extend({
   },
   tagName: 'div',
   id: 'release',
-  template: _.template("<div class=\"row\">\n  <div class=\"col-xs-2 img\">\n  <a target=\"_blank\" href=\"<%=uri%>\">\n  <% if (typeof(images) !== \"undefined\"){ %>   \n    <img src=\"<%=images[0][\"uri150\"]%>\">\n  <% }else{ %>\n    <img src=\"/img/rekid-150.png\">\n  <% }; %>\n  </a>\n  </div>\n  <div class=\"release col-xs-8\">\n    <h1><a target=\"_blank\" href=\"<%= uri %>\">\n        <% _.each(artists, function(artist, index){ %>\n            <%= artist.name %>\n            <% if (index+1 < artists.length){ %>   \n                <%= artist.join %>\n            <% } %>\n        <% }); %>\n        - <%= title%>\n    </a></h1>\n    <table class=\"table\">\n    <tr>\n      <td>\n      Genres &amp; styles:\n      </td>\n      <td>\n          <% _.each(styles, function(style) { %> \n              <span class=\"badge\"><%= style %></span>\n          <% }); %>\n          <% _.each(genres, function(genre) { %> \n              <span class=\"badge\"><%= genre %></span>\n          <% }); %>\n      </td>\n    </tr>\n    <tr>\n        <td>Year:</td><td><%= year %></td>\n    <tr>\n    <% if (typeof(labels) !== \"undefined\"){ %> \n        <tr>\n            <td>Cat. no / Label:</td>\n            <td>\n            <% _.each(labels, function(label) { %> \n                <%= label.catno %>  / <%= label.name %>\n            <% }); %>\n            </td>\n        </tr>\n    <% }; %>\n    </table>\n    <div class=\"social\">\n    <a id=\"print\" type=\"button\" class=\"btn btn-default\">\n        <span class=\"print icon-printer\"> </span>\n        Print one sheet\n    </a>\n    <a id=\"scrobble\" type=\"button\" class=\"btn btn-danger\">\n        <span class=\"scrobble icon-lastfm2\"> </span>\n        Scrobble to Last.fm\n    </a>\n    <a class=\"btn btn-info\" href=\"http://twitter.com/intent/tweet?hashtags=Disconest&url=http%3A//www.disconest.com/%3Fdiscogsurl%3Dhttp%253A//www.discogs.com/<%= type %>/<%= id %>\" target=\"_blank\">\n        <span class=\"icon-twitter2\"></span>\n        Tweet\n    </a>\n    <a class=\"btn btn-primary\" href=\"https://www.facebook.com/sharer/sharer.php?u=http://www.disconest.com/?discogsurl=http://www.discogs.com/<%= type %>/<%= id %>\" target=\"_blank\">\n        <span id=\"fb\" class=\"icon-facebook2\"> </span>\n        Share on Facebook\n    </a>\n    <div id=\"scrobbleerror\" class=\"alert alert-danger alert-dismissable fade in\" style=\"display:none;\">\n      <button type=\"button\" class=\"close\" aria-hidden=\"true\">&times;</button>\n      <strong>Error scrobbling. Sorry about that!</strong>\n    </div>\n    <div id=\"scrobblesuccess\" class=\"alert alert-success alert-dismissable fade in\" style=\"display:none;\">\n      <button type=\"button\" class=\"close\" aria-hidden=\"true\">&times;</button>\n      <strong>Success!</strong>\n    </div>\n    </div>\n  </div>\n</div>\n<div id=\"tracklist\" class=\"row\">\n    <h3>Tracklist</h3>\n    <table id=\"tltable\" class=\"table\">\n    <thead>\n    <% _.each([\"Position\", \"Duration\", \"Artist\", \"Title\", \"Links\"], function(heading) { %> \n        <td class=\"<%=heading %>\" ><%=heading %></td> \n    <% }); %>\n    <% _.each([\"Key\", \"TS\", \"BPM\"], function(heading) { %> \n        <td class=\"<%=heading %> center\"><%=heading %></td> \n    <% }); %>\n    </thead>\n    <tbody>\n    <% _.each(tracklist, function(track) { %> \n        <tr>\n            <td><%= track.position %></td>\n            <td class=\"duration\"><%= track.duration %></td>\n            <td>\n            <% if (track.artists) { %>\n                <% _.each(track.artists, function(artist, index){ %>\n                    <%= artist.name %> \n                    <% if (index+1 < track.artists.length) { %>\n                        <%= artist.join %>\n                    <% } %>\n                <% }); %>\n            <% } %>\n            </td>\n            <td ><%= track.title %> </td>\n            <td class=\"link\">\n                <% if (track.video) { %>\n                   <a href=\"<%= track.video %>\" target=\"_blank\" class=\"yt\">Youtube</a>\n                <% }; %>\n            </td>\n        </tr>\n    <% }); %>\n    </tbody>\n    </table>\n</div>"),
+  template: _.template("<div class=\"row\">\n  <div class=\"col-xs-2 img\">\n  <a target=\"_blank\" href=\"<%=uri%>\">\n  <% if (typeof(images) !== \"undefined\"){ %>   \n    <img src=\"<%=images[0][\"uri150\"]%>\">\n  <% }else{ %>\n    <img src=\"/img/rekid-150.png\">\n  <% }; %>\n  </a>\n  </div>\n  <div class=\"release col-xs-8\">\n    <h1><a target=\"_blank\" href=\"<%= uri %>\">\n        <% _.each(artists, function(artist, index){ %>\n            <%= artist.name %>\n            <% if (index+1 < artists.length){ %>   \n                <%= artist.join %>\n            <% } %>\n        <% }); %>\n        - <%= title%>\n    </a></h1>\n    <table class=\"table\">\n    <tr>\n      <td>\n      Genres &amp; styles:\n      </td>\n      <td>\n          <% _.each(styles, function(style) { %> \n              <span class=\"badge\"><%= style %></span>\n          <% }); %>\n          <% _.each(genres, function(genre) { %> \n              <span class=\"badge\"><%= genre %></span>\n          <% }); %>\n      </td>\n    </tr>\n    <tr>\n        <td>Year:</td><td><%= year %></td>\n    <tr>\n    <% if (typeof(labels) !== \"undefined\"){ %> \n        <tr>\n            <td>Cat. no / Label:</td>\n            <td>\n            <% _.each(labels, function(label) { %> \n                <%= label.catno %>  / <%= label.name %>\n            <% }); %>\n            </td>\n        </tr>\n    <% }; %>\n    </table>\n    </div>\n    <div class=\"social release col-xs-10\">\n    <a id=\"print\" type=\"button\" class=\"btn btn-default\">\n        <span class=\"print icon-printer\"> </span>\n        Print one sheet\n    </a>\n    <div class=\"btn-group\">\n        <a href=\"<%= junolink %>\" target=\"_blank\" class=\"btn juno\">\n            <span class=\"icon-radio-checked2\"></span>\n            Buy records on Juno\n        </a>\n        <button type=\"button\" class=\"btn juno dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n            <span class=\"caret\"></span>\n            <span class=\"sr-only\">Toggle Dropdown</span>\n        </button>\n        <ul class=\"dropdown-menu\">\n            <% if (junoartistlink !== \"\"){ %> \n                <li>\n                    <%= junoartistlink %>\n                </li>\n            <% }; %>\n            <% if (junolabellink !== \"\"){ %> \n                <li>\n                    <%= junolabellink %>\n                </li>\n            <% }; %>\n        </ul>\n    </div>\n    <a id=\"scrobble\" type=\"button\" class=\"btn btn-danger\">\n        <span class=\"scrobble icon-lastfm2\"> </span>\n        Scrobble to Last.fm\n    </a>\n    <a class=\"btn btn-info\" href=\"http://twitter.com/intent/tweet?hashtags=Disconest&url=http%3A//www.disconest.com/%3Fdiscogsurl%3Dhttp%253A//www.discogs.com/<%= type %>/<%= id %>\" target=\"_blank\">\n        <span class=\"icon-twitter2\"></span>\n        Tweet\n    </a>\n    <a class=\"btn btn-primary\" href=\"https://www.facebook.com/sharer/sharer.php?u=http://www.disconest.com/?discogsurl=http://www.discogs.com/<%= type %>/<%= id %>\" target=\"_blank\">\n        <span id=\"fb\" class=\"icon-facebook2\"> </span>\n        Share on Facebook\n    </a>\n    <div id=\"scrobbleerror\" class=\"alert alert-danger alert-dismissable fade in\" style=\"display:none;\">\n      <button type=\"button\" class=\"close\" aria-hidden=\"true\">&times;</button>\n      <strong>Error scrobbling. Sorry about that!</strong>\n    </div>\n    <div id=\"scrobblesuccess\" class=\"alert alert-success alert-dismissable fade in\" style=\"display:none;\">\n      <button type=\"button\" class=\"close\" aria-hidden=\"true\">&times;</button>\n      <strong>Success!</strong>\n    </div>\n    </div>\n  </div>\n</div>\n<div id=\"tracklist\" class=\"row\">\n    <h3>Tracklist</h3>\n    <table id=\"tltable\" class=\"table\">\n    <thead>\n    <% _.each([\"Position\", \"Duration\", \"Artist\", \"Title\", \"Links\"], function(heading) { %> \n        <td class=\"<%=heading %>\" ><%=heading %></td> \n    <% }); %>\n    <% _.each([\"Key\", \"TS\", \"BPM\"], function(heading) { %> \n        <td class=\"<%=heading %> center\"><%=heading %></td> \n    <% }); %>\n    </thead>\n    <tbody>\n    <% _.each(tracklist, function(track) { %> \n        <tr>\n            <td><%= track.position %></td>\n            <td class=\"duration\"><%= track.duration %></td>\n            <td>\n            <% if (track.artists) { %>\n                <% _.each(track.artists, function(artist, index){ %>\n                    <%= artist.name %> \n                    <% if (index+1 < track.artists.length) { %>\n                        <%= artist.join %>\n                    <% } %>\n                <% }); %>\n            <% } %>\n            </td>\n            <td ><%= track.title %> </td>\n            <td class=\"link\">\n                <% if (track.video) { %>\n                   <a href=\"<%= track.video %>\" target=\"_blank\" class=\"yt\">Youtube</a>\n                <% }; %>\n            </td>\n        </tr>\n    <% }); %>\n    </tbody>\n    </table>\n</div>\n<div class=\"row banner\">\n    <div class=\"text-center\" >\n        <a href=\"<%= banner.link %>\" target=\"_blank\">\n            <img src=\"<%= banner.img %>\" alt=\"<%= banner.alt %>\" title=\"<%= banner.alt %>\" width=\"234\" height=\"60\" />\n        </a>\n    </div>\n  </div>\n</div>"),
   render: function() {
     this.addVideoLinks();
     $('#' + this.id).html(this.template(this.model.toJSON()));

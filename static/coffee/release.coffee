@@ -12,7 +12,57 @@ ReleaseModel = Backbone.Model.extend({
             else
                 for artist in track.artists
                     artist.name = artist.name.replace(/\s\(\d+\)/,"")
+        response.styles = [] if not response.styles?
+        response.genres = [] if not response.genres?
+        response.banner = _.sample([
+            {
+                link: "http://www.junodownload.com/plus/2010/06/11/10-best-dj-headphones/?ref=bbis"
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/b2189b79.gif" 
+                alt: "10 Best: DJ Headphones 2013" 
+            },{
+                link: "http://www.junodownload.com/plus/2010/09/21/10-best-dj-mixers-2/?ref=bbis"
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/1d1ac0e1.gif" 
+                alt: "10 Best: DJ Mixers" 
+            },{
+                link: "http://www.junodownload.com/plus/2011/05/03/10-best-audio-interfaces-for-home-studios/?ref=bbis"
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif" 
+                alt: "10 Best: Audio Interfaces" 
+            },{
+                link: "http://www.junodownload.com/plus/2011/05/03/10-best-audio-interfaces-for-home-studios/?ref=bbis"
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif" 
+                alt: "10 Best: Audio Interfaces" 
+            },{
+                link: "http://www.juno.co.uk/promotions/DJ_Equipment_Deals/?ref=bbis"
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/ef6086b3.gif" 
+                alt: "DJ Equipment deals"
+            }
+        ])
         return response
+
+    createJunoLinks: () ->
+        searchprefix = "http://www.juno.co.uk/search/?q"
+        @attributes.junolabellink = ""
+        if @attributes.labels
+            @attributes.junolabellink = '<a target="_blank" href="'
+            @attributes.junolabellink += searchprefix+"%5Blabel%5D%5B%5D="
+            @attributes.junolabellink += encodeURIComponent(@attributes.labels[0].name)+'&ref=bbis">'
+            @attributes.junolabellink += 'Releases on '+@attributes.labels[0].name+'</a>'
+        @attributes.junoartistlink = ""
+        @attributes.junolink = ""
+        if @attributes.artists
+            artists = ""
+            for artist, index in @attributes.artists
+                artists += artist.name
+                if index+1 < @attributes.artists.length
+                    if artist.join = ","
+                        artists += ", "
+                    else
+                        artists += " "+artist.join+" "
+            @attributes.junolink = searchprefix+"%5Bartist%5D%5B%5D="+encodeURIComponent(artists)+'&ref=bbis'
+            @attributes.junoartistlink = '<a target="_blank" href="'
+            @attributes.junoartistlink += @attributes.junolink 
+            @attributes.junoartistlink += '">Releases by '+ artists 
+            @attributes.junoartistlink += '</a>'
 })
 
 ReleaseView = Backbone.View.extend({
@@ -119,11 +169,34 @@ ReleaseView = Backbone.View.extend({
                 </tr>
             <% }; %>
             </table>
-            <div class="social">
+            </div>
+            <div class="social release col-xs-10">
             <a id="print" type="button" class="btn btn-default">
                 <span class="print icon-printer"> </span>
                 Print one sheet
             </a>
+            <div class="btn-group">
+                <a href="<%= junolink %>" target="_blank" class="btn juno">
+                    <span class="icon-radio-checked2"></span>
+                    Buy records on Juno
+                </a>
+                <button type="button" class="btn juno dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <% if (junoartistlink !== ""){ %> 
+                        <li>
+                            <%= junoartistlink %>
+                        </li>
+                    <% }; %>
+                    <% if (junolabellink !== ""){ %> 
+                        <li>
+                            <%= junolabellink %>
+                        </li>
+                    <% }; %>
+                </ul>
+            </div>
             <a id="scrobble" type="button" class="btn btn-danger">
                 <span class="scrobble icon-lastfm2"> </span>
                 Scrobble to Last.fm
@@ -184,6 +257,14 @@ ReleaseView = Backbone.View.extend({
             </tbody>
             </table>
         </div>
+        <div class="row banner">
+            <div class="text-center" >
+                <a href="<%= banner.link %>" target="_blank">
+                    <img src="<%= banner.img %>" alt="<%= banner.alt %>" title="<%= banner.alt %>" width="234" height="60" />
+                </a>
+            </div>
+          </div>
+        </div>
         """)
     render: () ->
         @addVideoLinks()
@@ -196,4 +277,4 @@ ReleaseView = Backbone.View.extend({
           for track, index in @model.attributes.tracklist
             if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1 && !track.video
                 track.video = video.uri
-    })
+})

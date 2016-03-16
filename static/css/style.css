@@ -25,9 +25,29 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.banner{
+  padding-top: 20px;
+}
+
 .icon-printer:before {
   content: "\e600";
 }
+
+.juno{
+  color: #ffffff!important;
+  background-color: #1776a3;
+  border-color: #1776a3;
+}
+
+.juno:hover{
+  color: #ffffff!important;
+  background-color: #136286;
+}
+
+.icon-radio-checked2:before {
+    content: "\e900";
+}
+
 .icon-facebook2:before {
   content: "\e601";
 }
@@ -113,7 +133,7 @@ thead{
   padding: 15px;
 }
 
-.dropdown-menu{
+#results .dropdown-menu{
   display: block !important;
 }
 

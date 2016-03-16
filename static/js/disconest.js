@@ -118,6 +118,7 @@ getMetaData = function(discogsparams) {
       discogsurl = "https://www.discogs.com/" + releaseModel.attributes.type.slice(0, -1) + "/" + releaseModel.id;
       window.history.pushState(null, title, location.protocol + "//" + location.host + "/?discogsurl=" + discogsurl);
       document.title = title;
+      releaseModel.createJunoLinks();
       releaseView = new ReleaseView({
         model: releaseModel,
         el: $('body')
