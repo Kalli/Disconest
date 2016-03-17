@@ -67,7 +67,7 @@ ReleaseModel = Backbone.Model.extend({
 
 ReleaseView = Backbone.View.extend({
     events:
-        "click #scrobble": "scrobble"
+        # "click #scrobble": "scrobble"
         "click #print": "print"
     print : () ->
         window.print()
@@ -197,10 +197,13 @@ ReleaseView = Backbone.View.extend({
                     <% }; %>
                 </ul>
             </div>
+            <!--
+            Scrobbling disable while last.fm api is buggy
             <a id="scrobble" type="button" class="btn btn-danger">
-                <span class="scrobble icon-lastfm2"> </span>
-                Scrobble to Last.fm
+                  <span class="scrobble icon-lastfm2"> </span>
+                 Scrobble to Last.fm
             </a>
+            -->
             <a class="btn btn-info" href="http://twitter.com/intent/tweet?hashtags=Disconest&url=http%3A//www.disconest.com/%3Fdiscogsurl%3Dhttp%253A//www.discogs.com/<%= type %>/<%= id %>" target="_blank">
                 <span class="icon-twitter2"></span>
                 Tweet
