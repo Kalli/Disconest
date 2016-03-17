@@ -58,3 +58,5 @@ node_modules
 # compiled templates
 js/templates/template.js
 credentials.sh
+### we drink coffee ###
+static/js

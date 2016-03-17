@@ -10,6 +10,20 @@ module.exports = function(grunt) {
                 ]
             }
         },
+        coffee: {
+            options: {
+                bare: true
+            },
+            compile: {
+              files: {
+                'static/js/disconest.js': 'static/coffee/disconest.coffee',
+                'static/js/release.js': 'static/coffee/release.coffee',
+                'static/js/search.js': 'static/coffee/search.coffee',
+                'static/js/song.js': 'static/coffee/song.coffee',
+                'static/js/test.js': 'static/coffee/test.coffee',
+              }
+            }
+        },
         // concatinate the js files
         concat: {
             js: {
@@ -50,15 +64,26 @@ module.exports = function(grunt) {
                 }
             }
         },
+        watch:{
+          options:{
+            atBegin: true
+          },
+          coffee: {
+            files: "static/coffee/**.coffee",
+            tasks: ['coffee'],
+          }
+        },
     });
 
     // Load the plugins
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-processhtml');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task(s).
-    grunt.registerTask('default', ['copy', 'concat', 'uglify', 'processhtml']);
-    grunt.registerTask('build', ['copy', 'concat', 'uglify', 'processhtml']);
+    grunt.registerTask('default', ['copy', 'coffee', 'concat', 'uglify', 'processhtml']);
+    grunt.registerTask('build', ['copy', 'coffee', 'concat', 'uglify', 'processhtml']);
 };
