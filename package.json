@@ -8,11 +8,18 @@
   },
   "dependencies": {
     "express": "~3.4.6",
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-concat": "1.0.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-uglify": "1.0.1",
+    "grunt-processhtml": "0.3.13",
     "request": "~2.29.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "grunt build",
     "start": "node server.js"
   },
   "repository": "http://www.github.com/kalli/disconest",

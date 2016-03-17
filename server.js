@@ -6,7 +6,11 @@ var LastFmNode = require('lastfm').LastFmNode;
 url = require('url');
 app = express();
 
-app.use(express.static(__dirname + '/static'));
+if (process.env.NODE_ENV && process.env.NODE_ENV == "production"){
+	app.use(express.static(__dirname + '/build'));
+}else{
+	app.use(express.static(__dirname + '/static'));
+}
 app.use(express.bodyParser());
 
 app.get('/discogs', function(req,res) {
@@ -41,7 +45,7 @@ app.post('/scrobble', function(req,res) {
 			handlers: {
 				success: function(session) {
 					for (var i = 0; i<tracks.length; i++){
-						lastfm.update('scrobble', session, tracks[i]);			
+						lastfm.update('scrobble', session, tracks[i]);
 					}
                     res.json({"user": session.user, "tracks": tracks.length});
 				},
