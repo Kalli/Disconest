@@ -24,6 +24,19 @@ module.exports = function(grunt) {
               }
             }
         },
+        // compile backbone templates to js
+        jst: {
+            options: {
+                processName: function(filePath) {
+                    return filePath.split("/").pop();
+                }
+            },
+            compile: {
+                files: {
+                    "static/js/templates.js": ["static/templates/releaseTemplate.html"]
+                }
+            }
+        },
         // concatinate the js files
         concat: {
             js: {
@@ -33,6 +46,7 @@ module.exports = function(grunt) {
                     "static/bower_components/bootstrap/js/dropdown.js",
                     "static/bower_components/underscore/underscore.js",
                     "static/bower_components/backbone/backbone.js",
+                    "static/js/templates.js",
                     "static/js/release.js",
                     "static/js/song.js",
                     "static/js/search.js",
@@ -71,12 +85,17 @@ module.exports = function(grunt) {
           coffee: {
             files: "static/coffee/**.coffee",
             tasks: ['coffee'],
+          },
+          jst : {
+            files: "static/templates/*.html",
+            tasks: ['jst'],
           }
         },
     });
 
     // Load the plugins
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -84,6 +103,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task(s).
-    grunt.registerTask('default', ['copy', 'coffee', 'concat', 'uglify', 'processhtml']);
-    grunt.registerTask('build', ['copy', 'coffee', 'concat', 'uglify', 'processhtml']);
+    grunt.registerTask('default', ['copy', 'coffee', 'jst', 'concat', 'uglify', 'processhtml']);
+    grunt.registerTask('build', ['copy', 'coffee', 'jst', 'concat', 'uglify', 'processhtml']);
 };
