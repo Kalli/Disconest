@@ -192,8 +192,27 @@ thead{
 }
 
 @media(max-width:767px){
+  body{
+    padding-top: 10px;
+  }
   .jumbotron{
-    padding: 10px;
-    font-size: 14px;
+    padding: 0 10px 0 10px;
+    font-size: 13px;
+  }
+
+  .artwork{
+    padding:10px;
+  }
+
+  .tw, .fb{
+    display:none;
+  }
+
+  .social *{
+    padding-top: 10px;
+  }
+
+  #tracklist{
+    margin:0;
   }
 }
