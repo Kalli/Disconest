@@ -62,6 +62,7 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   background-color: #eee;
+  /*todo add creampaper*/
   background-image: url("http://www.karltryggvason.com/img/background/creampaper.png");
 }
 td.center{
@@ -188,4 +189,11 @@ thead{
 }
 .loading, .error, #printinfo{
   display: none;
+}
+
+@media(max-width:767px){
+  .jumbotron{
+    padding: 10px;
+    font-size: 14px;
+  }
 }
