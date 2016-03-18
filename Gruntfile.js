@@ -54,13 +54,6 @@ module.exports = function(grunt) {
                     "static/js/disconest.js"
                     ],
                 dest: 'build/main.js'
-            },
-            css:{
-                src: [
-                    "static/bower_components/bootstrap/dist/css/bootstrap.css",
-                    "static/css/style.css"
-                ],
-                dest: "build/style.css"
             }
         },
         // compress and uglify js files:
@@ -70,6 +63,13 @@ module.exports = function(grunt) {
                     'build/main.min.js': ['build/main.js']
                 }
             }
+        },
+        cssmin: {
+          target: {
+            files: {
+              'build/style.css': ["static/bower_components/bootstrap/dist/css/bootstrap.css", "static/css/style.css"]
+            }
+          }
         },
         // process the html file, change from individual js files to the concated and minified one 
         processhtml:{
@@ -101,10 +101,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task(s).
-    grunt.registerTask('default', ['copy', 'coffee', 'jst', 'concat', 'uglify', 'processhtml']);
-    grunt.registerTask('build', ['copy', 'coffee', 'jst', 'concat', 'uglify', 'processhtml']);
+    grunt.registerTask('default', ['copy', 'coffee', 'jst', 'concat', 'uglify', 'cssmin', 'processhtml']);
+    grunt.registerTask('build', ['copy', 'coffee', 'jst', 'concat', 'uglify', 'cssmin', 'processhtml']);
 };
