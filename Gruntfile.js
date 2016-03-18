@@ -6,7 +6,8 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     {cwd: 'static/img', src: '**/*', dest: 'build/img', expand: true},
-                    {cwd: 'static/css/fonts', src: '**/*', dest: 'build/fonts', expand: true}
+                    {cwd: 'static/css/fonts', src: '**/*', dest: 'build/fonts', expand: true},
+                    {cwd: 'static/css/', src: 'print.css', dest: 'build/css', expand: true}
                 ]
             }
         },
@@ -74,7 +75,8 @@ module.exports = function(grunt) {
         processhtml:{
             dist: {
                 files: {
-                    'build/index.html': ['static/index.html']
+                    'build/index.html': ['static/index.html'],
+                    'build/about/index.html': ['static/about/index.html'],
                 }
             }
         },
