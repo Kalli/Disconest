@@ -102,40 +102,42 @@
 </div>
 <div id="tracklist" class="row">
     <h3>Tracklist</h3>
-    <table id="tltable" class="table">
-    <thead>
-    <% _.each(["Position", "Duration", "Artist", "Title", "Links"], function(heading) { %> 
-        <td class="<%=heading %>" ><%=heading %></td> 
-    <% }); %>
-    <% _.each(["Key", "TS", "BPM"], function(heading) { %> 
-        <td class="<%=heading %> center"><%=heading %></td> 
-    <% }); %>
-    </thead>
-    <tbody>
-    <% _.each(tracklist, function(track) { %> 
-        <tr>
-            <td><%= track.position %></td>
-            <td class="duration"><%= track.duration %></td>
-            <td>
-            <% if (track.artists) { %>
-                <% _.each(track.artists, function(artist, index){ %>
-                    <%= artist.name %> 
-                    <% if (index+1 < track.artists.length) { %>
-                        <%= artist.join %>
-                    <% } %>
-                <% }); %>
-            <% } %>
-            </td>
-            <td ><%= track.title %> </td>
-            <td class="link">
-                <% if (track.video) { %>
-                   <a href="<%= track.video %>" target="_blank" class="yt">Youtube</a>
-                <% }; %>
-            </td>
-        </tr>
-    <% }); %>
-    </tbody>
-    </table>
+    <div class="table-responsive">
+        <table id="tltable" class="table">
+        <thead>
+        <% _.each(["Position", "Duration", "Artist", "Title", "Links"], function(heading) { %> 
+            <td class="<%=heading %>" ><%=heading %></td> 
+        <% }); %>
+        <% _.each(["Key", "TS", "BPM"], function(heading) { %> 
+            <td class="<%=heading %> center"><%=heading %></td> 
+        <% }); %>
+        </thead>
+        <tbody>
+        <% _.each(tracklist, function(track) { %> 
+            <tr>
+                <td><%= track.position %></td>
+                <td class="duration"><%= track.duration %></td>
+                <td>
+                <% if (track.artists) { %>
+                    <% _.each(track.artists, function(artist, index){ %>
+                        <%= artist.name %> 
+                        <% if (index+1 < track.artists.length) { %>
+                            <%= artist.join %>
+                        <% } %>
+                    <% }); %>
+                <% } %>
+                </td>
+                <td ><%= track.title %> </td>
+                <td class="link">
+                    <% if (track.video) { %>
+                       <a href="<%= track.video %>" target="_blank" class="yt">Youtube</a>
+                    <% }; %>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+        </table>
+    </div>
 </div>
 <div class="row banner">
     <div class="text-center" >
