@@ -63,7 +63,7 @@ body {
   padding-bottom: 40px;
   background-color: #eee;
   /*todo add creampaper*/
-  background-image: url("http://www.karltryggvason.com/img/background/creampaper.png");
+  background-image: url("/img/background/creampaper.png");
 }
 td.center{
   text-align: center;
@@ -108,22 +108,19 @@ thead{
 .jumbotron{
   background: transparent!important;
 }
-.link a{ 
-  height: 100%;
-  width: 16px;
-  font-size: 0;
-  margin:0 5px 0 5px;
+.link a{
   display: inline-block;
+  color: transparent;
+  width: 16px;
+  height: 16px;
   vertical-align: middle;
+  margin-right: 5px;
 }
 .link a.yt{
   background: url('/img/youtube.png') no-repeat 0 0;
 }
 .link a.sp{
   background: url('/img/spotify.png') no-repeat 0 0;
-}
-.link a.scrobble{
-  background: url('/img/lastfm.png') no-repeat 0 0;
 }
 .form-disconest{
   text-align: center;

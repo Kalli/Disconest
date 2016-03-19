@@ -37,7 +37,6 @@ SongView = Backbone.View.extend({
         # add streaming links if present
         if song.tracks
             spotify = false
-            deezer = false
            for track in song.tracks
                 if track.catalog == "spotify" and not spotify
                     url = "http://open.spotify.com/track/"+track.foreign_id.split("spotify:track:")[1]
