@@ -108,8 +108,8 @@
         <% _.each(["Position", "Duration", "Artist", "Title", "Links"], function(heading) { %> 
             <td class="<%=heading %>" ><%=heading %></td> 
         <% }); %>
-        <% _.each(["Key", "TS", "BPM"], function(heading) { %> 
-            <td class="<%=heading %> center"><%=heading %></td> 
+        <% _.each([["Key", "Key/Scale"], ["TS", "Time Signature"], ["BPM", "Tempo in beats per minute"]], function(heading) { %> 
+            <td class="<%=heading[0] %> center" title="<%= heading[1] %>"><%= heading[0] %></td> 
         <% }); %>
         </thead>
         <tbody>
