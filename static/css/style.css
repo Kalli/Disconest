@@ -63,7 +63,7 @@ body {
   padding-bottom: 40px;
   background-color: #eee;
   /*todo add creampaper*/
-  background-image: url("/img/background/creampaper.png");
+  background-image: url("/img/creampaper.png");
 }
 td.center{
   text-align: center;
