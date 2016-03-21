@@ -187,7 +187,9 @@ thead{
 .loading, .error, #printinfo{
   display: none;
 }
-
+.artwork img{
+  margin-top:20px;
+}
 @media(max-width:767px){
   body{
     padding-top: 10px;
