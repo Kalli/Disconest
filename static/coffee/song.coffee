@@ -1,7 +1,7 @@
 # Backbone model and view for a track on a release, fetches Echonest information for the track
 SongModel = Backbone.Model.extend({
     url: () ->
-        url = 'http://developer.echonest.com/api/v4/song/search?api_key=BB7QVYHAMYUOT4ESL&format=json&results=1'
+        url = 'http://developer.echonest.com/api/v4/song/search?api_key=HRRVBG3RPX0SXHSP2&format=json&results=1'
         if @attributes.artists and @attributes.artists.length > 1
             artists = artist.name+artist.join for artist in @attributes.artists
             url += '&artist='+escape(artists)            
