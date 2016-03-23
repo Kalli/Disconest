@@ -1,3 +1,4 @@
+require ('newrelic');
 express = require('express');
 request = require('request');
 var LastFmNode = require('lastfm').LastFmNode;
