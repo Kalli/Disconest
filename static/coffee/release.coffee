@@ -4,14 +4,13 @@ ReleaseModel = Backbone.Model.extend({
         "/discogs?url=https://api.discogs.com/"+@attributes.type+"/"+@id
 
     parse: (response) ->
-        for artist in response.artists
-            artist.name = artist.name.replace(/\s\(\d+\)/,"")
+        response.artistDisplayName = @createArtistDisplayName(response.artists)
         for track in response.tracklist
             if !track.artists
                 track.artists = response.artists
+                track.artistDisplayName = response.artistDisplayName
             else
-                for artist in track.artists
-                    artist.name = artist.name.replace(/\s\(\d+\)/,"")
+                track.artistDisplayName = @createArtistDisplayName(track.artists)
         response.styles = [] if not response.styles?
         response.genres = [] if not response.genres?
         response.banner = _.sample([
@@ -39,6 +38,21 @@ ReleaseModel = Backbone.Model.extend({
         ])
         return response
 
+    createArtistDisplayName: (artists) ->
+        artistDisplayName = ""
+        for artist, index in artists
+            artist.name = artist.name.replace(/\s\(\d+\)/,"")
+            if artist.anv
+                artistDisplayName += artist.anv
+            else
+                artistDisplayName += artist.name
+            if index+1 < artists.length
+                if artist.join == ","
+                    artistDisplayName += ", "
+                else
+                    artistDisplayName += " "+artist.join+" "
+        return artistDisplayName
+
     createJunoLinks: () ->
         searchprefix = "http://www.juno.co.uk/search/?q"
         @attributes.junolabellink = ""
@@ -50,18 +64,10 @@ ReleaseModel = Backbone.Model.extend({
         @attributes.junoartistlink = ""
         @attributes.junolink = ""
         if @attributes.artists
-            artists = ""
-            for artist, index in @attributes.artists
-                artists += artist.name
-                if index+1 < @attributes.artists.length
-                    if artist.join = ","
-                        artists += ", "
-                    else
-                        artists += " "+artist.join+" "
-            @attributes.junolink = searchprefix+"%5Bartist%5D%5B%5D="+encodeURIComponent(artists)+'&ref=bbis'
+            @attributes.junolink = searchprefix+"%5Bartist%5D%5B%5D="+encodeURIComponent(@attributes.artistDisplayName)+'&ref=bbis'
             @attributes.junoartistlink = '<a target="_blank" href="'
             @attributes.junoartistlink += @attributes.junolink 
-            @attributes.junoartistlink += '">Releases by '+ artists 
+            @attributes.junoartistlink += '">Releases by '+ @attributes.artistDisplayName 
             @attributes.junoartistlink += '</a>'
 })
 
