@@ -3,7 +3,6 @@ express = require('express');
 request = require('request');
 var LastFmNode = require('lastfm').LastFmNode;
 
-
 url = require('url');
 app = express();
 
@@ -48,7 +47,7 @@ app.post('/scrobble', function(req,res) {
 					for (var i = 0; i<tracks.length; i++){
 						lastfm.update('scrobble', session, tracks[i]);
 					}
-                    res.json({"user": session.user, "tracks": tracks.length});
+					res.json({"user": session.user, "tracks": tracks.length});
 				},
 				error: function(response){
 					res.send(503, '');
@@ -57,6 +56,60 @@ app.post('/scrobble', function(req,res) {
 		});
 	}else{
 		res.send(400, 'No token provided');
+	}
+});
+
+// Spotify auth
+var SPOTIFY_ID = process.env.SPOTIFY_ID;
+var SPOTIFY_SECRET = process.env.SPOTIFY_SECRET;
+var token = "";
+refreshToken(null, null, null);
+function refreshToken(callback, trackId, res){
+	var authOptions = {
+		url: 'https://accounts.spotify.com/api/token',
+		headers: {
+			'Authorization': 'Basic ' + (new Buffer(SPOTIFY_ID + ':' + SPOTIFY_SECRET).toString('base64'))
+		},
+		form: {
+			grant_type: 'client_credentials'
+		},
+		json: true
+	};
+	request.post(authOptions, function(error, response, body) {
+		if (!error && response.statusCode === 200) {
+			// use the access token to access the Spotify Web API
+			token = body.access_token;
+			if (callback){
+				callback(trackId, res);
+			}
+		}
+	});
+}
+
+function getAudioSummary(trackId, res){
+	var options = {
+		url: 'https://api.spotify.com/v1/audio-features/'+trackId,
+		headers: {
+			'Authorization': 'Bearer ' + token
+		},
+		json: true
+	};
+	var r = request(options);
+	r.on('response', function(response){
+		if (response.statusCode == 401) {
+			refreshToken(getAudioSummary, trackId, res);
+		}else{
+			r.pipe(res);
+		}
+	});
+}
+
+app.get('/spotify', function(req, res) {
+	var id = url.parse(req.url, true).query["id"];
+	if (id){
+		getAudioSummary(id, res);
+	}else{
+		res.send(404, 'Sorry cant find that!');
 	}
 });
 
