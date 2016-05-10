@@ -20,7 +20,6 @@ module.exports = function(grunt) {
                 'static/js/disconest.js': 'static/coffee/disconest.coffee',
                 'static/js/release.js': 'static/coffee/release.coffee',
                 'static/js/search.js': 'static/coffee/search.coffee',
-                'static/js/song.js': 'static/coffee/song.coffee',
                 'static/js/test.js': 'static/coffee/test.coffee',
               }
             }
@@ -49,7 +48,6 @@ module.exports = function(grunt) {
                     "static/bower_components/backbone/backbone.js",
                     "static/js/templates.js",
                     "static/js/release.js",
-                    "static/js/song.js",
                     "static/js/search.js",
                     "static/js/disconest.js"
                     ],

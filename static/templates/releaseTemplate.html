@@ -108,19 +108,39 @@
         </thead>
         <tbody>
         <% _.each(tracklist, function(track) { %> 
-            <tr>
-                <td><%= track.position %></td>
-                <td class="duration"><%= track.duration %></td>
-                <td>
-                  <%= track.artistDisplayName %> 
+          <tr>
+              <td><%= track.position.toUpperCase() %></td>
+              <td class="duration"><%= track.duration %></td>
+              <td>
+                <%= track.artistDisplayName %> 
+              </td>
+              <td ><%= track.title %> </td>
+              <td class="link">
+                  <% if (track.video) { %>
+                     <a href="<%= track.video %>" target="_blank" class="yt">Youtube</a>
+                  <% }; %>
+                  <% if (track.spotifyId) { %>
+                    <a href="https://open.spotify.com/track/<%= track.spotifyId %>" target="_blank" class="sp">
+                      Spotify
+                    </a>
+                  <% }; %>
+              </td>
+              <% if (track.spotifyId) { %>
+                <td class="center">
+                    <% print(keys[track.key] + " " + mode[track.mode] );%>
                 </td>
-                <td ><%= track.title %> </td>
-                <td class="link">
-                    <% if (track.video) { %>
-                       <a href="<%= track.video %>" target="_blank" class="yt">Youtube</a>
-                    <% }; %>
+                <td class="center">
+                  <%= track.time_signature %>
                 </td>
-            </tr>
+                <td class="center">
+                  <%= track.tempo %>
+                </td>
+              <% } else {%>
+                <td colspan="3" class="no-data center">
+                  Sorry - No metadata found!
+                </td>
+              <% }; %>
+          </tr>
         <% }); %>
         </tbody>
         </table>
