@@ -64,7 +64,8 @@ var SPOTIFY_ID = process.env.SPOTIFY_ID;
 var SPOTIFY_SECRET = process.env.SPOTIFY_SECRET;
 var token = "";
 refreshToken(null, null, null);
-function refreshToken(callback, trackId, res){
+
+function refreshToken(callback, ids, res){
 	var authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
 		headers: {
@@ -80,15 +81,15 @@ function refreshToken(callback, trackId, res){
 			// use the access token to access the Spotify Web API
 			token = body.access_token;
 			if (callback){
-				callback(trackId, res);
+				callback(ids, res);
 			}
 		}
 	});
 }
 
-function getAudioSummary(trackId, res){
+function getAudioSummary(ids, res){
 	var options = {
-		url: 'https://api.spotify.com/v1/audio-features/'+trackId,
+		url: 'https://api.spotify.com/v1/audio-features/?ids='+ids,
 		headers: {
 			'Authorization': 'Bearer ' + token
 		},
@@ -97,15 +98,14 @@ function getAudioSummary(trackId, res){
 	var r = request(options);
 	r.on('response', function(response){
 		if (response.statusCode == 401) {
-			refreshToken(getAudioSummary, trackId, res);
+			refreshToken(getAudioSummary, ids, res);
 		}else{
 			r.pipe(res);
 		}
 	});
 }
-
-app.get('/spotify', function(req, res) {
-	var id = url.parse(req.url, true).query["id"];
+app.get('/spotifyAudioFeatures', function(req, res) {
+	var id = url.parse(req.url, true).query["ids"];
 	if (id){
 		getAudioSummary(id, res);
 	}else{
