@@ -3,6 +3,78 @@ ReleaseModel = Backbone.Model.extend({
     url: () ->
         "/discogs?url=https://api.discogs.com/"+@attributes.type+"/"+@id
 
+    initialize: () ->
+        @on('sync', @.doSpotifySearch)
+        @attributes.keys = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B']
+        @attributes.mode = ['Minor','Major']
+    
+    doSpotifySearch: () ->
+        url = "https://api.spotify.com/v1/search"
+        url = url + "?q=album:"+escape(@attributes.title)
+        url = url + "%20artist:"+escape(@attributes.artistDisplayName)
+        url = url + "&type=album"
+        $.ajax
+            url: url
+            success: (response) => 
+                @handleSpotifySeachResponse(response)
+
+    handleSpotifySeachResponse: (response) ->
+        if response.albums.items.length > 0
+            @getSpotifyAlbum(response.albums.items[0].href)
+
+    getSpotifyAlbum: (spotifyAlbumUrl) ->
+        $.ajax
+            url: spotifyAlbumUrl
+            success: (response) => 
+                @handleSpotifyAlbumResponse(response)
+
+    handleSpotifyAlbumResponse: (response) ->
+        @parseTracks(response.tracks.items)
+        @getSpotifyAudioFeatures()
+
+    getSpotifyAudioFeatures: () ->
+        ids =   _.chain(@attributes.tracklist)
+                .filter(((track) -> return track.spotifyId))
+                .reduce(((ids, track) -> return ids + track.spotifyId + ","), "")
+                .value()
+        $.ajax
+            url: "spotifyAudioFeatures?ids="+ids
+            success: (response) => 
+                @handleSpotifyAudioFeaturesResponse(response)
+
+    handleSpotifyAudioFeaturesResponse: (response) ->
+        for audio_feature in response.audio_features
+            for track in @attributes.tracklist
+                if audio_feature != null && track.spotifyId == audio_feature.id
+                    if audio_feature.tempo
+                        audio_feature.tempo = +audio_feature.tempo.toFixed(1)
+                    _.extend(track, audio_feature)
+        @.trigger("spotifyDataLoaded")
+
+    parseTracks: (spotifyTracks) ->
+        for spotifyTrack in spotifyTracks
+            for discogsTrack in @attributes.tracklist
+                if @sameTrack(spotifyTrack, discogsTrack)
+                    discogsTrack.spotifyId = spotifyTrack.id
+                    discogsTrack.previewUrl = spotifyTrack.preview_url
+                    if discogsTrack.duration == ""
+                        minutes = String(Math.floor((spotifyTrack.duration_ms / 1000) / 60))
+                        seconds = String(Math.floor((spotifyTrack.duration_ms / 1000) % 60))
+                        if seconds.length == 1
+                            seconds += "0"
+                        discogsTrack.duration = minutes+":"+seconds
+
+    sameTrack: (spotifyTrack, discogsTrack) ->
+        spotifyName = spotifyTrack.name.toLowerCase().replace("(", "").replace(")", "")
+        discogsName = discogsTrack.title.toLowerCase().replace("(", "").replace(")", "")
+        name = spotifyName.indexOf(discogsName) != -1 || discogsName.indexOf(spotifyName) != -1
+        # todo add more heuristics
+        # string diff titles
+        # compare track position
+        # compare track length
+        # return a confidence value?
+        return name
+
     parse: (response) ->
         response.artistDisplayName = @createArtistDisplayName(response.artists)
         for track in response.tracklist
@@ -11,6 +83,11 @@ ReleaseModel = Backbone.Model.extend({
                 track.artistDisplayName = response.artistDisplayName
             else
                 track.artistDisplayName = @createArtistDisplayName(track.artists)
+        if response.videos
+            for video in response.videos
+                for track in response.tracklist
+                    if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1 && !track.video
+                        track.video = video.uri
         response.styles = [] if not response.styles?
         response.genres = [] if not response.genres?
         response.banner = _.sample([
@@ -128,14 +205,6 @@ ReleaseView = Backbone.View.extend({
     id: 'release'
     template: window["JST"]["releaseTemplate.html"];
     render: () ->
-        @addVideoLinks()
         $('#'+@id).html(@template(@model.toJSON()))
         return @
-
-    addVideoLinks: () ->
-      if @model.attributes.videos
-        for video in @model.attributes.videos
-          for track, index in @model.attributes.tracklist
-            if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1 && !track.video
-                track.video = video.uri
 })

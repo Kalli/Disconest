@@ -83,26 +83,12 @@ getMetaData = (discogsparams) ->
             document.title = title
             releaseModel.createJunoLinks()
             releaseView = new ReleaseView({model:releaseModel, el: $('body')})
+            releaseView.listenTo(releaseModel, 'spotifyDataLoaded', releaseView.render);
             releaseView.render()
             $(".loading").hide()
             $(".error").hide()
             $('#release').show()
-            for track, index in releaseModel.attributes.tracklist
-                if track.artists[0].id != 194 #194 is the dreaded various
-                    ( ->
-                        if track.artists.length > 1
-                            songModel = new SongModel({artists: track.artists, index: index, title: track.title})
-                        else
-                            songModel = new SongModel({id: track.artists[0].id, index: index, title: track.title})
-                        songModel.fetch(
-                            success: () ->
-                                songView = new SongView({model: songModel})
-                                songView.render()
-                        )
-                    )()
-                else 
-                    html = '<td></td><td></td><td></td>'
-                    $('#tltable tbody tr').eq(index).append(html)
+
         error: () ->
             $('.loading').hide() 
             $('.error').show() 
