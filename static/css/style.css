@@ -83,6 +83,12 @@ thead{
   margin-right: auto;
 }
 
+.about img.icon{
+  display: inline;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .caption{
   text-align: center;
   font-size: 14px;
