@@ -19,6 +19,7 @@ module.exports = function(grunt) {
               files: {
                 'static/js/disconest.js': 'static/coffee/disconest.coffee',
                 'static/js/release.js': 'static/coffee/release.coffee',
+                'static/js/song.js': 'static/coffee/song.coffee',
                 'static/js/search.js': 'static/coffee/search.coffee',
                 'static/js/test.js': 'static/coffee/test.coffee',
               }
@@ -33,7 +34,7 @@ module.exports = function(grunt) {
             },
             compile: {
                 files: {
-                    "static/js/templates.js": ["static/templates/releaseTemplate.html"]
+                    "static/js/templates.js": ["static/templates/releaseTemplate.html", "static/templates/songTemplate.html"]
                 }
             }
         },
@@ -49,6 +50,7 @@ module.exports = function(grunt) {
                     "static/js/templates.js",
                     "static/js/release.js",
                     "static/js/search.js",
+                    "static/js/song.js",
                     "static/js/disconest.js"
                     ],
                 dest: 'build/main.js'
