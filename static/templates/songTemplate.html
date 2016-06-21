@@ -1,0 +1,31 @@
+<tr>
+    <td><%= position.toUpperCase() %></td>
+    <td class="duration"><%= duration %></td>
+    <td><%= artistDisplayName %></td>
+    <td><%= title %> </td>
+    <td class="link">
+      <% if (typeof(video) !== "undefined"){ %>
+         <a href="<%= video %>" target="_blank" class="yt">Youtube</a>
+      <% }; %>
+      <% if (typeof(spotifyId) !== "undefined"){ %>
+        <a href="https://open.spotify.com/track/<%= spotifyId %>" target="_blank" class="sp">
+          Spotify
+        </a>
+      <% }; %>
+    </td>
+    <% if (typeof(spotifyId) !== "undefined"){ %>
+        <td class="center">
+            <% print(keys[key] + " " + modes[mode] );%>
+        </td>
+        <td class="center">
+          <%= time_signature %>
+        </td>
+        <td class="center">
+          <%= tempo %>
+        </td>
+        <% } else {%>
+        <td colspan="3" class="no-data center">
+          Sorry - No metadata found!
+        </td>
+    <% }; %>
+</tr>
