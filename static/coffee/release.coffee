@@ -5,8 +5,7 @@ ReleaseModel = Backbone.Model.extend({
 
     initialize: () ->
         @on('sync', @.doSpotifySearch)
-        @attributes.keys = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B']
-        @attributes.mode = ['Minor','Major']
+        @attributes.songs = []
     
     doSpotifySearch: () ->
         url = "https://api.spotify.com/v1/search"
@@ -44,50 +43,30 @@ ReleaseModel = Backbone.Model.extend({
 
     handleSpotifyAudioFeaturesResponse: (response) ->
         for audio_feature in response.audio_features
-            for track in @attributes.tracklist
-                if audio_feature != null && track.spotifyId == audio_feature.id
-                    if audio_feature.tempo
-                        audio_feature.tempo = +audio_feature.tempo.toFixed(1)
-                    _.extend(track, audio_feature)
+            for songModel in @attributes.songs
+                songModel.handleSpotifyAudioData(audio_feature)
         @.trigger("spotifyDataLoaded")
 
     parseTracks: (spotifyTracks) ->
         for spotifyTrack in spotifyTracks
-            for discogsTrack in @attributes.tracklist
-                if @sameTrack(spotifyTrack, discogsTrack)
-                    discogsTrack.spotifyId = spotifyTrack.id
-                    discogsTrack.previewUrl = spotifyTrack.preview_url
-                    if discogsTrack.duration == ""
-                        minutes = String(Math.floor((spotifyTrack.duration_ms / 1000) / 60))
-                        seconds = String(Math.floor((spotifyTrack.duration_ms / 1000) % 60))
-                        if seconds.length == 1
-                            seconds += "0"
-                        discogsTrack.duration = minutes+":"+seconds
-
-    sameTrack: (spotifyTrack, discogsTrack) ->
-        spotifyName = spotifyTrack.name.toLowerCase().replace("(", "").replace(")", "")
-        discogsName = discogsTrack.title.toLowerCase().replace("(", "").replace(")", "")
-        name = spotifyName.indexOf(discogsName) != -1 || discogsName.indexOf(spotifyName) != -1
-        # todo add more heuristics
-        # string diff titles
-        # compare track position
-        # compare track length
-        # return a confidence value?
-        return name
+            for songModel in @attributes.songs
+                songModel.handleSpotifyTrackData(spotifyTrack)
 
     parse: (response) ->
         response.artistDisplayName = @createArtistDisplayName(response.artists)
         for track in response.tracklist
+            songModel = new SongModel(track)
             if !track.artists
-                track.artists = response.artists
-                track.artistDisplayName = response.artistDisplayName
+                songModel.attributes.artists = response.artists
+                songModel.attributes.artistDisplayName = response.artistDisplayName
             else
-                track.artistDisplayName = @createArtistDisplayName(track.artists)
+                songModel.attributes.artistDisplayName = @createArtistDisplayName(track.artists)
+            @.attributes.songs.push(songModel)
         if response.videos
             for video in response.videos
-                for track in response.tracklist
-                    if video.description.toLowerCase().indexOf(track.title.toLowerCase()) != -1 && !track.video
-                        track.video = video.uri
+                for songModel in @.attributes.songs
+                    if video.description.toLowerCase().indexOf(songModel.attributes.title.toLowerCase()) != -1 && !songModel.attributes.video
+                        songModel.attributes.video = video.uri
         response.styles = [] if not response.styles?
         response.genres = [] if not response.genres?
         response.banner = _.sample([
@@ -206,5 +185,8 @@ ReleaseView = Backbone.View.extend({
     template: window["JST"]["releaseTemplate.html"];
     render: () ->
         $('#'+@id).html(@template(@model.toJSON()))
+        for songModel in @model.attributes.songs
+            songView = new SongView(model: songModel)
+            songView.render()
         return @
 })
