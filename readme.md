@@ -12,7 +12,8 @@ Disconest comes in two flavors:
 1. Web version  - Demo at [disconest.com](http://www.disconest.com)
   * Fetches and displays information about a single release at a time.
   
-2. Command Line version
+2. Command Line version 
+  * *ATTN: Due to changes in the export functionality at Discogs and in the Echonest API the command line version is currently broken*
   * Fetches information from and saves information to an xml file
   * Can be used to fetch the data for your entire [Discogs collection](http://www.discogs.com/users/export?w=collection)
   * You can run this like so: 
