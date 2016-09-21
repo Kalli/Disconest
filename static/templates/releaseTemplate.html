@@ -95,21 +95,6 @@
   </div>
 </div>
 <div id="tracklist" class="row">
-    <h3>Tracklist</h3>
-    <div class="table-responsive">
-        <table id="tltable" class="table">
-        <thead>
-        <% _.each(["Position", "Duration", "Artist", "Title", "Links"], function(heading) { %> 
-            <td class="<%=heading %>" ><%=heading %></td> 
-        <% }); %>
-        <% _.each([["Key", "Key/Scale"], ["TS", "Time Signature"], ["BPM", "Tempo in beats per minute"]], function(heading) { %> 
-            <td class="<%=heading[0] %> center" title="<%= heading[1] %>"><%= heading[0] %></td> 
-        <% }); %>
-        </thead>
-        <tbody id="songs">
-        </tbody>
-        </table>
-    </div>
 </div>
 <div class="row banner">
     <div class="text-center" >

@@ -32,9 +32,9 @@ ReleaseModel = Backbone.Model.extend({
         @getSpotifyAudioFeatures()
 
     getSpotifyAudioFeatures: () ->
-        ids =   _.chain(@attributes.tracklist)
-                .filter(((track) -> return track.spotifyId))
-                .reduce(((ids, track) -> return ids + track.spotifyId + ","), "")
+        ids =   _.chain(@attributes.songs)
+                .filter(((song) -> return song.attributes.spotifyId))
+                .reduce(((ids, song) -> return ids + song.attributes.spotifyId + ","), "")
                 .value()
         $.ajax
             url: "spotifyAudioFeatures?ids="+ids
@@ -131,6 +131,7 @@ ReleaseView = Backbone.View.extend({
     events:
         # "click #scrobble": "scrobble"
         "click #print": "print"
+
     print : () ->
         window.print()
       
@@ -183,10 +184,11 @@ ReleaseView = Backbone.View.extend({
     tagName: 'div'
     id: 'release'
     template: window["JST"]["releaseTemplate.html"];
+
     render: () ->
         $('#'+@id).html(@template(@model.toJSON()))
-        for songModel in @model.attributes.songs
-            songView = new SongView(model: songModel)
-            songView.render()
+        songCollection = new SongCollection(@model.attributes.songs)
+        songCollectionView = new SongCollectionView({collection: songCollection, el: $("#tracklist")})
+        songCollectionView.render()
         return @
 })

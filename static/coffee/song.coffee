@@ -33,10 +33,45 @@ SongModel = Backbone.Model.extend(
 )
 
 SongView = Backbone.View.extend({
-    tagName: 'tbody'
+    tagName: "tr",
     id: 'songs'
-    template: window["JST"]["songTemplate.html"];
+    template: window["JST"]["songTemplate.html"]
+    events:
+        "click .edit": "edit"
+
+    editing: false
+
+    edit : () ->
+        @editing = !@editing
+        for td in @$el.find('td')
+            if $(td).hasClass('editable')
+                $(td).attr('contenteditable', @editing)
+
+        span = @$el.find('.edit span')
+        if @editing
+            span.addClass('glyphicon-ok').removeClass('glyphicon-pencil')
+        else
+            span.removeClass('glyphicon-ok').addClass('glyphicon-pencil')
+
+
     render: () ->
-        $('#'+@id).append(@template(@model.toJSON()))
+        @$el.html(@template(@model.toJSON()))
         return @
 })
+
+SongCollection = Backbone.Collection.extend(
+    model = SongModel
+    tagName: 'div'
+
+)
+
+SongCollectionView = Backbone.View.extend(
+    template: window["JST"]["songCollectionTemplate.html"]
+
+    render: () ->
+        @$el.html(@template({}))
+        for songModel in @collection.models
+            songView = new SongView(model: songModel)
+            songView.render()
+            @$el.find('tbody').append(songView.el)
+)

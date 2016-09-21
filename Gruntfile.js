@@ -34,7 +34,7 @@ module.exports = function(grunt) {
             },
             compile: {
                 files: {
-                    "static/js/templates.js": ["static/templates/releaseTemplate.html", "static/templates/songTemplate.html"]
+                    "static/js/templates.js": ["static/templates/releaseTemplate.html", "static/templates/songCollectionTemplate.html",  "static/templates/songTemplate.html"]
                 }
             }
         },

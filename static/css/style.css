@@ -196,6 +196,12 @@ thead{
 .artwork img{
   margin-top:20px;
 }
+
+td[contenteditable="true"]{
+  background-color: white;
+  background-clip: padding-box;
+  border-radius: 20px;
+}
 @media(max-width:767px){
   body{
     padding-top: 10px;
