@@ -87,6 +87,47 @@ function refreshToken(callback, ids, res){
 	});
 }
 
+function spotifySearch(title, artistName, res){
+	var url = "https://api.spotify.com/v1/search";
+	url = url + "?q=album:"+title;
+	url = url + "%20artist:"+artistName;
+	url = url + "&type=album";
+	var options = {
+		url: url,
+		headers: {
+			'Authorization': 'Bearer ' + token
+		},
+		json: true
+	};
+	var r = request(options);
+	r.on('response', function(response){
+		if (response.statusCode == 401) {
+			refreshToken(spotifySearch, title, artistName, res);
+		}else{
+			r.pipe(res);
+		}
+	});
+}
+
+function spotifyAlbum(id, res){
+	var url = "https://api.spotify.com/v1/albums/"+id;
+	var options = {
+		url: url,
+		headers: {
+			'Authorization': 'Bearer ' + token
+		},
+		json: true
+	};
+	var r = request(options);
+	r.on('response', function(response){
+		if (response.statusCode == 401) {
+			refreshToken(spotifyAlbum, id, res);
+		}else{
+			r.pipe(res);
+		}
+	});
+}
+
 function getAudioSummary(ids, res){
 	var options = {
 		url: 'https://api.spotify.com/v1/audio-features/?ids='+ids,
@@ -108,6 +149,26 @@ app.get('/spotifyAudioFeatures', function(req, res) {
 	var id = url.parse(req.url, true).query["ids"];
 	if (id){
 		getAudioSummary(id, res);
+	}else{
+		res.send(404, 'Sorry cant find that!');
+	}
+});
+
+
+app.get('/spotifySearch', function(req, res) {
+	var title = url.parse(req.url, true).query["title"];
+	var artistName = url.parse(req.url, true).query["artistName"];
+	if (title && artistName){
+		spotifySearch(title, artistName, res);
+	}else{
+		res.send(404, 'Sorry cant find that!');
+	}
+});
+
+app.get('/spotifyAlbum', function(req, res) {
+	var id = url.parse(req.url, true).query["id"];
+	if (id){
+		spotifyAlbum(id, res);
 	}else{
 		res.send(404, 'Sorry cant find that!');
 	}

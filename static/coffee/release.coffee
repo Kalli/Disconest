@@ -7,25 +7,24 @@ ReleaseModel = Backbone.Model.extend({
         @on('sync', @.doSpotifySearch)
         @attributes.keys = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B']
         @attributes.mode = ['Minor','Major']
-    
+
     doSpotifySearch: () ->
-        url = "https://api.spotify.com/v1/search"
-        url = url + "?q=album:"+escape(@attributes.title)
-        url = url + "%20artist:"+escape(@attributes.artistDisplayName)
-        url = url + "&type=album"
+        url = "spotifySearch"
+        url = url + "?title="+escape(@attributes.title)
+        url = url + "&artistName="+escape(@attributes.artistDisplayName)
         $.ajax
             url: url
-            success: (response) => 
+            success: (response) =>
                 @handleSpotifySeachResponse(response)
 
     handleSpotifySeachResponse: (response) ->
         if response.albums.items.length > 0
-            @getSpotifyAlbum(response.albums.items[0].href)
+            @getSpotifyAlbum(response.albums.items[0].id)
 
-    getSpotifyAlbum: (spotifyAlbumUrl) ->
+    getSpotifyAlbum: (spotifyAlbumId) ->
         $.ajax
-            url: spotifyAlbumUrl
-            success: (response) => 
+            url: 'spotifyAlbum?id='+spotifyAlbumId
+            success: (response) =>
                 @handleSpotifyAlbumResponse(response)
 
     handleSpotifyAlbumResponse: (response) ->
@@ -39,7 +38,7 @@ ReleaseModel = Backbone.Model.extend({
                 .value()
         $.ajax
             url: "spotifyAudioFeatures?ids="+ids
-            success: (response) => 
+            success: (response) =>
                 @handleSpotifyAudioFeaturesResponse(response)
 
     handleSpotifyAudioFeaturesResponse: (response) ->
@@ -93,23 +92,23 @@ ReleaseModel = Backbone.Model.extend({
         response.banner = _.sample([
             {
                 link: "http://www.junodownload.com/plus/2010/06/11/10-best-dj-headphones/?ref=bbis"
-                img: "https://affiliate.juno.co.uk/accounts/default1/banners/b2189b79.gif" 
-                alt: "10 Best: DJ Headphones 2013" 
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/b2189b79.gif"
+                alt: "10 Best: DJ Headphones 2013"
             },{
                 link: "http://www.junodownload.com/plus/2010/09/21/10-best-dj-mixers-2/?ref=bbis"
-                img: "https://affiliate.juno.co.uk/accounts/default1/banners/1d1ac0e1.gif" 
-                alt: "10 Best: DJ Mixers" 
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/1d1ac0e1.gif"
+                alt: "10 Best: DJ Mixers"
             },{
                 link: "http://www.junodownload.com/plus/2011/05/03/10-best-audio-interfaces-for-home-studios/?ref=bbis"
-                img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif" 
-                alt: "10 Best: Audio Interfaces" 
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif"
+                alt: "10 Best: Audio Interfaces"
             },{
                 link: "http://www.junodownload.com/plus/2011/05/03/10-best-audio-interfaces-for-home-studios/?ref=bbis"
-                img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif" 
-                alt: "10 Best: Audio Interfaces" 
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/f7470cb1.gif"
+                alt: "10 Best: Audio Interfaces"
             },{
                 link: "http://www.juno.co.uk/promotions/DJ_Equipment_Deals/?ref=bbis"
-                img: "https://affiliate.juno.co.uk/accounts/default1/banners/ef6086b3.gif" 
+                img: "https://affiliate.juno.co.uk/accounts/default1/banners/ef6086b3.gif"
                 alt: "DJ Equipment deals"
             }
         ])
@@ -143,8 +142,8 @@ ReleaseModel = Backbone.Model.extend({
         if @attributes.artists
             @attributes.junolink = searchprefix+"%5Bartist%5D%5B%5D="+encodeURIComponent(@attributes.artistDisplayName)+'&ref=bbis'
             @attributes.junoartistlink = '<a target="_blank" href="'
-            @attributes.junoartistlink += @attributes.junolink 
-            @attributes.junoartistlink += '">Releases by '+ @attributes.artistDisplayName 
+            @attributes.junoartistlink += @attributes.junolink
+            @attributes.junoartistlink += '">Releases by '+ @attributes.artistDisplayName
             @attributes.junoartistlink += '</a>'
 })
 
@@ -154,7 +153,7 @@ ReleaseView = Backbone.View.extend({
         "click #print": "print"
     print : () ->
         window.print()
-      
+
     scrobble: () ->
         if @model.attributes.lastfmtoken
             scrobbledata = @createScrobbleData()
@@ -181,7 +180,7 @@ ReleaseView = Backbone.View.extend({
         timestamp = Math.round(new Date().getTime()/1000)
         for track, index in @model.attributes.tracklist
             tracklistlength = @model.attributes.tracklist.length
-            if track.title 
+            if track.title
                 artistname = ""
                 artists = if track.artists then track.artists else @model.attributes.artists
                 for artist, index in artists
@@ -196,7 +195,7 @@ ReleaseView = Backbone.View.extend({
                     track: track.title
                     timestamp: String(timestamp-(300*(tracklistlength-index)))
                 tracks.push(scrobbletrack)
-        scrobbledata = 
+        scrobbledata =
             tracks: tracks
             token: @model.attributes.lastfmtoken
         return scrobbledata
