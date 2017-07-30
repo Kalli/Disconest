@@ -4,7 +4,7 @@
   "description": "Get Echonest musical analysis metadata for Discogs.com records",
   "main": "server.js",
   "engines": {
-    "node": "4.2.2"
+    "node": "4.8.4"
   },
   "dependencies": {
     "bower": "1.7.7",
