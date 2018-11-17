@@ -11,7 +11,7 @@ if (process.env.NODE_ENV && process.env.NODE_ENV == "production"){
 }else{
 	app.use(express.static(__dirname + '/static'));
 }
-app.use(express.bodyParser());
+app.use(express.urlencoded()).use(express.json());
 
 app.get('/discogs', function(req,res) {
 	var discogsurl = url.parse(req.url, true).query["url"];
