@@ -101,7 +101,7 @@ function spotifySearch(title, artistName, res){
 	};
 	var r = request(options);
 	r.on('response', function(response){
-		if (response.statusCode == 401) {
+		if ([401, 400].includes(response.statusCode)) {
 			refreshToken(spotifySearch, title, artistName, res);
 		}else{
 			r.pipe(res);
@@ -120,7 +120,7 @@ function spotifyAlbum(id, res){
 	};
 	var r = request(options);
 	r.on('response', function(response){
-		if (response.statusCode == 401) {
+		if ([401, 400].includes(response.statusCode)) {
 			refreshToken(spotifyAlbum, id, res);
 		}else{
 			r.pipe(res);
@@ -138,7 +138,7 @@ function getAudioSummary(ids, res){
 	};
 	var r = request(options);
 	r.on('response', function(response){
-		if (response.statusCode == 401) {
+		if ([401, 400].includes(response.statusCode)) {
 			refreshToken(getAudioSummary, ids, res);
 		}else{
 			r.pipe(res);
