@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "bower": "1.7.7",
-    "express": "~3.4.6",
+    "express": "3.11.0",
     "grunt": "0.4.5",
     "grunt-cli": "0.1.13",
     "grunt-contrib-coffee": "1.0.0",
