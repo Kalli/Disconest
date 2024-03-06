@@ -8,6 +8,7 @@ bower_components/
 build/
 dist/
 .env
+.env.local
 
 ### Bower ###
 bower_components
