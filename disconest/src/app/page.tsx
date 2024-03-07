@@ -3,9 +3,43 @@ import Image from "next/image";
 import 'bootstrap/dist/css/bootstrap.css'
 import './style.css'
 import styles from "./page.module.css";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { DiscogsReleaseProps, DiscogsRelease } from './release';
+type ReleaseType = "master" | "release";
 
 export default function Home() {
+    const [selectedReleaseId, setselectedReleaseId] = useState<number | null>(null);
+    const [selectedReleaseType, setselectedReleaseType] = useState<ReleaseType | null>(null);
+    const [selectedRelease, setselectedRelease] = useState<DiscogsReleaseProps | null>(null);
+    
+    const handleReleaseSelected = (releaseId: number|null, releaseType: ReleaseType|null) => {
+        setselectedReleaseId(releaseId);
+        setselectedReleaseType(releaseType);
+    };
+
+    useEffect(() => {
+        const loadDiscogsRelease = async () => {
+            if (selectedReleaseId !== null){
+                try {
+                    const response = await fetch(`/api/discogs?${selectedReleaseType}=${selectedReleaseId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    });
+                    if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    setselectedRelease(data);
+                } catch (error) {
+                    console.error('There was an error!', error);
+                }
+            }
+        };
+        loadDiscogsRelease();
+    }, [selectedReleaseId]);
+
     return (
         <main className={styles.main}>
             <div className="container">
@@ -24,7 +58,7 @@ export default function Home() {
                         Keys, bpm's and more.</p>
                     </div>
                     <div className="row">
-                        <SearchForm></SearchForm>
+                        <SearchForm handleReleaseSelected={handleReleaseSelected} ></SearchForm>
                     </div>
             <div className="row loading ">
                 <img className="center-block" src="/img/rekid.png" alt="Loading..." />
@@ -34,6 +68,7 @@ export default function Home() {
                 <h3 className="text-center">Sorry something went wrong. Please try again</h3>
             </div>
             <div id="release" className="row">
+                {selectedRelease && <DiscogsRelease {...selectedRelease} />}
             </div>
             <div id="info" className="row">            
                 <p>
@@ -53,11 +88,14 @@ export default function Home() {
     );
 }
 
-// This example assumes you are inside a functional component
+interface SearchFormProps {
+    handleReleaseSelected: (releaseId: number|null, releaseType: ReleaseType|null) => void;
+}
 
-const SearchForm : React.FC = () =>  {
+
+const SearchForm : React.FC<SearchFormProps> = ({ handleReleaseSelected }) =>  {
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [searchResults, setSearchResults] = useState<SearchResultProps>([]);
+    const [searchResults, setSearchResults] = useState<SearchResultProps["results"]>([]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
@@ -71,21 +109,21 @@ const SearchForm : React.FC = () =>  {
     
     const discogsSearch = async () => {
         try {
-          const response = await fetch(`/api/discogs?q=${encodeURIComponent(searchQuery)}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          setSearchResults(data);
+            const response = await fetch(`/api/discogs?q=${encodeURIComponent(searchQuery)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            setSearchResults(data.results);
         } catch (error) {
-          console.error('There was an error!', error);
+            console.error('There was an error!', error);
         }
-      };
+    };
 
     return (
         <div className="col-md-6 col-md-offset-3" id="searchform">
@@ -102,22 +140,26 @@ const SearchForm : React.FC = () =>  {
                 <span className="input-group-btn">
                     <button className="btn btn-default" id="searchbutton" type="button" onClick={discogsSearch}>Go!</button>
                 </span>
-                <SearchResults results={searchResults.results} /> 
+                <SearchResults results={searchResults} onSelectRelease={handleReleaseSelected} setSearchResults={setSearchResults} /> 
             </div>
         </div>
     );
 }
 
 interface SearchResultProps {
-    results?: DiscogsRelease[]
+    results?: DiscogsSearchResult[];
+    setSearchResults: (results: DiscogsSearchResult[]) => void,
+    onSelectRelease: (releaseId: number, releaseType: ReleaseType) => void,
 }
 
-interface DiscogsRelease{
+interface DiscogsSearchResult{
     thumb: string,
     title: string,
+    id: number,
+    type: ReleaseType,
 }
 
-const SearchResults: React.FC<SearchResultProps> = ({ results = [] }) => {
+const SearchResults: React.FC<SearchResultProps> = ({ results = [], onSelectRelease, setSearchResults }) => {
     const [resultsToShow, setResultsToShow] = useState<number>(4);
     if (results?.length === 0){
         return null;
@@ -127,6 +169,12 @@ const SearchResults: React.FC<SearchResultProps> = ({ results = [] }) => {
         e.preventDefault();
         setResultsToShow(resultsToShow + 4)
     }
+
+    const releaseClickHandler = (e: React.MouseEvent, releaseId: number, releaseType: ReleaseType) => {
+        e.preventDefault();
+        setSearchResults([]);
+        onSelectRelease(releaseId, releaseType);
+    }
     const showResults = results.slice(0, resultsToShow);
     const showMore = results.length > resultsToShow ? (
         <><li className="divider"></li><li><a className="showmore" href="" onClick={showAllClickHandler}>Show more</a></li></>
@@ -135,12 +183,12 @@ const SearchResults: React.FC<SearchResultProps> = ({ results = [] }) => {
     return (
         <div id="results" className="dropdown">
             <ul id="searchCollection" className="col-md-12 dropdown-menu" role="menu" tabIndex={1} aria-labelledby="searchform">
-                {showResults.slice().map(e => {
+                {showResults.slice().map(release => {
                     return (
-                        <li>
-                            <a href="">
-                                <img width="50" height="50" src={e.thumb} />
-                                {e.title}
+                        <li key={release.id}>
+                            <a href="" onClick={(e) => releaseClickHandler(e, release.id, release.type)}>
+                                <img width="50" height="50" src={release.thumb} />
+                                {release.title}
                             </a>
                         </li>
                     )
