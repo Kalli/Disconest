@@ -4,7 +4,7 @@ import { RequestOptions } from 'http';
 // Define a type for the postData parameter which can be a string or Buffer
 type PostData = string | Buffer;
 
-function httpRequestAsync(options: RequestOptions, postData?: PostData): Promise<string> {
+function httpRequestAsync(options: RequestOptions, postData?: PostData): Promise<Record<string, unknown>> {
     return new Promise((resolve, reject) => {
         const req = http.request(options, (res) => {
             // Handle HTTP response
@@ -27,12 +27,12 @@ function httpRequestAsync(options: RequestOptions, postData?: PostData): Promise
     });
 }
 
-export async function makeRequest(options : RequestOptions): Promise<string> {
+export async function makeRequest(options : RequestOptions, postData?: PostData): Promise<Record<string, unknown>> {
     try {
-        const response: string = await httpRequestAsync(options);
+        const response = await httpRequestAsync(options, postData);
         return response;
     } catch (error) {
         console.error(error);
-        return '';
+        return {};
     }
 }
