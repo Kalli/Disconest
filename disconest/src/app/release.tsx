@@ -1,5 +1,6 @@
 import React from 'react';
 import { SpotifyTrackMetadata, matchDiscogsAndSpotifyTracks } from './spotify';
+import { Links } from './links';
 import { AlbumWithAudioFeatures, TrackWithAudioFeatures } from './types/spotify';
 
 export interface DiscogsReleaseProps {
@@ -17,20 +18,19 @@ export interface DiscogsReleaseProps {
     styles: any[],
     genres: any[],
     year: any,
-    labels: {
-        catno: string,
-        name: string,
-    }[],
-    junolink: any,
-    junoartistlink: any,
-    junolabellink: any,
+    labels: DiscogsLabel[],
     type: any,
     id: any,
     tracklist: DiscogsTrackProps[],
     spotify: AlbumWithAudioFeatures,
 }
 
-interface DiscogsArtist{
+export interface DiscogsLabel {
+    catno: string,
+    name: string,
+}
+
+export interface DiscogsArtist{
     name: string,
     anv?: string,
     join?: string,
@@ -91,6 +91,7 @@ export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props: DiscogsRel
                         </tbody>
                     </table>
                 </div>
+                <Links labels={labels} artists={artists} />
             </div>
             <DiscogsTrackList tracklist={tracklist} artists={artists} spotify={spotify} />
         </div>

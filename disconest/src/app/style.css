@@ -222,3 +222,36 @@ thead{
     margin:0;
   }
 }
+
+:not(.btn-group) > a.btn, .social .btn-group{
+  margin-right: 10px;
+}
+
+.junolinks{
+  color: #ffffff!important;
+  background-color: #1776a3;
+  border-color: #1776a3;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 14px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  background-clip: padding-box;
+  list-style-type: none;
+  width: 100%;   
+}
+
+.junolinks li{
+  margin-top: 5px;
+}
+
+.junolinks a{
+  color: #ffffff;
+  margin: 10px;
+}
