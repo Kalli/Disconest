@@ -4,7 +4,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import './style.css'
 import styles from "./page.module.css";
 import React, { useState, useEffect } from 'react';
-import { DiscogsReleaseProps, DiscogsRelease } from './release';
+import { DiscogsReleaseProps, DiscogsRelease, createArtistDisplayName } from './release';
+import { AlbumWithAudioFeatures } from './types/spotify';
 type ReleaseType = "master" | "release";
 
 export default function Home() {
@@ -22,13 +23,13 @@ export default function Home() {
             if (selectedReleaseId !== null){
                 try {
                     const response = await fetch(`/api/discogs?${selectedReleaseType}=${selectedReleaseId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
                     });
                     if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                        throw new Error('Network response was not ok');
                     }
                     const data = await response.json();
                     setselectedRelease(data);
@@ -40,6 +41,37 @@ export default function Home() {
         loadDiscogsRelease();
     }, [selectedReleaseId]);
 
+    useEffect(() => {
+        const loadSpotifyData = async () => {
+            if (selectedRelease !== null){
+                try {
+                    const query = (
+                        `title=${encodeURIComponent(selectedRelease.title)}&` + 
+                        `artist=${encodeURIComponent(createArtistDisplayName(selectedRelease.artists))}`
+                    );
+                    const response = await fetch(`/api/spotify?${query}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    // @ts-ignore
+                    const spotifyData = data as AlbumWithAudioFeatures;
+                    setselectedRelease({
+                        ...selectedRelease,
+                        spotify: spotifyData
+                    })
+                } catch (error) {
+                    console.error('There was an error!', error);
+                }
+            }
+        };
+        loadSpotifyData();
+    }, [selectedRelease]);
     return (
         <main className={styles.main}>
             <div className="container">

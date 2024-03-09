@@ -20,7 +20,9 @@ export interface Artist extends SimplifiedArtist {
 export interface AudioFeatures {
     danceability: number
     energy: number
-    key: number
+    key?: number
+    // we need to replace key with musicalKey because "key" is a reserved word in JSX
+    musicalKey?: string
     loudness: number
     mode: number
     speechiness: number

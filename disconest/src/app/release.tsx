@@ -1,7 +1,6 @@
 import React from 'react';
-
-const keys = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
-const mode = ['Minor', 'Major'];
+import { SpotifyTrackMetadata, matchDiscogsAndSpotifyTracks } from './spotify';
+import { AlbumWithAudioFeatures, TrackWithAudioFeatures } from './types/spotify';
 
 export interface DiscogsReleaseProps {
     uri: string,
@@ -28,6 +27,7 @@ export interface DiscogsReleaseProps {
     type: any,
     id: any,
     tracklist: DiscogsTrackProps[],
+    spotify: AlbumWithAudioFeatures,
 }
 
 interface DiscogsArtist{
@@ -41,9 +41,8 @@ interface DiscogsArtist{
     thumbnail_url: string,
 }
 
-export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props:DiscogsReleaseProps) => {
-    const { uri, images, artists, title, styles, genres, year, labels, junolink, junoartistlink, junolabellink, type, id, tracklist } = props;
-
+export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props: DiscogsReleaseProps) => {
+    const { uri, images, artists, title, styles, genres, year, labels, spotify, tracklist } = props;
     return (
         <div>
             <div className="row">
@@ -63,41 +62,43 @@ export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props:DiscogsRele
                         </a>
                     </h1>
                     <table className="table">
-                        <tr>
-                            <td>Genres &amp; styles:</td>
-                            <td>
-                                {styles.map(style => (
-                                    <span className="badge">{style}</span>
-                                ))}
-                                {genres.map(genre => (
-                                    <span className="badge">{genre}</span>
-                                ))}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Year:</td>
-                            <td>{year}</td>
-                        </tr>
-                        {labels && (
+                        <tbody>
                             <tr>
-                                <td>Cat. no / Label:</td>
+                                <td>Genres &amp; styles:</td>
                                 <td>
-                                    {labels.map(label => (
-                                        <span>{label.catno} / {label.name}</span>
+                                    {styles.map(style => (
+                                        <span key={style} className="badge">{style}</span>
+                                    ))}
+                                    {genres.map(genre => (
+                                        <span key={genre} className="badge">{genre}</span>
                                     ))}
                                 </td>
                             </tr>
-                        )}
+                            <tr>
+                                <td>Year:</td>
+                                <td>{year}</td>
+                            </tr>
+                            {labels && (
+                                <tr>
+                                    <td>Cat. no / Label:</td>
+                                    <td>
+                                        {labels.map(label => (
+                                            <span key={label.catno}>{label.catno} / {label.name}</span>
+                                        ))}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
                     </table>
                 </div>
             </div>
-            <DiscogsTrackList tracklist={tracklist} artists={artists} />
+            <DiscogsTrackList tracklist={tracklist} artists={artists} spotify={spotify} />
         </div>
     );
 }
 
 
-function createArtistDisplayName(artists: DiscogsReleaseProps['artists']): string {
+export function createArtistDisplayName(artists: DiscogsReleaseProps['artists']): string {
     return artists.reduce((artistDisplayName, artist, index) => {
         artist.name = artist.name.replace(/\s\(\d+\)/,"");
         if (artist.anv) {
@@ -116,7 +117,7 @@ function createArtistDisplayName(artists: DiscogsReleaseProps['artists']): strin
       }, "");
 }
 
-interface DiscogsTrackProps {
+export interface DiscogsTrackProps {
     duration: string,
     position: string,
     title: string,
@@ -127,15 +128,16 @@ interface DiscogsTrackProps {
     key: number,
     mode: number,
     artists: DiscogsArtist[],
+    spotify?: TrackWithAudioFeatures,
 }
 
 interface DiscogsTrackListProps {
     tracklist: DiscogsTrackProps[],
     artists: DiscogsArtist[],
-
+    spotify?: AlbumWithAudioFeatures,
 }
 
-const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists }) => {
+const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists, spotify }) => {
     const headings = ["Position", "Duration", "Artist", "Title", "Links"];
     const detailedHeadings = [
       ["Key", "Key/Scale"],
@@ -143,25 +145,35 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
       ["BPM", "Tempo in beats per minute"]
     ];
     // compilations can have different artists for each track, otherwise use the release artist
-    const tracklistWithArtists = tracklist.map((track) => {
+    let tracklistWithArtists = tracklist.map((track) => {
         return {
             ...track,
             artists: track.artists?.length > 0 ? track.artists : artists,
         }
-    })
+    });
+
+    if (spotify){
+        tracklistWithArtists = matchDiscogsAndSpotifyTracks(tracklistWithArtists, spotify.tracks.items);
+    }
+
     return(
         <div id="tracklist" className="row">
             <h3>Tracklist</h3>
             <div className="table-responsive">
                 <table id="tltable" className="table">
                     <thead>
-                        {headings.map((h) => (<td className={h} key={h}>{h}</td>))}
-                        {detailedHeadings.map(([short, full]) => (
-                            <td className={`${short} center`} title={full} key={short}>{short}</td>
-                        ))}
+                        <tr>
+                            {headings.map((h) => (<th className={h} key={h}>{h}</th>))}
+                            {detailedHeadings.map(([short, full]) => (
+                                <td className={`${short} center`} title={full} key={short}>{short}</td>
+                            ))}
+                        </tr>
                     </thead>
                 <tbody>
-                    {tracklistWithArtists.map((track) => <DiscogsTrack {...track} />)}
+                    {tracklistWithArtists.map((track) => {
+                        // @ts-ignore
+                        return <DiscogsTrack key={track.position} {...track} />
+                    })}
                 </tbody>
                 </table>
             </div>
@@ -178,17 +190,9 @@ const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
             <td>{track.title}</td>
             <td className="link">
                 {track.video && <a href={track.video} target="_blank" rel="noopener noreferrer" className="yt">Youtube</a>}
-                {track.spotifyId && <a href={`https://open.spotify.com/track/${track.spotifyId}`} target="_blank" rel="noopener noreferrer" className="sp">Spotify</a>}
+                {track.spotify?.id && <a href={`https://open.spotify.com/track/${track.spotify.id}`} target="_blank" rel="noopener noreferrer" className="sp">Spotify</a>}
             </td>
-            {track.spotifyId ? (
-                <>
-                    <td className="center">{keys[track.key]} {mode[track.mode]}</td>
-                    <td className="center">{track.time_signature}</td>
-                    <td className="center">{track.tempo}</td>
-                </>
-            ) : (
-                <td colSpan={3} className="no-data center">Sorry - No metadata found!</td>
-            )}
+            {track.spotify? <SpotifyTrackMetadata {...track.spotify} /> : <td colSpan={3} className="no-data center">Sorry - No metadata found!</td>}
         </tr>
     )
 };
