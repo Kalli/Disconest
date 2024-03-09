@@ -25,7 +25,7 @@ export const Links: React.FC<LinksProps> = ({ labels, artists }) => {
     });
     return (
         <div className="social release col-md-12">
-            <a id="print" type="button" className="btn pr btn-default">
+            <a id="print" onClick={() => window.print()} type="button" className="btn pr btn-default">
                 <span className="print icon-printer"> </span>
                 Print one sheet
             </a>

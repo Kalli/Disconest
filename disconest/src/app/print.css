@@ -1,0 +1,85 @@
+@media print {
+    .link, .social, .form-disconest, #info, #searchform, .img, .Links, .banner{
+        display:none;
+    }
+
+    #tracklist table thead, #tracklist table tbody, #tracklist table tfoot{
+        font-size: 14px;
+    }
+    #tracklist table td{
+        padding: 5px;
+    }
+
+    h1 {
+        font-size: 18px
+    }
+
+    h3{
+        font-size: 14px;
+    }
+
+    a{
+        text-decoration: none;
+        color: black;
+    }
+    .no-data{
+        display: none;
+    }
+    a::after {
+        content: none !important;
+    }
+    .jumbotron {
+        padding: 30px;
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 200;
+    }
+    #tracklist table {
+        table-layout: auto;
+        width: 70%;
+    }
+
+    #tracklist table td, #tracklist table th{
+        overflow: wrap; 
+        text-overflow: ellipsis;
+        white-space: normal;
+        padding: 5px;
+        text-align: left !important;
+    }
+
+    #tracklist table th {
+        font-size: 12px;
+        align-items: left;
+        width: 100%;
+    }
+
+    /* position, duration, key, ts and bpm */
+    #tracklist table th:nth-child(1),
+    #tracklist table th:nth-child(2),
+    #tracklist table th:nth-child(5),
+    #tracklist table th:nth-child(6),
+    #tracklist table th:nth-child(7),
+    #tracklist table td:nth-child(8),
+    #tracklist table th:nth-child(1),
+    #tracklist table td:nth-child(2),
+    #tracklist table td:nth-child(5),
+    #tracklist table td:nth-child(6),
+    #tracklist table td:nth-child(7),
+    #tracklist table td:nth-child(8) {
+        width: 5%;
+    }
+    /* artist, title */
+    #tracklist table th:nth-child(3), 
+    #tracklist table td:nth-child(3){
+        width: 20%;
+    }    
+    /* title */
+    #tracklist table th:nth-child(4), 
+    #tracklist table td:nth-child(4){
+        width: 35%;
+    }
+
+    #printinfo {
+        display: block;
+    }
+}

@@ -166,7 +166,7 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
                         <tr>
                             {headings.map((h) => (<th className={h} key={h}>{h}</th>))}
                             {detailedHeadings.map(([short, full]) => (
-                                <td className={`${short} center`} title={full} key={short}>{short}</td>
+                                <th className={`${short} center`} title={full} key={short}>{short}</th>
                             ))}
                         </tr>
                     </thead>

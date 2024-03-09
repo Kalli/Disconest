@@ -2,7 +2,7 @@
 import Image from "next/image";
 import 'bootstrap/dist/css/bootstrap.css'
 import './style.css'
-import styles from "./page.module.css";
+import './print.css'
 import React, { useState, useEffect } from 'react';
 import { DiscogsReleaseProps, DiscogsRelease, createArtistDisplayName } from './release';
 import { AlbumWithAudioFeatures } from './types/spotify';
@@ -73,7 +73,7 @@ export default function Home() {
         loadSpotifyData();
     }, [selectedRelease]);
     return (
-        <main className={styles.main}>
+        <main>
             <div className="container">
                 <div className="jumbotron">
                     <div className="form-disconest">
@@ -112,7 +112,7 @@ export default function Home() {
                 </p>
             </div>
             <div id="printinfo" className="row">
-                <p>Disconest.com - Musical metadata for your Records</p>
+                <p>Disconest.com - Musical Metadata for your Records</p>
             </div>
             </div>
             </div>
