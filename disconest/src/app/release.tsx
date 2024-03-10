@@ -23,6 +23,7 @@ export interface DiscogsReleaseProps {
     id: any,
     tracklist: DiscogsTrackProps[],
     spotify: AlbumWithAudioFeatures,
+    videos: DiscogsVideo[],
 }
 
 export interface DiscogsLabel {
@@ -42,7 +43,7 @@ export interface DiscogsArtist{
 }
 
 export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props: DiscogsReleaseProps) => {
-    const { uri, images, artists, title, styles, genres, year, labels, spotify, tracklist } = props;
+    const { uri, images, artists, title, styles, genres, year, labels, spotify, tracklist, videos } = props;
     return (
         <div>
             <div className="row">
@@ -93,7 +94,7 @@ export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props: DiscogsRel
                 </div>
                 <Links labels={labels} artists={artists} />
             </div>
-            <DiscogsTrackList tracklist={tracklist} artists={artists} spotify={spotify} />
+            <DiscogsTrackList videos={videos} tracklist={tracklist} artists={artists} spotify={spotify} />
         </div>
     );
 }
@@ -122,7 +123,6 @@ export interface DiscogsTrackProps {
     duration: string,
     position: string,
     title: string,
-    video: string,
     spotifyId: string,
     tempo: number,
     time_signature: string,
@@ -130,15 +130,25 @@ export interface DiscogsTrackProps {
     mode: number,
     artists: DiscogsArtist[],
     spotify?: TrackWithAudioFeatures,
+    video?: DiscogsVideo,
+}
+
+interface DiscogsVideo {
+    title: string,
+    description: string,
+    duration: number,
+    embed: boolean,
+    uri: string,
 }
 
 interface DiscogsTrackListProps {
     tracklist: DiscogsTrackProps[],
     artists: DiscogsArtist[],
+    videos: DiscogsVideo[] 
     spotify?: AlbumWithAudioFeatures,
 }
 
-const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists, spotify }) => {
+const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists, spotify, videos }) => {
     const headings = ["Position", "Duration", "Artist", "Title", "Links"];
     const detailedHeadings = [
       ["Key", "Key/Scale"],
@@ -153,8 +163,21 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
         }
     });
 
+    const tracklistWithVideos = tracklistWithArtists.map((track) => {
+        const trackVideo = videos.find((video) => {
+            return video.title.toLowerCase().indexOf(track.title.toLowerCase()) != -1;
+        })
+        if (!trackVideo){
+            return track;
+        }
+        return {
+            ...track,
+            video: trackVideo
+        }
+    })
+
     if (spotify){
-        tracklistWithArtists = matchDiscogsAndSpotifyTracks(tracklistWithArtists, spotify.tracks.items);
+        tracklistWithArtists = matchDiscogsAndSpotifyTracks(tracklistWithVideos, spotify.tracks.items);
     }
 
     return(
@@ -190,7 +213,7 @@ const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
             <td>{createArtistDisplayName(track.artists)}</td>
             <td>{track.title}</td>
             <td className="link">
-                {track.video && <a href={track.video} target="_blank" rel="noopener noreferrer" className="yt">Youtube</a>}
+                {track.video && <a href={track.video.uri} target="_blank" rel="noopener noreferrer" className="yt">Youtube</a>}
                 {track.spotify?.id && <a href={`https://open.spotify.com/track/${track.spotify.id}`} target="_blank" rel="noopener noreferrer" className="sp">Spotify</a>}
             </td>
             {track.spotify? <SpotifyTrackMetadata {...track.spotify} /> : <td colSpan={3} className="no-data center">Sorry - No metadata found!</td>}
