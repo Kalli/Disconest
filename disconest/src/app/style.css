@@ -65,8 +65,8 @@ body {
   /*todo add creampaper*/
   background-image: url("/img/creampaper.png");
 }
-td.center{
-  text-align: center;
+td.center, th.center{
+  text-align: center !important;
 }
 thead{
   font-weight: bold;
@@ -115,6 +115,14 @@ thead{
   background: transparent!important;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+
+.jumbotron {
+  padding: 30px;
+  margin-bottom: 30px;
+  font-size: 21px;
+  font-weight: 200;
+}
+
 .link a{
   display: inline-block;
   color: transparent;
