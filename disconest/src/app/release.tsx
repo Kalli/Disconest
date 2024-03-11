@@ -3,6 +3,11 @@ import { SpotifyTrackMetadata, matchDiscogsAndSpotifyTracks } from './spotify';
 import { Links } from './links';
 import { AlbumWithAudioFeatures, TrackWithAudioFeatures } from './types/spotify';
 
+export interface ReleaseProps {
+    discogsRelease: DiscogsReleaseProps,
+    spotifyData: AlbumWithAudioFeatures|null,
+}
+
 export interface DiscogsReleaseProps {
     uri: string,
     images: {
@@ -22,7 +27,6 @@ export interface DiscogsReleaseProps {
     type: any,
     id: any,
     tracklist: DiscogsTrackProps[],
-    spotify: AlbumWithAudioFeatures,
     videos: DiscogsVideo[],
 }
 
@@ -42,8 +46,12 @@ export interface DiscogsArtist{
     thumbnail_url: string,
 }
 
-export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props: DiscogsReleaseProps) => {
-    const { uri, images, artists, title, styles, genres, year, labels, spotify, tracklist, videos } = props;
+export const DiscogsRelease : React.FC<ReleaseProps> = (props: ReleaseProps) => {
+    if (!props.discogsRelease || Object.keys(props.discogsRelease).length === 0 ){
+        return null;
+    }
+    const { uri, images, artists, title, styles, genres, year, labels, tracklist, videos } = props.discogsRelease;
+    const { spotifyData } = props;
     return (
         <div>
             <div className="row">
@@ -94,13 +102,16 @@ export const DiscogsRelease : React.FC<DiscogsReleaseProps> = (props: DiscogsRel
                 </div>
                 <Links labels={labels} artists={artists} />
             </div>
-            <DiscogsTrackList videos={videos} tracklist={tracklist} artists={artists} spotify={spotify} />
+            <DiscogsTrackList videos={videos} tracklist={tracklist} artists={artists} spotify={spotifyData} />
         </div>
     );
 }
 
 
 export function createArtistDisplayName(artists: DiscogsReleaseProps['artists']): string {
+    if (!artists) {
+        return '';
+    }
     return artists.reduce((artistDisplayName, artist, index) => {
         artist.name = artist.name.replace(/\s\(\d+\)/,"");
         if (artist.anv) {
@@ -145,7 +156,7 @@ interface DiscogsTrackListProps {
     tracklist: DiscogsTrackProps[],
     artists: DiscogsArtist[],
     videos: DiscogsVideo[] 
-    spotify?: AlbumWithAudioFeatures,
+    spotify?: AlbumWithAudioFeatures|null,
 }
 
 const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists, spotify, videos }) => {

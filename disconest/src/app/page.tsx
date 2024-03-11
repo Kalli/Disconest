@@ -12,6 +12,7 @@ export default function Home() {
     const [selectedReleaseId, setselectedReleaseId] = useState<number | null>(null);
     const [selectedReleaseType, setselectedReleaseType] = useState<ReleaseType | null>(null);
     const [selectedRelease, setselectedRelease] = useState<DiscogsReleaseProps | null>(null);
+    const [spotifyData, setSpotifyData] = useState<AlbumWithAudioFeatures | null>(null);
     const [loadingDiscogsData, setLoadingDiscogsData] = useState<boolean>(false);
     const [errored, setError] = useState<boolean>(false);
     
@@ -23,6 +24,7 @@ export default function Home() {
     useEffect(() => {
         const loadDiscogsRelease = async () => {
             if (selectedReleaseId !== null){
+                setselectedRelease(null);
                 setLoadingDiscogsData(true);
                 try {
                     const response = await fetch(`/api/discogs?${selectedReleaseType}=${selectedReleaseId}`, {
@@ -36,8 +38,10 @@ export default function Home() {
                     }
                     const data = await response.json();
                     setselectedRelease(data);
+                    setLoadingDiscogsData(false);
                 } catch (error) {
                     console.error('There was an error!', error);
+                    setError(true);
                 }
             }
         };
@@ -62,12 +66,8 @@ export default function Home() {
                         throw new Error('Network response was not ok');
                     }
                     const data = await response.json();
-                    // @ts-ignore
                     const spotifyData = data as AlbumWithAudioFeatures;
-                    setselectedRelease({
-                        ...selectedRelease,
-                        spotify: spotifyData
-                    })
+                    setSpotifyData(spotifyData)
                 } catch (error) {
                     console.error('There was an error!', error);
                 }
