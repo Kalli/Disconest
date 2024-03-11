@@ -153,6 +153,9 @@ const SearchForm : React.FC<SearchFormProps> = ({ handleReleaseSelected, setLoad
         if (e.key === 'Enter') {
             discogsSearch();
         }
+        if (e.key === 'Escape') {
+            setSearchResults([]);
+        }
       };
     
     const discogsSearch = async () => {
@@ -225,10 +228,21 @@ const SearchResults: React.FC<SearchResultProps> = ({ results = [], onSelectRele
         setSearchResults([]);
         onSelectRelease(releaseId, releaseType);
     }
+
+    const closeSearch = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setSearchResults([]);
+    }
+
+
     const showResults = results.slice(0, resultsToShow);
-    const showMore = results.length > resultsToShow ? (
-        <><li className="divider"></li><li><a className="showmore" href="" onClick={showAllClickHandler}>Show more</a></li></>
-    ) : null;
+    const showMore = (<>
+        <li className="divider"></li>
+        <li>
+        {results.length > resultsToShow ? <button className="btn btn-default pull-left" onClick={showAllClickHandler}>Show more</button> : null}
+        <button className="btn btn-default pull-right" onClick={closeSearch}>Close</button>
+        </li>
+    </>);
 
     return (
         <div id="results" className="dropdown">
