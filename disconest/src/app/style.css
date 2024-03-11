@@ -180,12 +180,11 @@ thead{
 }
 
 .dropdown-menu > li > a > img{
-  display: inline-block;
   float: left;
   padding-right: 5px;
 }
 
-@-webkit-keyframes rotate {
+@keyframes rotate {
   from {
     -webkit-transform: rotate(0deg);
   }
@@ -193,13 +192,16 @@ thead{
     -webkit-transform: rotate(359deg);
   }
 }
+
 .loading img{
   -webkit-animation-name: rotate; 
   -webkit-animation-duration: 1s; 
   -webkit-animation-iteration-count: infinite;
   -webkit-ANIMATION-timing-function: linear;
+  margin-top: 20px;
 }
-.loading, .error, #printinfo{
+
+#printinfo{
   display: none;
 }
 .artwork img{

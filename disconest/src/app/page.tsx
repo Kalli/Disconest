@@ -12,6 +12,8 @@ export default function Home() {
     const [selectedReleaseId, setselectedReleaseId] = useState<number | null>(null);
     const [selectedReleaseType, setselectedReleaseType] = useState<ReleaseType | null>(null);
     const [selectedRelease, setselectedRelease] = useState<DiscogsReleaseProps | null>(null);
+    const [loadingDiscogsData, setLoadingDiscogsData] = useState<boolean>(false);
+    const [errored, setError] = useState<boolean>(false);
     
     const handleReleaseSelected = (releaseId: number|null, releaseType: ReleaseType|null) => {
         setselectedReleaseId(releaseId);
@@ -21,6 +23,7 @@ export default function Home() {
     useEffect(() => {
         const loadDiscogsRelease = async () => {
             if (selectedReleaseId !== null){
+                setLoadingDiscogsData(true);
                 try {
                     const response = await fetch(`/api/discogs?${selectedReleaseType}=${selectedReleaseId}`, {
                         method: 'GET',
@@ -90,15 +93,10 @@ export default function Home() {
                         Keys, bpm's and more.</p>
                     </div>
                     <div className="row">
-                        <SearchForm handleReleaseSelected={handleReleaseSelected} ></SearchForm>
+                        <SearchForm handleReleaseSelected={handleReleaseSelected} setLoadingDiscogsData={setLoadingDiscogsData}></SearchForm>
                     </div>
-            <div className="row loading ">
-                <img className="center-block" src="/img/rekid.png" alt="Loading..." />
-                <p className="text-center">Loading...</p>
-            </div>
-            <div className="row error">
-                <h3 className="text-center">Sorry something went wrong. Please try again</h3>
-            </div>
+            {loadingDiscogsData && <Loading />}
+            {errored && <ErrorMessage />}
             <div id="release" className="row">
                 {selectedRelease && <DiscogsRelease {...selectedRelease} />}
             </div>
@@ -122,10 +120,28 @@ export default function Home() {
 
 interface SearchFormProps {
     handleReleaseSelected: (releaseId: number|null, releaseType: ReleaseType|null) => void;
+    setLoadingDiscogsData: (loading: boolean) => void;
+}
+
+const Loading : React.FC = () => {
+    return (
+        <div className="row loading ">
+            <img className="center-block" src="/img/rekid.png" alt="Loading..." />
+            <p className="text-center">Loading...</p>
+        </div>
+    )
+}
+
+const ErrorMessage : React.FC = () => {
+    return (
+        <div className="row error">
+            <h3 className="text-center">Sorry something went wrong. Please refresh the page and try again</h3>
+        </div>
+    )
 }
 
 
-const SearchForm : React.FC<SearchFormProps> = ({ handleReleaseSelected }) =>  {
+const SearchForm : React.FC<SearchFormProps> = ({ handleReleaseSelected, setLoadingDiscogsData }) =>  {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [searchResults, setSearchResults] = useState<SearchResultProps["results"]>([]);
 
@@ -141,6 +157,7 @@ const SearchForm : React.FC<SearchFormProps> = ({ handleReleaseSelected }) =>  {
     
     const discogsSearch = async () => {
         try {
+            setLoadingDiscogsData(true);
             const response = await fetch(`/api/discogs?q=${encodeURIComponent(searchQuery)}`, {
                 method: 'GET',
                 headers: {
@@ -152,6 +169,7 @@ const SearchForm : React.FC<SearchFormProps> = ({ handleReleaseSelected }) =>  {
             }
             const data = await response.json();
             setSearchResults(data.results);
+            setLoadingDiscogsData(false);
         } catch (error) {
             console.error('There was an error!', error);
         }
