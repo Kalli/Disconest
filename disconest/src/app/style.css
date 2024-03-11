@@ -265,3 +265,12 @@ thead{
   color: #ffffff;
   margin: 10px;
 }
+.bookmarklet {
+  margin: 5px;
+}
+
+.bookmarklet a {
+  text-decoration: none;
+  color: #ffffff;
+  pad: 5px;
+}
