@@ -6,7 +6,8 @@ import './print.css'
 import React, { useState, useEffect } from 'react';
 import { DiscogsReleaseProps, DiscogsRelease, createArtistDisplayName } from './release';
 import { AlbumWithAudioFeatures } from './types/spotify';
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation';
+
 type ReleaseType = "master" | "release";
 
 export default function Home() {
@@ -23,6 +24,15 @@ export default function Home() {
         setselectedReleaseId(releaseId);
         setselectedReleaseType(releaseType);
     };
+
+    // first load of a page with id in the url, then set the selected release id and type
+    const queryParams = useSearchParams();
+    const urlReleaseType = queryParams?.get('type');
+    const urlReleaseId = queryParams?.get('id');
+    if (urlReleaseType && urlReleaseId && selectedReleaseId === null){
+        setselectedReleaseId(parseInt(urlReleaseId));
+        setselectedReleaseType(urlReleaseType as ReleaseType);
+    }
 
     const updateUrl = () => {
         if (selectedRelease !== null && selectedRelease.title !== undefined && selectedRelease.artists !== undefined) {
@@ -83,8 +93,10 @@ export default function Home() {
                 }
             }
         };
-        updateUrl();
-        loadSpotifyData();
+        if (selectedRelease !== null){
+            updateUrl();
+            loadSpotifyData();
+        }
     }, [selectedRelease]);
     return (
         <main>
