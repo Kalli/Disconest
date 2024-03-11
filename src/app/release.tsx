@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from "next/image";
 import { SpotifyTrackMetadata, matchDiscogsAndSpotifyTracks } from './spotify';
 import { Links } from './links';
 import { AlbumWithAudioFeatures, TrackWithAudioFeatures } from './types/spotify';
@@ -58,9 +59,9 @@ export const DiscogsRelease : React.FC<ReleaseProps> = (props: ReleaseProps) => 
                 <div className="artwork col-md-2">
                     <a target="_blank" href={uri}>
                         {images ? (
-                            <img className="img-responsive center-block" src={images[0]['uri150']} />
+                            <Image className="img-responsive center-block" src={images[0]['uri150']} width={150} height={150} alt={title + ' cover'} />
                         ) : (
-                            <img className="img-responsive center-block" src="/img/rekid-150.png" />
+                            <Image className="img-responsive center-block" src="/img/rekid-150.png" width={150} height={150} alt={title + ' cover'}/>
                         )}
                     </a>
                 </div>

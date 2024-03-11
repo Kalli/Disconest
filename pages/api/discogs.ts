@@ -4,7 +4,7 @@ import { makeRequest } from '../requests';
 type ResponseData = Object
 
 // makes the relevant requests to the discogs api based on query parameters
-export default async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
+const discogsApiHandler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
     // discogs search
     if (req.query['q']){
         let discogsSearchQuery = req.query['q'].toString() || '';
@@ -56,3 +56,5 @@ export default async (req: NextApiRequest, res: NextApiResponse<ResponseData>) =
     }
     res.status(200).json({});
 };
+
+export default discogsApiHandler;

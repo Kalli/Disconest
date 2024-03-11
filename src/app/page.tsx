@@ -1,5 +1,6 @@
 'use client'
 import Image from "next/image";
+import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.css'
 import './style.css'
 import './print.css'
@@ -78,7 +79,7 @@ export default function Home() {
             }
         };
         loadDiscogsRelease();
-    }, [selectedReleaseId]);
+    }, [selectedReleaseId, selectedReleaseType]);
 
     useEffect(() => {
         const loadSpotifyData = async () => {
@@ -125,7 +126,7 @@ export default function Home() {
                             />
                         </a>
                         <p>Find musical metadata for your records!<br />
-                        Keys, bpm's and more.</p>
+                        Keys, bpm&apos;s and more.</p>
                     </div>
                     <div className="row">
                         <SearchForm handleReleaseSelected={handleReleaseSelected} setLoadingDiscogsData={setLoadingDiscogsData}></SearchForm>
@@ -144,7 +145,7 @@ export default function Home() {
                 <p>    
                     Enter a search term or a Discogs url in the box above to try it out or drag this 
                     <span className="badge bookmarklet" dangerouslySetInnerHTML={{__html:'<a href="javascript:(function(){var matches,regexp,url;url=document.URL;regexp=/(?:https?:\\/\\/)?(?:www.)?discogs.com\\/.*?\\/?(release|master)\\/(\\d+)/;matches=url.match(regexp);if(matches&&matches.length===3){open(\'http://www.disconest.com/?discogsurl=\'+url,\'_blank\',\'resizable,location,menubar,toolbar,scrollbars,status\');}else{alert(&quot;This is not a valid Discogs url&quot;);}})();">Disconest!</a>'}} />
-                    bookmarklet to your bookmarks bar and click it when you are on a Discogs release page. <a href="/about">More information.</a>
+                    bookmarklet to your bookmarks bar and click it when you are on a Discogs release page. <Link href="/about">More information.</Link>
                 </p>
             </div>
             <div id="printinfo" className="row">
@@ -164,7 +165,7 @@ interface SearchFormProps {
 const Loading : React.FC = () => {
     return (
         <div className="row loading ">
-            <img className="center-block" src="/img/rekid.png" alt="Loading..." />
+            <Image className="center-block" src="/img/rekid.png" alt="Loading..." width={48} height={48} />
             <p className="text-center">Loading...</p>
         </div>
     )
@@ -289,7 +290,7 @@ const SearchResults: React.FC<SearchResultProps> = ({ results = [], onSelectRele
                     return (
                         <li key={release.id}>
                             <a href="" onClick={(e) => releaseClickHandler(e, release.id, release.type)}>
-                                <img width="50" height="50" src={release.thumb} />
+                                <Image width="50" height="50" src={release.thumb} alt={release.title + " cover"}/>
                                 {release.title}
                             </a>
                         </li>

@@ -1,35 +1,53 @@
 import '../src/app/style.css'
 import 'bootstrap/dist/css/bootstrap.css'
+import Image from 'next/image';
 
 const About = () => {
     return (
         <div className="container jumbotron about">
             <a href="/">
-                <img className="img-responsive center-block logo" alt="Disconest" title="Disconest" src="/img/disconest-1.png" />
+                <Image
+                    src="/img/disconest-1.png"
+                    alt="Disconest Logo"
+                    width={300}
+                    height={50}
+                    priority
+                />
             </a>
             <div id="info" className="row">      
                 <hr />
                     <div className="caption">Update: May 2016 - Some important changes to Disconest. <a href="#may2016">See below.</a></div>
                 <hr />
                 <p>
-                    Disconest was borne out of an itch I had when comparing vinyl dj-ing to its digital counterpart. Of course proper djs should know their records but it can still be good to see at a glance whether this tune is 120 or 125 bpm or if it's in C or D major.
+                    Disconest was borne out of an itch I had when comparing vinyl dj-ing to its digital counterpart. Of course proper djs should know their records but it can still be good to see at a glance whether this tune is 120 or 125 bpm or if it&apos;s in C or D major.
                 </p>
             
                 <p>
-                    Ever so often you buy second hand records where dj’s solved this problem in an ingenious fashion but tapping out the bpm’s and writing labels doesn’t really scale for hundreds or thousands of records.
+                    Ever so often you buy second hand records where dj&apos;s solved this problem in an ingenious fashion but tapping out the bpm&apos;s and writing labels doesn&apos;t really scale for hundreds or thousands of records.
                 </p>
   
                 <div className="image">
-                    <img className="img-responsive center-block" alt="How we used to do it" src="/img/disconest-1.jpg" />
-                    <div className="caption">Old skool bpm label on a 2nd hand record I bought. Useful information but tapping out bpms and writing them on covers really doesn't scale!</div>
+                    <Image
+                        src="/img/disconest-1.jpg"
+                        alt="How we used to do it"
+                        width={600}
+                        height={600}
+                        priority
+                    />
+                    <div className="caption">Old skool bpm label on a 2nd hand record I bought. Useful information but tapping out bpms and writing them on covers really doesn&apos;t scale!</div>
                 </div>
                 
                 <p>
-                    I knew <a href="http://www.discogs.com/developers/">Discogs</a> had an api to get you information about the records listed on there and that Spotify (previously <a href="http://the.echonest.com/">The Echonest</a>) has metadata information on a lot of the songs on those records. So what Disconest does is connect the two. It doesn't always get it right, Spotify might not have information about that <a href="http://www.disconest.com/?discogsurl=https://www.discogs.com/release/1698948">super rare grime white label you bought in 2004</a>, but often enough it'll do the trick.
+                    I knew <a href="http://www.discogs.com/developers/">Discogs</a> had an api to get you information about the records listed on there and that Spotify (previously <a href="http://the.echonest.com/">The Echonest</a>) has metadata information on a lot of the songs on those records. So what Disconest does is connect the two. It doesn&apos;t always get it right, Spotify might not have information about that <a href="http://www.disconest.com/?discogsurl=https://www.discogs.com/release/1698948">super rare grime white label you bought in 2004</a>, but often enough it&apos;ll do the trick.
                 </p>
-                
-                <img className="img-responsive center-block" alt="How Disconest does it" src="/img/disconest-2.jpg" />
-        
+
+                <Image
+                        src="/img/disconest-2.jpg"
+                        alt="How Disconest does it"
+                        width={600}
+                        height={600}
+                        priority
+                    />
                 <div className="caption">
                     Disconest metadata label.
                 </div>
@@ -39,13 +57,12 @@ const About = () => {
                 </p>
           
                 <p>
-                    There’s also a <a href="http://www.github.com/kalli/disconest">command line version</a> that you can use to fetch the same information for your entire <a href="http://www.discogs.com/users/export?w=collection">Discogs</a> collection. I hope Disconest can be of use to some of the record nerds out there. Shouts to <a href="https://dribbble.com/jonfri">Jonfri</a> who made the snazzy logo.
+                    There&apos;s also a <a href="http://www.github.com/kalli/disconest">command line version</a> that you can use to fetch the same information for your entire <a href="http://www.discogs.com/users/export?w=collection">Discogs</a> collection. I hope Disconest can be of use to some of the record nerds out there. Shouts to <a href="https://dribbble.com/jonfri">Jonfri</a> who made the snazzy logo.
                 </p>
           
                 <p>
                     Made by <a href="http://www.karltryggvason.com">Karl Tryggvason</a> (<a href="http://www.twitter.com/karltryggvason">@karltryggvason</a>) at <a href="http://www.london.musichackday.org/2013/">Music Hack Day London 2013</a>. Using: 
-                    <a target="_blank" title="Echonest" href="http://the.echonest.com/"><img className="icon" src="/img/echonest.png" alt="Echonest" /></a>
-                    <a target="_blank" title="Discogs" href="http://www.discogs.com/developers/"><img className="icon" src="/img/discogs.png" alt="Discogs" /></a>
+                    <a target="_blank" title="Echonest" href="http://the.echonest.com/">the Echonest</a> and <a target="_blank" title="Discogs" href="http://www.discogs.com/developers/">Discogs</a> apis.
                 </p>
             <hr />
             <h2 id="may2016">

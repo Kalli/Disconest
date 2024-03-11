@@ -61,7 +61,7 @@ const getSpotifyAlbum = async (spotifySearchResponse: any, token: string) : Prom
 }
 
 const getSpotifyTracksAudioFeatures = async (spotifyAlbum: any, token: string) : Promise<AudioFeaturesCollection|null> => {
-    const ids = spotifyAlbum.tracks.items.reduce((ids: string, track: any) => {
+    const ids = spotifyAlbum.tracks?.items?.reduce((ids: string, track: any) => {
         ids += track.id + ',';
         return ids;
     }, '');
@@ -79,7 +79,7 @@ const getSpotifyTracksAudioFeatures = async (spotifyAlbum: any, token: string) :
     return response as AudioFeatures[];
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
+const spotifyApiHandler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
     const token = await refreshToken();
     if (req.query['title'] && req.query['artist']){
         const spotifySearchResponse = await spotifySearch(req.query['title'] as string, req.query['artist'] as string, token);
@@ -114,3 +114,4 @@ export default async (req: NextApiRequest, res: NextApiResponse<ResponseData>) =
     res.status(400).json({error: 'Invalid request'});
 };
 
+export default spotifyApiHandler;
