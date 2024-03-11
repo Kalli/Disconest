@@ -12,8 +12,9 @@ export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[],
     };
     return discogsTracks.map(discogsTrack => {
         const spotifyTrack = spotifyTracks.find(spotifyTrack => {
-            const spotifyName = spotifyTrack.name.toLowerCase().replace("(", "").replace(")", "")
-            const discogsName = discogsTrack.title.toLowerCase().replace("(", "").replace(")", "")
+            // replace punctuation, parentheses and case to compare track names
+            const spotifyName = spotifyTrack.name.toLowerCase().replace(/[.,()]/g, '')
+            const discogsName = discogsTrack.title.toLowerCase().replace(/[.,()]/g, '')
             const name = spotifyName.indexOf(discogsName) != -1 || discogsName.indexOf(spotifyName) != -1
             return name
         })
