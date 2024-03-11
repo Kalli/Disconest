@@ -6,9 +6,12 @@ import './print.css'
 import React, { useState, useEffect } from 'react';
 import { DiscogsReleaseProps, DiscogsRelease, createArtistDisplayName } from './release';
 import { AlbumWithAudioFeatures } from './types/spotify';
+import { useRouter } from 'next/navigation'
 type ReleaseType = "master" | "release";
 
 export default function Home() {
+    const router = useRouter()
+
     const [selectedReleaseId, setselectedReleaseId] = useState<number | null>(null);
     const [selectedReleaseType, setselectedReleaseType] = useState<ReleaseType | null>(null);
     const [selectedRelease, setselectedRelease] = useState<DiscogsReleaseProps | null>(null);
@@ -20,6 +23,13 @@ export default function Home() {
         setselectedReleaseId(releaseId);
         setselectedReleaseType(releaseType);
     };
+
+    const updateUrl = () => {
+        if (selectedRelease !== null && selectedRelease.title !== undefined && selectedRelease.artists !== undefined) {
+            document.title = `Musical metadata for ${selectedRelease.title} by ${createArtistDisplayName(selectedRelease.artists)} - Disconest`;
+        };
+        router.push(`/?type=${selectedReleaseType}&id=${selectedReleaseId}`);
+    }
 
     useEffect(() => {
         const loadDiscogsRelease = async () => {
@@ -73,6 +83,7 @@ export default function Home() {
                 }
             }
         };
+        updateUrl();
         loadSpotifyData();
     }, [selectedRelease]);
     return (
