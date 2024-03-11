@@ -11,12 +11,19 @@ export default async (req: NextApiRequest, res: NextApiResponse<ResponseData>) =
         const options = {
             protocol: 'https:',
             hostname: 'api.discogs.com',
-            path: `/database/search?q=${encodeURIComponent(discogsSearchQuery)}&token=${process.env.DISCOGS_TOKEN}&type=master`,
+            path: `/database/search?q=${encodeURIComponent(discogsSearchQuery)}&token=${process.env.DISCOGS_TOKEN}`,
             headers: {
                 'User-Agent': 'Disconest/1.0 +http://www.disconest.com',
             },
         };
         const discogsApiResponse = await makeRequest(options);
+        // filter to just release and master types
+        res.status(200).json({
+                // @ts-ignore
+                results: discogsApiResponse.results.filter((result: any) => {
+                    return result.type == 'release' || result.type == 'master';
+                })
+        });
         res.status(200).json(discogsApiResponse);
     }
     // discogs release
