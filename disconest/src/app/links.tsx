@@ -13,10 +13,10 @@ export const Links: React.FC<LinksProps> = ({ labels, artists }) => {
     };
 
     let searchprefix = 'http://www.juno.co.uk/search/?q';
-    const labelLinks = labels.map((label) => {
+    const labelLinks = labels? labels.map((label) => {
         const labelLink = searchprefix + "%5Blabel%5D%5B%5D=" + encodeURIComponent(label.name) + '&ref=bbis';
         return <a key={label.name} target="_blank" href={labelLink}>Releases on {label.name}</a>;
-    });
+    }) : [];
     const artistName = createArtistDisplayName(artists);
     const junoLink = searchprefix + "%5Bartist%5D%5B%5D=" + encodeURIComponent(artistName) + '&ref=bbis';
     const artistLinks = artists.map((artist) => {
