@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { DiscogsReleaseProps, DiscogsRelease, createArtistDisplayName } from './release';
 import { AlbumWithAudioFeatures } from './types/spotify';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Banner } from "./links";
 
 type ReleaseType = "master" | "release";
 
@@ -19,11 +20,14 @@ export default function Home() {
     const [selectedRelease, setselectedRelease] = useState<DiscogsReleaseProps | null>(null);
     const [spotifyData, setSpotifyData] = useState<AlbumWithAudioFeatures | null>(null);
     const [loadingDiscogsData, setLoadingDiscogsData] = useState<boolean>(false);
+    const [banner, setBanner] = useState<React.ReactNode|null>(null);
     const [errored, setError] = useState<boolean>(false);
     
     const handleReleaseSelected = (releaseId: number|null, releaseType: ReleaseType|null) => {
         setselectedReleaseId(releaseId);
         setselectedReleaseType(releaseType);
+        const banner = <Banner />;
+        setBanner(banner)
     };
 
     // first load of a page with id in the url, then set the selected release id and type
@@ -138,6 +142,7 @@ export default function Home() {
                     (<DiscogsRelease discogsRelease={selectedRelease} spotifyData={spotifyData} />): null
                 }
             </div>
+            {selectedRelease? banner : null}
             <div id="info" className="row">            
                 <p>
                     Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="http://the.echonest.com/">The Echonest</a> music database to find this information about records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 

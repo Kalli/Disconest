@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DiscogsLabel, DiscogsArtist, createArtistDisplayName } from './release';
+import Image from "next/image";
 
 interface LinksProps {
     labels: DiscogsLabel[];
@@ -58,4 +59,37 @@ export const Links: React.FC<LinksProps> = ({ labels, artists }) => {
             </a>
         </div>
     );
+}
+
+export const Banner: React.FC = () => {
+    const banners = [
+        { 
+            src: 'https://images.juno.co.uk/banners/affiliate/latestcampaign/jr_latestcampaign_468x60.gif',
+            href: 'http://www.juno.co.uk/latestcampaign/?ref=bbis',
+            alt: 'Juno Records latest campaign', 
+        },
+        {
+            src: 'https://affiliate.juno.co.uk/accounts/default1/banners/0e2eb320.gif',
+            href: 'http://www.juno.co.uk/promotions/Studio_Equipment_Deals/?ref=bbis',
+            alt: 'Studio Equipment Deals',        
+        },
+        {
+            src: 'https://affiliate.juno.co.uk/accounts/default1/banners/d23486eb.gif',
+            href: 'http://www.juno.co.uk/promotions/DJ_Equipment_Deals/?ref=bbis',
+            alt: 'DJ Equipment Deals',        
+        },
+    ]
+    const banner = banners[Math.floor(Math.random() * banners.length)];
+    return (<div className="row banner">
+        <div className="text-center" >
+            <a href={banner.href} target="_blank">
+                <Image src={banner.src} alt={banner.alt} width={468} height={60} style={{display: 'inline-block', verticalAlign: 'middle'}} className='center text-center'/>
+            </a>
+        </div>
+        <div className="text-center" >
+            <a href={banner.href} target="_blank">
+                <small>Support Disconest by shopping from Juno</small>
+            </a>
+        </div>
+    </div>)
 }

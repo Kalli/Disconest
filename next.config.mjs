@@ -6,7 +6,18 @@ const nextConfig = {
           hostname: 'i.discogs.com',
           port: '',
           pathname: '/**',
-        }],
+        },{
+          protocol: 'https',
+          hostname: 'images.juno.co.uk',
+          port: '',
+          pathname: '/**',
+        },{
+          protocol: 'https',
+          hostname: 'affiliate.juno.co.uk',
+          port: '',
+          pathname: '/**',
+        },
+      ],
     },
 }
 
