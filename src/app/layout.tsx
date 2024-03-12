@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Suspense } from 'react';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,7 +31,10 @@ export default function RootLayout({
       <head>
         <title>Disconest - Musical metadata for your Records</title>
       </head>
+      {/* ToDo refactor useSearchParams so we don't need to wrap entire body in suspense */}
+      <Suspense>
       <body className={inter.className}>{children}</body>
+      </Suspense>
     </html>
   );
 }
