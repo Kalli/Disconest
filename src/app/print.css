@@ -53,7 +53,7 @@
         width: 100%;
     }
 
-    /* position, duration, key, ts and bpm */
+    /* position, duration, ts and bpm */
     #tracklist table th:nth-child(1),
     #tracklist table th:nth-child(2),
     #tracklist table th:nth-child(5),
@@ -67,6 +67,11 @@
     #tracklist table td:nth-child(7),
     #tracklist table td:nth-child(8) {
         width: 5%;
+    }
+    /* key */
+    #tracklist table th:nth-child(6),
+    #tracklist table td:nth-child(6){
+        width: 10%;
     }
     /* artist, title */
     #tracklist table th:nth-child(3), 
