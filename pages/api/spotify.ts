@@ -100,8 +100,9 @@ const spotifyApiHandler = async (req: NextApiRequest, res: NextApiResponse<Respo
                 res.status(200).json(enrichedSpotifyAlbum);
             }
         }
+    } else {
+        res.status(400).json({error: 'Invalid request'});
     }
-    res.status(400).json({error: 'Invalid request'});
 };
 
 export default spotifyApiHandler;
