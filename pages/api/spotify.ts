@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { makeRequest } from '../requests';
+import { makeRequest } from '../../requests';
 import { Album, SearchResultsMap, AudioFeaturesCollection, AlbumWithAudioFeatures } from '@/app/types/spotify';
 
 type ResponseData = Object;

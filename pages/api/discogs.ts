@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { makeRequest } from '../requests';
+import { makeRequest } from '../../requests';
 
 type ResponseData = Object
 
