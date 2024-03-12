@@ -19,12 +19,11 @@ const discogsApiHandler = async (req: NextApiRequest, res: NextApiResponse<Respo
         const discogsApiResponse = await makeRequest(options);
         // filter to just release and master types
         res.status(200).json({
-                // @ts-ignore
-                results: discogsApiResponse.results.filter((result: any) => {
-                    return result.type == 'release' || result.type == 'master';
-                })
+            // @ts-ignore
+            results: discogsApiResponse.results.filter((result: any) => {
+                return result.type == 'release' || result.type == 'master';
+            })
         });
-        res.status(200).json(discogsApiResponse);
     }
     // discogs release
     if (req.query['release']){
