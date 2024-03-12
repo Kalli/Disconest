@@ -5,6 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://disconest.com'),
   description: 'Get the key, tempo and other musical metadata for your records.',
   authors: [{name: 'Karl Tryggvason'}],
   openGraph: {
