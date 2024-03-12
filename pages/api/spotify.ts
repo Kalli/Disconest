@@ -66,9 +66,12 @@ const getSpotifyTracksAudioFeatures = async (spotifyAlbum: any, authHeader: {}) 
 }
 
 const spotifyApiHandler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
-    const token = await refreshToken();
-    const authHeader = {'Authorization': 'Bearer ' + token};
     if (req.query['title'] && req.query['artist']){
+        const token = await refreshToken();
+        if (token === ''){
+            res.status(500).json({error: 'Something went wrong with the Spotify token refresh. Please try again later.'});
+        }
+        const authHeader = {'Authorization': 'Bearer ' + token};
         const spotifySearchResponse = await spotifySearch(req.query['title'] as string, req.query['artist'] as string, authHeader);
         const spotifyAlbum = await getSpotifyAlbum(spotifySearchResponse, authHeader);  
         if (spotifyAlbum === null){
