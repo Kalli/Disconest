@@ -176,7 +176,7 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
     });
 
     const tracklistWithVideos = tracklistWithArtists.map((track) => {
-        const trackVideo = videos.find((video) => {
+        const trackVideo = videos?.find((video) => {
             return video.title.toLowerCase().indexOf(track.title.toLowerCase()) != -1;
         })
         if (!trackVideo){
