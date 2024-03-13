@@ -1,4 +1,4 @@
-import '../src/app/style.css'
+import '../style.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import Image from 'next/image';
 

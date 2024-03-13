@@ -123,6 +123,10 @@ thead{
   font-weight: 200;
 }
 
+.jumbotron ul {
+  padding-left: 30px;
+}
+
 .link a{
   display: inline-block;
   color: transparent;
