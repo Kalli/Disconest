@@ -28,8 +28,11 @@ const refreshToken = async (): Promise<string> => {
 }
 
 const spotifySearch = async (title: string, artist: string, authHeader: {}) : Promise<SearchResultsMap|null>=> {
+    // spotify album titles, don't generally contain the "EP" suffix
+    const lowerTitle = title.toLowerCase();
+    const filteredTitle = lowerTitle.endsWith(' ep') && title.length > 2 ? title.slice(0, -3) : title;
     const qs = (
-        '?q=album:' + encodeURIComponent(title) +
+        '?q=album:' + encodeURIComponent(filteredTitle) +
         '%20artist:' + encodeURIComponent(artist) +
         '&type=album'
     );
