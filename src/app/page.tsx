@@ -42,13 +42,12 @@ export default function Home() {
     const discogsurl = queryParams?.get('discogsurl');
     // if this page was loaded by the bookmarklet we will have gotten the discogsurl param 
     if (discogsurl && selectedReleaseId === null){
-        const url = new URL(discogsurl);
-        const pathnameParts = url.pathname.split('/');
-        const releaseType = pathnameParts[pathnameParts.length - 2];
-        const releaseId = pathnameParts[pathnameParts.length - 1].split('-')[0];
-
-        setselectedReleaseId(parseInt(releaseId));
-        setselectedReleaseType(releaseType as ReleaseType);
+        const match = matchDiscogsUrl(discogsurl);
+        if (match){
+            const [releaseType, releaseId] = match;
+            setselectedReleaseId(parseInt(releaseId));
+            setselectedReleaseType(releaseType as ReleaseType);
+        }
     }
 
     const updateUrl = () => {
@@ -203,6 +202,12 @@ const SearchForm : React.FC<SearchFormProps> = ({ handleReleaseSelected, setLoad
       };
     
     const discogsSearch = async () => {
+        const match = matchDiscogsUrl(searchQuery);
+        if (match){
+            const [releaseType, releaseId] = match;
+            handleReleaseSelected(parseInt(releaseId), releaseType as ReleaseType);
+            return;
+        }
         try {
             setLoadingDiscogsData(true);
             const response = await fetch(`/api/discogs?q=${encodeURIComponent(searchQuery)}`, {
@@ -305,4 +310,16 @@ const SearchResults: React.FC<SearchResultProps> = ({ results = [], onSelectRele
             </ul>
         </div>
     )
+}
+
+function matchDiscogsUrl(testString: string) : string[]|null{
+    const regex = /^((http|https):\/\/)?(www\.)?discogs\.com\/(master|release)/i;
+    if (!regex.test(testString)){
+        return null;
+    }
+    const url = new URL(testString);
+    const pathnameParts = url.pathname.split('/');
+    const releaseType = pathnameParts[pathnameParts.length - 2];
+    const releaseId = pathnameParts[pathnameParts.length - 1].split('-')[0];
+    return [releaseType, releaseId];
 }
