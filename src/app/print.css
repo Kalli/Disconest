@@ -87,4 +87,7 @@
     #printinfo {
         display: block;
     }
+    .footer {
+        display: none;
+    }
 }

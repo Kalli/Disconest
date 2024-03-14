@@ -35,7 +35,7 @@
 }
 
 .icon-printer:before {
-  content: "\e600";
+  content: "\e954";
 }
 
 .juno{
@@ -50,17 +50,20 @@
 }
 
 .icon-radio-checked2:before {
-    content: "\e900";
+    content: "\ea55";
 }
 
 .icon-facebook2:before {
-  content: "\e601";
+  content: "\ea91";
 }
 .icon-twitter2:before {
-  content: "\e602";
+  content: "\ea96";
 }
 .icon-lastfm2:before {
   content: "\e603";
+}
+.icon-instagram:before {
+  content: "\ea92";
 }
 
 body {
@@ -282,4 +285,23 @@ thead{
   text-decoration: none;
   color: #ffffff;
   pad: 5px;
+}
+
+.footer { 
+  position: fixed; 
+  left: 0; 
+  bottom: 0; 
+  width: 100%; 
+  text-align: center;
+  background-image: url("/img/creampaper.png");
+  z-index: 3;
+}
+
+.footer span {
+  margin: 5px;
+}
+
+.footer a {
+  text-decoration: none;
+  color: inherit
 }

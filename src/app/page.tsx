@@ -157,6 +157,7 @@ export default function Home() {
             </div>
             </div>
             </div>
+            <Footer />
         </main>
     );
 }
@@ -322,4 +323,20 @@ function matchDiscogsUrl(testString: string) : string[]|null{
     const releaseType = pathnameParts[pathnameParts.length - 2];
     const releaseId = pathnameParts[pathnameParts.length - 1].split('-')[0];
     return [releaseType, releaseId];
+}
+
+const Footer = () => {
+    return (
+        <div className="footer">
+            <a href="https://www.instagram.com/disconestdotcom/" target="_blank" title="Disconest on Instagram">
+                <span className="icon-instagram"></span>
+            </a>
+            <a href="https://twitter.com/disconestdotcom" target="_blank" title="Disconest on Twitter">
+                <span className="icon-twitter2"></span>
+            </a>
+            <div>
+                <small>Copyright © {new Date().getFullYear()} Disconest</small>
+            </div>
+        </div>
+    );
 }
