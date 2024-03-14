@@ -1,4 +1,15 @@
 @media print {
+    body {
+        size: A4;
+        margin: auto;
+        max-width: 210mm;
+    }
+    .container {
+        max-width: 100%;
+    }
+    .row {
+        max-width: 100%;
+    }
     .link, .social, .form-disconest, #info, #searchform, .img, .Links, .banner{
         display:none;
     }
@@ -36,7 +47,12 @@
     }
     #tracklist table {
         table-layout: auto;
-        width: 70%;
+        width: 100%;
+    }
+
+    table .release-info {
+        max-width: fill-available;
+        overflow: wrap;
     }
 
     #tracklist table td, #tracklist table th{
@@ -71,7 +87,7 @@
     /* key */
     #tracklist table th:nth-child(6),
     #tracklist table td:nth-child(6){
-        width: 10%;
+        width: 15%;
     }
     /* artist, title */
     #tracklist table th:nth-child(3), 

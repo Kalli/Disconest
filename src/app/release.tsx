@@ -71,7 +71,7 @@ export const DiscogsRelease : React.FC<ReleaseProps> = (props: ReleaseProps) => 
                             {createArtistDisplayName(artists)} - {title}
                         </a>
                     </h1>
-                    <table className="table">
+                    <table className="table release-info">
                         <tbody>
                             <tr>
                                 <td>Genres &amp; styles:</td>
