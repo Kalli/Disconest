@@ -59,7 +59,7 @@ export const DiscogsRelease : React.FC<ReleaseProps> = (props: ReleaseProps) => 
                 <div className="artwork col-md-2">
                     <a target="_blank" href={uri}>
                         {images ? (
-                            <Image className="img-responsive center-block" src={images[0]['uri150']} width={150} height={150} alt={title + ' cover'} />
+                            <img className="img-responsive center-block" src={images[0]['uri150']} width={150} height={150} alt={title + ' cover'} />
                         ) : (
                             <Image className="img-responsive center-block" src="/img/rekid-150.png" width={150} height={150} alt={title + ' cover'}/>
                         )}

@@ -301,7 +301,7 @@ const SearchResults: React.FC<SearchResultProps> = ({ results = [], onSelectRele
                     return (
                         <li key={release.id}>
                             <a href="" onClick={(e) => releaseClickHandler(e, release.id, release.type)}>
-                                <Image width="50" height="50" src={release.thumb} alt={release.title + " cover"}/>
+                                <img width="50" height="50" src={release.thumb} alt={release.title + " cover"}/>
                                 {release.title}
                             </a>
                         </li>
