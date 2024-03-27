@@ -76,10 +76,10 @@ export const DiscogsRelease : React.FC<ReleaseProps> = (props: ReleaseProps) => 
                             <tr>
                                 <td>Genres &amp; styles:</td>
                                 <td>
-                                    {styles.map(style => (
+                                    {styles && styles.map(style => (
                                         <span key={style} className="badge">{style}</span>
                                     ))}
-                                    {genres.map(genre => (
+                                    {genres && genres.map(genre => (
                                         <span key={genre} className="badge">{genre}</span>
                                     ))}
                                 </td>
