@@ -29,7 +29,7 @@ export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[],
             ...discogsTrack,
             spotify: {
                 ...spotifyTrackAttributes,
-                ...(key? {musicalKey: keys[key]}:{}),
+                ...(key != null ? {musicalKey: keys[key]}:{}),
             },
         }
     })
