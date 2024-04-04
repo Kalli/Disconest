@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 type ResponseData = Object
-const discogsApiUrl = 'https://api.discogs.com';
+const discogsApiUrl = process.env.DISCOGS_API_URL || 'https://api.discogs.com';
 const discogsHeaders = {
     'User-Agent': 'Disconest/1.0 +http://www.disconest.com',
 }

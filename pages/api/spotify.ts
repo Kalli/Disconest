@@ -6,8 +6,8 @@ type ResponseData = Object;
 // Spotify auth
 const SPOTIFY_ID = process.env.SPOTIFY_ID;
 const SPOTIFY_SECRET = process.env.SPOTIFY_SECRET;
-const spotifyAccountsUrl = 'https://accounts.spotify.com';
-const spotifyApiUrl = 'https://api.spotify.com';
+const spotifyAccountsUrl = process.env.SPOTIFY_ACCOUNTS_URL || 'https://accounts.spotify.com';
+const spotifyApiUrl = process.env.SPOTIFY_API_URL || 'https://api.spotify.com';
 const spotifyAuthHeaders = {
     'Authorization': 'Basic ' + (new Buffer(SPOTIFY_ID + ':' + SPOTIFY_SECRET).toString('base64')),
     'Content-Type': 'application/x-www-form-urlencoded',
