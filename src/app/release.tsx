@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from "next/image";
-import { SpotifyTrackMetadata, matchDiscogsAndSpotifyTracks } from './spotify';
+import { SpotifyTrackMetadata, matchDiscogsAndSpotifyTracks, ManualMetadata} from './spotify';
 import { Links } from './links';
 import { AlbumWithAudioFeatures, TrackWithAudioFeatures } from './types/spotify';
 
@@ -171,6 +171,13 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
             setSelectedRow(index);
         }
     };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            setSelectedRow(null);
+        }
+    };
+    
     const headings = ["Position", "Duration", "Artist", "Title", "Links"];
     const detailedHeadings = [
       ["Key", "Key/Scale"],
@@ -203,7 +210,7 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
     }
 
     return(
-        <div id="tracklist" className="row">
+        <div id="tracklist" className="row" onKeyDown={handleKeyDown} tabIndex={0}>
             <h3>Tracklist</h3>
             <div className="table-responsive">
                 <table id="tltable" className="table">
@@ -238,7 +245,7 @@ const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
                 {track.video && <a href={track.video.uri} target="_blank" rel="noopener noreferrer" className="yt">Youtube</a>}
                 {track.spotify?.id && <a href={`https://open.spotify.com/track/${track.spotify.id}`} target="_blank" rel="noopener noreferrer" className="sp">Spotify</a>}
             </td>
-            {track.spotify? <SpotifyTrackMetadata {...track.spotify} showToolTip={props.selectedRow || false}/> : <td colSpan={3} className="no-data center">Sorry - No metadata found!</td>}
+            {track.spotify? <SpotifyTrackMetadata {...track.spotify} showToolTip={props.selectedRow || false}/> : <ManualMetadata showToolTip={props.selectedRow || false} />}
         </tr>
     )
 };

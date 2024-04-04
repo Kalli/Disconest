@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { DiscogsTrackProps } from './release';
+import { BPMCounter } from './bpmcounter';
 import { TrackWithAudioFeatures } from './types/spotify';
 
 const keys = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
@@ -40,64 +41,36 @@ type TrackRowProps = {
 }
 type TrackRowWithAudioFeatures = TrackWithAudioFeatures & TrackRowProps;
 
+export const ManualMetadata : React.FC<TrackRowProps> = (props) => {
+    const [tapped, setTapped] = useState<boolean>(false);
+    const [tappedBPM, setTappedBPM] = useState<number>(0);
+
+    if (tapped) {
+        return (<>
+            <td className="center"></td>
+            <td className="center bpm" title='Click for BPM options'>
+                { props.showToolTip ? <BPMCounter originalBpm={0} setBpm={setTappedBPM}/> : null}
+                {tappedBPM.toFixed(1)}
+            </td>
+            <td className="center"></td>
+        </>);
+    } else {
+        return (<td colSpan={3} className="no-data center" onClick={() => setTapped(true)}><small>No metadata found -  Tap to manually set BPMs</small></td>);
+    }
+}
+
+
 export const SpotifyTrackMetadata : React.FC<TrackRowWithAudioFeatures> = (track) => {
-    const [tapCounts, setTapCounts] = useState<number>(0);
-    const [tapStart, setTapStart] = useState<Date|null>(null);
     const [tappedBPM, setTappedBPM] = useState<number|null>(null);
-    const tapEndRef = useRef<Date|null>(null);
-    const tapIntervalIdRef = useRef<number|null>(null);
-
-    const multiply = (multiplier:number, event: React.MouseEvent) => {
-        event.stopPropagation();
-        setTappedBPM((tappedBPM || track.tempo) * multiplier);
-    }
-
-    const tapBpms = (event: React.MouseEvent) => {
-        event.stopPropagation();
-        setTapCounts(tapCounts + 1);
-        if (!tapStart){
-            setTapStart(new Date());
-            tapEndRef.current = null;
-            tapIntervalIdRef.current = null;
-        } else {
-            const bpm = tapCounts * 1000 / ((new Date).getTime() - tapStart.getTime()) * 60;
-            tapEndRef.current = new Date();
-            setTappedBPM(bpm);
-        }
-        if (!tapIntervalIdRef.current){
-            tapIntervalIdRef.current = Number(setInterval(() => {
-                resetBpmTap(tapEndRef, tapIntervalIdRef);
-            }, 2000));
-        }
-    }
-
-    const resetBpmTap = (tapEndRef: React.RefObject<Date> | null, tapIntervalId: React.RefObject<number> | null,) => {
-        if (tapEndRef?.current && new Date().getTime() - tapEndRef?.current.getTime() > 2000){
-            setTapCounts(0);
-            setTapStart(null);
-            if (tapIntervalId?.current){
-                clearInterval(tapIntervalId.current);
-            }
-        }
-    }
     const bpm = tappedBPM || track.tempo;
     return (
         <>
             <td className="center">{track.musicalKey} {mode[track.mode]}</td>
             <td className="center bpm" title='Click for BPM options'>
-                { track.showToolTip ? (<>
-                    <div className='bpm-tool popover top'>
-                    <div className="arrow" style={{"left": "50%"}}></div>
-                    <div className="btn-group center">
-                        <button className="btn btn-default btn-sm" onClick={(e) => multiply(2, e)} title='Double current bpm'>2×</button>
-                        <button className="btn btn-default btn-sm" onClick={(e) => multiply(0.5, e)} title='Half current bpm'>½×</button>
-                        <button className="btn btn-default btn-sm" onClick={(e) => tapBpms(e)} title='Tap bpm by using your mouse (resets after 2 seconds of inactivity)'>Tap</button>
-                    </div>
-                    </div>
-                </>) : null}
+                { track.showToolTip ? <BPMCounter originalBpm={track.tempo} setBpm={setTappedBPM}/> : null}
                 {bpm.toFixed(1)}
             </td>
-            <td className="center">{track.time_signature}</td>
+            <td className="center">{track.time_signature} / 4</td>
         </>
     )
 }
