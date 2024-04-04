@@ -35,8 +35,12 @@ export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[],
     })
 }
 
-export const SpotifyTrackMetadata : React.FC<TrackWithAudioFeatures> = (track) => {
-    const [showToolTip, setShowToolTip] = useState<boolean>(false);
+type TrackRowProps = {
+    showToolTip: boolean,
+}
+type TrackRowWithAudioFeatures = TrackWithAudioFeatures & TrackRowProps;
+
+export const SpotifyTrackMetadata : React.FC<TrackRowWithAudioFeatures> = (track) => {
     const [tapCounts, setTapCounts] = useState<number>(0);
     const [tapStart, setTapStart] = useState<Date|null>(null);
     const [tappedBPM, setTappedBPM] = useState<number|null>(null);
@@ -80,20 +84,20 @@ export const SpotifyTrackMetadata : React.FC<TrackWithAudioFeatures> = (track) =
     return (
         <>
             <td className="center">{track.musicalKey} {mode[track.mode]}</td>
-            <td className="center">{track.time_signature}</td>
-            <td className="center bpm" title='Click for BPM options' onClick={() => setShowToolTip(!showToolTip)}>
-                { showToolTip ? (<>
+            <td className="center bpm" title='Click for BPM options'>
+                { track.showToolTip ? (<>
                     <div className='bpm-tool popover top'>
                     <div className="arrow" style={{"left": "50%"}}></div>
                     <div className="btn-group center">
-                        <button className="btn btn-default btn-xs" onClick={(e) => multiply(2, e)} title='Double current bpm'>2×</button>
-                        <button className="btn btn-default btn-xs" onClick={(e) => multiply(0.5, e)} title='Half current bpm'>½×</button>
-                        <button className="btn btn-default btn-xs" onClick={(e) => tapBpms(e)} title='Tap bpm by using your mouse (resets after 2 seconds of inactivity)'>Tap</button>
+                        <button className="btn btn-default btn-sm" onClick={(e) => multiply(2, e)} title='Double current bpm'>2×</button>
+                        <button className="btn btn-default btn-sm" onClick={(e) => multiply(0.5, e)} title='Half current bpm'>½×</button>
+                        <button className="btn btn-default btn-sm" onClick={(e) => tapBpms(e)} title='Tap bpm by using your mouse (resets after 2 seconds of inactivity)'>Tap</button>
                     </div>
                     </div>
                 </>) : null}
                 {bpm.toFixed(1)}
             </td>
+            <td className="center">{track.time_signature}</td>
         </>
     )
 }

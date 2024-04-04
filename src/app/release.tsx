@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from "next/image";
 import { SpotifyTrackMetadata, matchDiscogsAndSpotifyTracks } from './spotify';
 import { Links } from './links';
@@ -143,6 +143,8 @@ export interface DiscogsTrackProps {
     artists: DiscogsArtist[],
     spotify?: TrackWithAudioFeatures,
     video?: DiscogsVideo,
+    selectedRow?: boolean,
+    onClick: () => void,
 }
 
 interface DiscogsVideo {
@@ -161,11 +163,19 @@ interface DiscogsTrackListProps {
 }
 
 const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists, spotify, videos }) => {
+    const [selectedRow, setSelectedRow] = useState<number | null>(null);
+    const handleRowClick = (index: number) => {
+        if (index === selectedRow) {
+            setSelectedRow(null);
+        } else {
+            setSelectedRow(index);
+        }
+    };
     const headings = ["Position", "Duration", "Artist", "Title", "Links"];
     const detailedHeadings = [
       ["Key", "Key/Scale"],
+      ["BPM", "Tempo in beats per minute"],
       ["TS", "Time Signature"],
-      ["BPM", "Tempo in beats per minute"]
     ];
     // compilations can have different artists for each track, otherwise use the release artist
     let tracklistWithArtists = tracklist.map((track) => {
@@ -175,7 +185,7 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
         }
     });
 
-    const tracklistWithVideos = tracklistWithArtists.map((track) => {
+    const tracklistWithVideos = tracklistWithArtists.map((track, index) => {
         const trackVideo = videos?.find((video) => {
             return video.title.toLowerCase().indexOf(track.title.toLowerCase()) != -1;
         })
@@ -184,7 +194,7 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
         }
         return {
             ...track,
-            video: trackVideo
+            video: trackVideo,
         }
     })
 
@@ -206,9 +216,9 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
                         </tr>
                     </thead>
                 <tbody>
-                    {tracklistWithArtists.map((track) => {
+                    {tracklistWithArtists.map((track, index) => {
                         // @ts-ignore
-                        return <DiscogsTrack key={track.position} {...track} />
+                        return <DiscogsTrack key={index} {...track} selectedRow={index === selectedRow} onClick={() => handleRowClick(index)} />
                     })}
                 </tbody>
                 </table>
@@ -217,9 +227,9 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
     )
 }
 const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
-    const track = props;
+    const { onClick, selectedRow, ...track } = props;
     return (
-        <tr key={track.position}>
+        <tr key={track.position} onClick={onClick}>
             <td>{track.position.toUpperCase()}</td>
             <td className="duration">{track.duration}</td>
             <td>{createArtistDisplayName(track.artists)}</td>
@@ -228,7 +238,7 @@ const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
                 {track.video && <a href={track.video.uri} target="_blank" rel="noopener noreferrer" className="yt">Youtube</a>}
                 {track.spotify?.id && <a href={`https://open.spotify.com/track/${track.spotify.id}`} target="_blank" rel="noopener noreferrer" className="sp">Spotify</a>}
             </td>
-            {track.spotify? <SpotifyTrackMetadata {...track.spotify} /> : <td colSpan={3} className="no-data center">Sorry - No metadata found!</td>}
+            {track.spotify? <SpotifyTrackMetadata {...track.spotify} showToolTip={props.selectedRow || false}/> : <td colSpan={3} className="no-data center">Sorry - No metadata found!</td>}
         </tr>
     )
 };

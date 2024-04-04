@@ -324,11 +324,13 @@ thead{
 }
 
 .bpm-tool {
+  position: absolute;
+  white-space: nowrap;
   top: -20px;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-  display: block;
-  border: 0px !important;
-  padding: 0px !important;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  border: 0 !important;
+  padding: 0 !important;
 }

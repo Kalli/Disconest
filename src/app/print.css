@@ -10,8 +10,8 @@
     .row {
         max-width: 100%;
     }
-    .link, .social, .form-disconest, #info, #searchform, .img, .Links, .banner{
-        display:none;
+    .link, .social, .form-disconest, #info, #searchform, .img, .Links, .banner, .bpm-tool{
+        display: none;
     }
 
     #tracklist table thead, #tracklist table tbody, #tracklist table tfoot{
