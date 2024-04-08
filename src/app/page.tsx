@@ -16,6 +16,7 @@ export default function Home() {
     const router = useRouter()
 
     const [selectedReleaseId, setselectedReleaseId] = useState<number | null>(null);
+    const [screenshot, setScreenshot] = useState<boolean>(false);
     const [selectedReleaseType, setselectedReleaseType] = useState<ReleaseType | null>(null);
     const [selectedRelease, setselectedRelease] = useState<DiscogsReleaseProps | null>(null);
     const [spotifyData, setSpotifyData] = useState<AlbumWithAudioFeatures | null>(null);
@@ -34,11 +35,12 @@ export default function Home() {
     const queryParams = useSearchParams();
     const urlReleaseType = queryParams?.get('type');
     const urlReleaseId = queryParams?.get('id');
+    const urlScreenshot = queryParams?.get('screenshot') === "1";
     if (urlReleaseType && urlReleaseId && selectedReleaseId === null){
         setselectedReleaseId(parseInt(urlReleaseId));
         setselectedReleaseType(urlReleaseType as ReleaseType);
+        setScreenshot(urlScreenshot);
     }
-
     const discogsurl = queryParams?.get('discogsurl');
     // if this page was loaded by the bookmarklet we will have gotten the discogsurl param 
     if (discogsurl && selectedReleaseId === null){
@@ -131,9 +133,11 @@ export default function Home() {
                         <p>Find musical metadata for your records!<br />
                         Keys, bpm&apos;s and more.</p>
                     </div>
-                    <div className="row">
-                        <SearchForm handleReleaseSelected={handleReleaseSelected} setLoadingDiscogsData={setLoadingDiscogsData}></SearchForm>
-                    </div>
+                    {!screenshot && 
+                        <div className="row">
+                            <SearchForm handleReleaseSelected={handleReleaseSelected} setLoadingDiscogsData={setLoadingDiscogsData}></SearchForm>
+                        </div>
+                    }
             {loadingDiscogsData && <Loading />}
             {errored && <ErrorMessage />}
             <div id="release" className="row">
@@ -142,16 +146,18 @@ export default function Home() {
                 }
             </div>
             {selectedRelease? banner : null}
-            <div id="info" className="row">            
-                <p>
-                    Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="http://the.echonest.com/">The Echonest</a> music database to find this information about records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 
-                </p>    
-                <p>    
-                    Enter a search term or a Discogs url in the box above to try it out or drag this 
-                    <span className="badge bookmarklet" dangerouslySetInnerHTML={{__html:'<a href="javascript:(function(){var matches,regexp,url;url=document.URL;regexp=/(?:https?:\\/\\/)?(?:www.)?discogs.com\\/.*?\\/?(release|master)\\/(\\d+)/;matches=url.match(regexp);if(matches&&matches.length===3){open(\'http://www.disconest.com/?discogsurl=\'+url,\'_blank\',\'resizable,location,menubar,toolbar,scrollbars,status\');}else{alert(&quot;This is not a valid Discogs url&quot;);}})();">Disconest!</a>'}} />
-                    bookmarklet to your bookmarks bar and click it when you are on a Discogs release page. <Link href="/about">More information.</Link>
-                </p>
-            </div>
+            {!screenshot && 
+                <div id="info" className="row">            
+                    <p>
+                        Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="http://the.echonest.com/">The Echonest</a> music database to find this information about records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 
+                    </p>    
+                    <p>    
+                        Enter a search term or a Discogs url in the box above to try it out or drag this 
+                        <span className="badge bookmarklet" dangerouslySetInnerHTML={{__html:'<a href="javascript:(function(){var matches,regexp,url;url=document.URL;regexp=/(?:https?:\\/\\/)?(?:www.)?discogs.com\\/.*?\\/?(release|master)\\/(\\d+)/;matches=url.match(regexp);if(matches&&matches.length===3){open(\'http://www.disconest.com/?discogsurl=\'+url,\'_blank\',\'resizable,location,menubar,toolbar,scrollbars,status\');}else{alert(&quot;This is not a valid Discogs url&quot;);}})();">Disconest!</a>'}} />
+                        bookmarklet to your bookmarks bar and click it when you are on a Discogs release page. <Link href="/about">More information.</Link>
+                    </p>
+                </div>
+            }
             <div id="printinfo" className="row">
                 <p>Disconest.com - Musical Metadata for your Records</p>
             </div>
