@@ -49,7 +49,7 @@ export const ManualMetadata : React.FC<TrackRowProps> = (props) => {
         return (<>
             <td className="center"></td>
             <td className="center bpm" title='Click for BPM options'>
-                { props.showToolTip ? <BPMCounter originalBpm={0} setBpm={setTappedBPM}/> : null}
+                {props.showToolTip ? <BPMCounter originalBpm={0} setBpm={setTappedBPM}/> : null}
                 {tappedBPM.toFixed(1)}
             </td>
             <td className="center"></td>
@@ -66,7 +66,7 @@ export const SpotifyTrackMetadata : React.FC<TrackRowWithAudioFeatures> = (track
     return (
         <>
             <td className="center">{track.musicalKey} {mode[track.mode]}</td>
-            <td className="center bpm" title='Click for BPM options'>
+            <td className="center bpm spotify-metadata" title='Click for BPM options'>
                 { track.showToolTip ? <BPMCounter originalBpm={track.tempo} setBpm={setTappedBPM}/> : null}
                 {bpm.toFixed(1)}
             </td>
