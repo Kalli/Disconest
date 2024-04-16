@@ -233,12 +233,22 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
         </div>
     )
 }
+
+const msToTime = (duration: number|undefined) : string => {
+    if (!duration) {
+        return '';
+    }
+    const seconds = Math.floor((duration / 1000) % 60);
+    const minutes = Math.floor((duration / (1000 * 60)));
+    return minutes + ':' + seconds;
+}
+
 const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
     const { onClick, selectedRow, ...track } = props;
     return (
         <tr key={track.position} onClick={onClick}>
             <td>{track.position.toUpperCase()}</td>
-            <td className="duration">{track.duration}</td>
+            <td>{track.duration || msToTime(track.spotify?.duration_ms)}</td>
             <td>{createArtistDisplayName(track.artists)}</td>
             <td>{track.title}</td>
             <td className="link">
