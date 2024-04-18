@@ -144,6 +144,7 @@ export interface DiscogsTrackProps {
     spotify?: TrackWithAudioFeatures,
     video?: DiscogsVideo,
     selectedRow?: boolean,
+    type_: string,
     onClick: () => void,
 }
 
@@ -186,6 +187,9 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
     ];
     // compilations can have different artists for each track, otherwise use the release artist
     let tracklistWithArtists = tracklist.map((track) => {
+        if (track.type_ === 'heading'){
+            return track
+        }
         return {
             ...track,
             artists: track.artists?.length > 0 ? track.artists : artists,
@@ -245,17 +249,22 @@ const msToTime = (duration: number|undefined) : string => {
 
 const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
     const { onClick, selectedRow, ...track } = props;
+    const metaData = (track.spotify? 
+        <SpotifyTrackMetadata {...track.spotify} showToolTip={props.selectedRow || false}/> :
+        <ManualMetadata showToolTip={props.selectedRow || false} />
+    )
+    
     return (
         <tr key={track.position} onClick={onClick}>
             <td>{track.position.toUpperCase()}</td>
             <td>{track.duration || msToTime(track.spotify?.duration_ms)}</td>
             <td>{createArtistDisplayName(track.artists)}</td>
-            <td>{track.title}</td>
+            <td className={track.type_ === 'heading'? 'heading' : ''}>{track.title}</td>
             <td className="link">
                 {track.video && <a href={track.video.uri} target="_blank" rel="noopener noreferrer" className="yt">Youtube</a>}
                 {track.spotify?.id && <a href={`https://open.spotify.com/track/${track.spotify.id}`} target="_blank" rel="noopener noreferrer" className="sp">Spotify</a>}
             </td>
-            {track.spotify? <SpotifyTrackMetadata {...track.spotify} showToolTip={props.selectedRow || false}/> : <ManualMetadata showToolTip={props.selectedRow || false} />}
+            {track.type_ !== 'heading'? metaData : <td colSpan={3} ></td>}
         </tr>
     )
 };
