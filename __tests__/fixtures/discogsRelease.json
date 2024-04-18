@@ -1,0 +1,171 @@
+{
+  "id": 1187343,
+  "main_release": 10374955,
+  "most_recent_release": 10374955,
+  "resource_url": "https://api.discogs.com/masters/1187343",
+  "uri": "https://www.discogs.com/master/1187343-Peverelist-Tessellations",
+  "versions_url": "https://api.discogs.com/masters/1187343/versions",
+  "main_release_url": "https://api.discogs.com/releases/10374955",
+  "most_recent_release_url": "https://api.discogs.com/releases/10374955",
+  "num_for_sale": 21,
+  "lowest_price": 8.73,
+  "images": [
+      {
+          "type": "secondary",
+          "uri": "https://i.discogs.com/iUgYE_c_GTyo1BAGsKpBZul_8dAcorX5Fq8O5rpRujI/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMzc0/OTU1LTE0OTYyMjY2/NzQtMjE5Ni5qcGVn.jpeg",
+          "resource_url": "https://i.discogs.com/iUgYE_c_GTyo1BAGsKpBZul_8dAcorX5Fq8O5rpRujI/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMzc0/OTU1LTE0OTYyMjY2/NzQtMjE5Ni5qcGVn.jpeg",
+          "uri150": "https://i.discogs.com/QtbUhdc8NzSSLezQGlddpe8E3JS7C8rw7RJysbDkUkw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEwMzc0/OTU1LTE0OTYyMjY2/NzQtMjE5Ni5qcGVn.jpeg",
+          "width": 600,
+          "height": 600
+      }
+  ],
+  "genres": [
+      "Electronic"
+  ],
+  "styles": [
+      "Techno"
+  ],
+  "year": 2017,
+  "tracklist": [
+      {
+          "position": "1",
+          "type_": "track",
+          "title": "Burning Sea",
+          "duration": "3:52"
+      },
+      {
+          "position": "2",
+          "type_": "track",
+          "title": "Under Clearing Skies",
+          "duration": "5:41"
+      },
+      {
+          "position": "3",
+          "type_": "track",
+          "title": "Still Early",
+          "duration": "7:00"
+      },
+      {
+          "position": "4",
+          "type_": "track",
+          "title": "Sheer Chance Matters",
+          "duration": "5:54"
+      },
+      {
+          "position": "5",
+          "type_": "track",
+          "title": "Wireframes",
+          "duration": "7:15"
+      },
+      {
+          "position": "6",
+          "type_": "track",
+          "title": "Slice Of Life",
+          "duration": "4:58"
+      },
+      {
+          "position": "7",
+          "type_": "track",
+          "title": "Further Inland",
+          "duration": "5:59"
+      },
+      {
+          "position": "8",
+          "type_": "track",
+          "title": "Brinks And Limits",
+          "duration": "5:08"
+      },
+      {
+          "position": "9",
+          "type_": "track",
+          "title": "Plateau",
+          "duration": "2:29"
+      }
+  ],
+  "artists": [
+      {
+          "name": "Peverelist",
+          "anv": "",
+          "join": "",
+          "role": "",
+          "tracks": "",
+          "id": 748051,
+          "resource_url": "https://api.discogs.com/artists/748051",
+          "thumbnail_url": "https://i.discogs.com/X2x4qWMjk7l7JXkzexi1sWR6VHokwHRnuYQK6M-qM-E/rs:fit/g:sm/q:40/h:500/w:375/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTc0ODA1/MS0xMjIyMjQ3MDM3/LmpwZWc.jpeg"
+      }
+  ],
+  "title": "Tessellations",
+  "data_quality": "Correct",
+  "videos": [
+      {
+          "uri": "https://www.youtube.com/watch?v=Xm06Wmto44o",
+          "title": "Peverelist - Burning Sea",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 1). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 232,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=H__6awh5kKA",
+          "title": "Peverelist - Under Clearing Skies",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 2). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 341,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=WDj1ys-8KqY",
+          "title": "Peverelist - Still Early",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 3). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 421,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=gu4FNUARANg",
+          "title": "Peverelist - Sheer Chance Matters",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 4). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 354,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=OO0bvOR1lWs",
+          "title": "Peverelist - Wireframes",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 5). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 436,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=Fc9cbmFRGgI",
+          "title": "Peverelist - Slice of Life",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 6). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 299,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=f70H9nKGa14",
+          "title": "Peverelist - Further Inland",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 7). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 359,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=No3gj83GElg",
+          "title": "Peverelist - Brinks and Limits",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 8). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 309,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=-IYayoJ7TQQ",
+          "title": "Peverelist - Plateau",
+          "description": "For promotion purposes only, will take down upon request x\n\nTaken from Tessellations (track 9). Incredible album.\n\nUploaded in low audio quality, if you want higher please support the artist :\n\nhttps://peverelist.bandcamp.com/album/tessellations\nhttps://w",
+          "duration": 150,
+          "embed": true
+      },
+      {
+          "uri": "https://www.youtube.com/watch?v=DsTfPuQ_I50",
+          "title": "Wireframes",
+          "description": "Provided to YouTube by IDOL\n\nWireframes · Peverelist\n\nTessellations\n\n℗ Livity Sound Recordings\n\nReleased on: 2017-05-26\n\nComposer: Tom Ford\n\nAuto-generated by YouTube.",
+          "duration": 436,
+          "embed": true
+      }
+  ]
+}

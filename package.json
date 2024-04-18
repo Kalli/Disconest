@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest"
   },
   "dependencies": {
     "bootstrap": "^3.4.1",
@@ -16,11 +17,15 @@
     "unidecode": "^1.0.1"
   },
   "devDependencies": {
+    "@testing-library/react": "^15.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.2",
-    "typescript": "^5"
+    "jsdom": "^24.0.0",
+    "typescript": "^5",
+    "vitest": "^1.5.0"
   }
 }
