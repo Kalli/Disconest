@@ -158,16 +158,7 @@ export default function Home() {
             </div>
             {selectedRelease? banner : null}
             {!screenshot && 
-                <div id="info" className="row">            
-                    <p>
-                        Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="http://the.echonest.com/">The Echonest</a> music database to find this information about records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 
-                    </p>    
-                    <p>    
-                        Enter a search term or a Discogs url in the box above to try it out or drag this 
-                        <span className="badge bookmarklet" dangerouslySetInnerHTML={{__html:'<a href="javascript:(function(){var matches,regexp,url;url=document.URL;regexp=/(?:https?:\\/\\/)?(?:www.)?discogs.com\\/.*?\\/?(release|master)\\/(\\d+)/;matches=url.match(regexp);if(matches&&matches.length===3){open(\'http://www.disconest.com/?discogsurl=\'+url,\'_blank\',\'resizable,location,menubar,toolbar,scrollbars,status\');}else{alert(&quot;This is not a valid Discogs url&quot;);}})();">Disconest!</a>'}} />
-                        bookmarklet to your bookmarks bar and click it when you are on a Discogs release page. <Link href="/about">More information.</Link>
-                    </p>
-                </div>
+                <AboutText />
             }
             <div id="printinfo" className="row">
                 <p>Disconest.com - Musical Metadata for your Records</p>
@@ -177,6 +168,39 @@ export default function Home() {
             <Footer />
         </main>
     );
+}
+
+const AboutText : React.FC = () => {
+    const [showVideoModal, setShowVideoModal] = useState(false);
+    const showModal = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setShowVideoModal(true);
+    }
+    const closeModal = () => setShowVideoModal(false);
+
+    return (
+        <div id="info" className="row">            
+            <p>
+                Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="http://the.echonest.com/">The Echonest</a> music database to find this information about records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 
+            </p>    
+            <p>    
+                Enter a search term or a Discogs url in the box above to try it out or drag this 
+                <span className="badge bookmarklet" dangerouslySetInnerHTML={{__html:'<a href="javascript:(function(){var matches,regexp,url;url=document.URL;regexp=/(?:https?:\\/\\/)?(?:www.)?discogs.com\\/.*?\\/?(release|master)\\/(\\d+)/;matches=url.match(regexp);if(matches&&matches.length===3){open(\'http://www.disconest.com/?discogsurl=\'+url,\'_blank\',\'resizable,location,menubar,toolbar,scrollbars,status\');}else{alert(&quot;This is not a valid Discogs url&quot;);}})();">Disconest!</a>'}} />
+                bookmarklet to your bookmarks bar and click it when you are on a Discogs release page. <Link href="/about">More information</Link> / <a onClick={showModal}>Watch video</a>
+                {showVideoModal && 
+                    <div className="videoModal">
+                        <div className="modalContent">
+                            <span onClick={closeModal} className="closeButton">&nbsp;</span>
+                            <video className="videoPlayer" width="80%" controls autoPlay>
+                            <source src="https://s3.eu-west-1.amazonaws.com/media.disconest.com/HowToDisconest540.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                }
+            </p>
+        </div>
+    )
 }
 
 interface SearchFormProps {
