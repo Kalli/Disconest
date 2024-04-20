@@ -58,6 +58,17 @@ export default function Home() {
         };
         router.push(`/?type=${selectedReleaseType}&id=${selectedReleaseId}`);
     }
+    // load page when query params change, on history back and fwd
+    useEffect(() => {
+        const urlReleaseType = queryParams?.get('type');
+        const urlReleaseId = queryParams?.get('id');
+        const urlScreenshot = queryParams?.get('screenshot') === "1";
+        if (urlReleaseType && urlReleaseId){
+            setselectedReleaseId(parseInt(urlReleaseId));
+            setselectedReleaseType(urlReleaseType as ReleaseType);
+            setScreenshot(urlScreenshot);
+        }
+    }, [queryParams]);
 
     useEffect(() => {
         const loadDiscogsRelease = async () => {
