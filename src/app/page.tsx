@@ -102,7 +102,7 @@ export default function Home() {
             if (selectedRelease !== null){
                 try {
                     const query = (
-                        `title=${encodeURIComponent(selectedRelease.title)}&` + 
+                        `title=${encodeURIComponent(selectedRelease.title.replace("'", ""))}&` + 
                         `artist=${encodeURIComponent(createArtistDisplayName(selectedRelease.artists))}`
                     );
                     const response = await fetch(`/api/spotify?${query}`, {
