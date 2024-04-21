@@ -186,17 +186,9 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
       ["TS", "Time Signature"],
     ];
     // compilations can have different artists for each track, otherwise use the release artist
-    let tracklistWithArtists = tracklist.map((track) => {
-        if (track.type_ === 'heading'){
-            return track
-        }
-        return {
-            ...track,
-            artists: track.artists?.length > 0 ? track.artists : artists,
-        }
-    });
+    const noArtistInTracklist = tracklist.every(track => track.artists === undefined);
 
-    const tracklistWithVideos = tracklistWithArtists.map((track, index) => {
+    let tracklistWithVideos = tracklist.map((track) => {
         const trackVideo = videos?.find((video) => {
             return video.title.toLowerCase().indexOf(track.title.toLowerCase()) != -1;
         })
@@ -210,7 +202,7 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
     })
 
     if (spotify){
-        tracklistWithArtists = matchDiscogsAndSpotifyTracks(tracklistWithVideos, spotify.tracks.items);
+        tracklistWithVideos = matchDiscogsAndSpotifyTracks(tracklistWithVideos, spotify.tracks.items);
     }
 
     return(
@@ -220,14 +212,14 @@ const DiscogsTrackList : React.FC<DiscogsTrackListProps> = ({ tracklist, artists
                 <table id="tltable" className="table">
                     <thead>
                         <tr>
-                            {headings.map((h) => (<th className={h} key={h}>{h}</th>))}
+                            {headings.filter(h => h !== "Artist" || !noArtistInTracklist).map((h) => (<th className={h} key={h}>{h}</th>))}
                             {detailedHeadings.map(([short, full]) => (
                                 <th className={`${short} center`} title={full} key={short}>{short}</th>
                             ))}
                         </tr>
                     </thead>
                 <tbody>
-                    {tracklistWithArtists.map((track, index) => {
+                    {tracklistWithVideos.map((track, index) => {
                         // @ts-ignore
                         return <DiscogsTrack key={index} {...track} selectedRow={index === selectedRow} onClick={() => handleRowClick(index)} />
                     })}
@@ -258,7 +250,7 @@ const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
         <tr key={track.position} onClick={onClick}>
             <td>{track.position.toUpperCase()}</td>
             <td>{track.duration || msToTime(track.spotify?.duration_ms)}</td>
-            <td>{createArtistDisplayName(track.artists)}</td>
+            { track.artists? <td>{createArtistDisplayName(track.artists)}</td> : ''}
             <td className={track.type_ === 'heading'? 'heading' : ''}>{track.title}</td>
             <td className="link">
                 {track.video && <a href={track.video.uri} target="_blank" rel="noopener noreferrer" className="yt">Youtube</a>}
