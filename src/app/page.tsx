@@ -56,7 +56,7 @@ export default function Home() {
         if (selectedRelease !== null && selectedRelease.title !== undefined && selectedRelease.artists !== undefined) {
             document.title = `Musical metadata for ${selectedRelease.title} by ${createArtistDisplayName(selectedRelease.artists)} - Disconest`;
         };
-        router.push(`/?type=${selectedReleaseType}&id=${selectedReleaseId}`);
+        router.push(`/?type=${selectedReleaseType}&id=${selectedReleaseId}${screenshot? '&screenshot=1' : ''}`);
     }
     // load page when query params change, on history back and fwd
     useEffect(() => {
