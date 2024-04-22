@@ -27,9 +27,9 @@ const refreshToken = async (): Promise<string> => {
     }
 }
 
-const spotifySearch = async (title: string, artist: string, authHeader: {}) : Promise<SearchResultsMap|null>=> {
-    // spotify album titles, don't generally contain the "EP" suffix
-    const filteredTitle = title.toLowerCase().replace(/( ep| e\.p\.)$/, '');
+const spotifySearch = async (title: string, artist: string, authHeader: {}) : Promise<SearchResultsMap|null> => {
+    // spotify album titles, don't generally contain the "EP" suffix and punctuation characters dont alwasy match
+    const filteredTitle = title.toLowerCase().replace(/( ep| e\.p\.)$/, '').replace(/[.,()"]/g, ' ');
     const qs = (
         '?q=album:' + encodeURIComponent(filteredTitle) +
         '%20artist:' + encodeURIComponent(artist) +
@@ -37,9 +37,23 @@ const spotifySearch = async (title: string, artist: string, authHeader: {}) : Pr
     );
     const path = '/v1/search' + qs;
     const spotifyApiResponse = await fetch(spotifyApiUrl + path, { headers: authHeader })
-    const spotifyApiResponseJson = spotifyApiResponse.json();
+    const spotifyApiResponseJson = await spotifyApiResponse.json();
     // @ts-ignore
-    return spotifyApiResponseJson as SearchResultsMap;
+    const results = spotifyApiResponseJson as SearchResultsMap;
+    // if we got not match on a "a side / b side" release, try searching for just "a side"
+    // discogs releases often include both in the name, while Spotify releases use that pattern less frequently
+    if (results.albums?.total === 0 && title.includes(' / ')){
+        const revisedQs = (
+            '?q=album:' + encodeURIComponent(filteredTitle.split(' / ')[0]) +
+            '%20artist:' + encodeURIComponent(artist) +
+            '&type=album'
+        );
+        const newPath = '/v1/search' + revisedQs;
+        const secondSpotifyApiResponse = await fetch(spotifyApiUrl + newPath, { headers: authHeader })
+        const secondSpotifyApiResponseJson = await secondSpotifyApiResponse.json();
+        return secondSpotifyApiResponseJson as SearchResultsMap;
+    }
+    return results;
 }
 
 const getSpotifyAlbum = async (spotifySearchResponse: any, authHeader: {}) : Promise<Album|null> => {
