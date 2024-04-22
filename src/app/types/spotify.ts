@@ -91,7 +91,7 @@ export interface Restrictions {
 }
 
 export interface SearchResultsMap {
-    album: SimplifiedAlbum
+    albums: Page<SimplifiedAlbum>
     // we only care about the album
     // artist: Artist
     // track: Track
