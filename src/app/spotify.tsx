@@ -96,7 +96,7 @@ export const SpotifyTrackMetadata : React.FC<TrackRowWithAudioFeatures> = (track
             <td className="center">{track.musicalKey} {mode[track.mode]}</td>
             <td className="center bpm spotify-metadata" title='Click for BPM options'>
                 { track.showToolTip ? <BPMCounter originalBpm={track.tempo} setBpm={setTappedBPM}/> : null}
-                {bpm.toFixed(1)}
+                {bpm? bpm.toFixed(1) : ''}
             </td>
             <td className="center">{track.time_signature} / 4</td>
         </>

@@ -99,6 +99,9 @@ const spotifyApiHandler = async (req: NextApiRequest, res: NextApiResponse<Respo
             } else {
                 const enrichedTracks = spotifyAlbum.tracks.items.map((track: any, index: number) => {
                     const audioFeatureMatch = spotifyAudioFeatures.audio_features.find((audioFeature: any) => {
+                        if (!audioFeature){
+                            return false;
+                        }
                         return audioFeature.id === track.id;
                     })
                     return {
