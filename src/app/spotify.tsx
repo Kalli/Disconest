@@ -25,23 +25,25 @@ export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[],
         if (!spotifyTrack) {
             spotifyTrack = spotifyTracks.find((spotifyTrack, spotifyTrackIndex) => {
                 // compare the ascii versions of both tracks
-                const spotifyName = unidecode(spotifyTrack.name.toLowerCase().replace(/[.,()"]/g, '')).
-                    replace(' & ', ' ').replace(' and ', ' ').trim();
-                // replace certain characters that often differ between the platforms
-                const discogsNameFiltered = unidecode(discogsName).replace(' & ', ' ').replace(' and ', ' ').trim();
+                const spotifyName = filterTrackTitle(spotifyTrack.name);
+                const discogsNameFiltered = filterTrackTitle(discogsName);
                 const name = spotifyName.indexOf(discogsNameFiltered) != -1 || discogsNameFiltered.indexOf(spotifyName) != -1
                 if (name){
                     return name;
                 }
-                // check for track position and duration match
+                // check for track position, duration match and levenshtein distance
+                const distance = levenshteinDistance(spotifyName, discogsNameFiltered);
+                const likelyNameMatch = distance === 1 || distance/spotifyName.length < 0.05;
+                const indexMatch = spotifyTrackIndex === discogsTrackIndex;
+                let likelyTimeMatch = false;
                 if (discogsTrack.duration && timeDurationRegex.test(discogsTrack.duration)){
                     const [minutes, seconds] = discogsTrack.duration.split(':').map(num => parseInt(num));
                     const durationInSeconds = minutes * 60 + seconds;
-                    const index = spotifyTrackIndex === discogsTrackIndex;
-                    // if the index is the same and the duration differs by less than 2 seconds, its probably a match
-                    if (index && Math.abs(durationInSeconds - spotifyTrack.duration_ms/1000) < 2){
-                        return true;
-                    }
+                    likelyTimeMatch = Math.abs(durationInSeconds - spotifyTrack.duration_ms/1000) < 2
+                }
+                // if two of these matches are true, we likely have a match
+                if ((+indexMatch + +likelyTimeMatch + +likelyNameMatch) >= 2){
+                    return true;
                 }
                 return false;
             })
@@ -62,6 +64,43 @@ export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[],
             },
         }
     })
+}
+
+function filterTrackTitle(trackTitle: string): string {
+    const filteredTitle = trackTitle.
+        toLowerCase().
+        // punctuation characters
+        replace(/[.,()?\-"]/g, '').
+        // & and ands 
+        replace(' & ', ' ').replace(' and ', ' ').
+        // remove double spaces or more
+        replace(/\s{2,}/g, ' ')
+        .trim();
+    // convert non-latin/ascii characters
+    return unidecode(filteredTitle);
+}
+
+function levenshteinDistance(s: string, t: string): number {
+    // Create and initialize the matrix
+    const dist = Array.from({ length: s.length + 1 }, (_, i) =>
+        Array.from({ length: t.length + 1 }, (_, j) => i === 0 ? j : j === 0 ? i : 0)
+    );
+
+    // Fill the matrix
+    dist.forEach((row, i) => {
+        if (i === 0) return; // Skip the first row as it's already initialized
+        row.forEach((_, j) => {
+            if (j === 0) return; // Skip the first column of each row as it's already initialized
+            const cost = s[i - 1] === t[j - 1] ? 0 : 1;
+            dist[i][j] = Math.min(
+                dist[i - 1][j] + 1,    // Deletion
+                dist[i][j - 1] + 1,    // Insertion
+                dist[i - 1][j - 1] + cost  // Substitution
+            );
+        });
+    });
+
+    return dist[s.length][t.length];
 }
 
 type TrackRowProps = {

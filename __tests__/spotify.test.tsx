@@ -59,4 +59,15 @@ describe('Spotify and Discogs Matching', () => {
         expect(tracks[1].spotify !== undefined).toBe(true);
         expect(tracks[1].spotify?.name).toBe('a title');
     });
+
+    it('Should filter punctuation and non ascii characters  ', () => {
+        discogsTrack.title = 'What About This Love (Dub Version)';
+        spotifyTrack.name = 'What About This Love - Dub Version';
+        spotifyTrack.duration_ms = 2320000
+        // @ts-ignore
+        const tracks = matchDiscogsAndSpotifyTracks([discogsRelease.tracklist[1], discogsTrack], [SpotifySearchResponse.tracks.items[1], spotifyTrack]);
+        expect(tracks.length).toBe(2);
+        expect(tracks[1].spotify !== undefined).toBe(true);
+        expect(tracks[1].spotify?.name).toBe(spotifyTrack.name);
+    });
 })
