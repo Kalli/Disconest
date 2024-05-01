@@ -40,7 +40,7 @@ const spotifySearch = async (title: string, artist: string, authHeader: {}) : Pr
     const spotifyApiResponseJson = await spotifyApiResponse.json();
     // @ts-ignore
     const results = spotifyApiResponseJson as SearchResultsMap;
-    // if we got not match on a "a side / b side" release, try searching for just "a side"
+    // if we got no match on a "a side / b side" release, try searching for just "a side"
     // discogs releases often include both in the name, while Spotify releases use that pattern less frequently
     if (results.albums?.total === 0 && title.includes(' / ')){
         const revisedQs = (
@@ -56,17 +56,41 @@ const spotifySearch = async (title: string, artist: string, authHeader: {}) : Pr
     return results;
 }
 
-const getSpotifyAlbum = async (spotifySearchResponse: any, authHeader: {}) : Promise<Album|null> => {
-    if (spotifySearchResponse.albums?.items.length > 0){
-        // somewhat naively, we just take the first response
-        const albumId = spotifySearchResponse.albums.items[0].id;
-        const path = '/v1/albums/' + albumId;
-        const spotifyApiResponse = await fetch(spotifyApiUrl + path, { headers: authHeader })
-        const spotifyApiResponseJson = spotifyApiResponse.json();
-        // @ts-ignore
-        return spotifyApiResponseJson as SpotifyAlbum;
+interface DiscogsSearchData {
+    title: string,
+    artist: string,
+    year?: string,
+    trackCount: number,
+}
+
+// find the search result that is most likely to match our discogs release
+const matchAlbumToDiscogsRelease = (discogsSearchData: DiscogsSearchData, spotifySearchResponse: any) : string =>  {
+    if (spotifySearchResponse.albums?.items.length === 0){
+        return '';
     }
-    return null;
+    const bestMatch = spotifySearchResponse.albums.items.reduce((bestMatch: Album, album: Album) => {
+        return (scoreMatch(discogsSearchData, bestMatch) >= scoreMatch(discogsSearchData, album)? bestMatch : album);
+    }, spotifySearchResponse.albums.items[0])
+    return bestMatch.id;
+}
+
+
+// Give a score of how likely a spotify album is to be a match for the given discogs release
+const scoreMatch = (discogsSearchData: DiscogsSearchData, album: Album) : Number => {
+    const titleMatch = discogsSearchData.title === album.name? 10 : 0;
+    const artist = album.artists.find(spotifyArtist => spotifyArtist.name === discogsSearchData.artist);
+    const artistMatch = artist !== null ? 5 : 0;
+    const yearMatch = discogsSearchData.year === album.release_date.slice(0, 4) ? 1 : 0;
+    const trackMatch = discogsSearchData.trackCount === album.total_tracks? 1 : 0;
+    return titleMatch + artistMatch + yearMatch + trackMatch;
+}
+
+const getSpotifyAlbum = async (spotifyAlbumId: string, authHeader: {}) : Promise<Album|null> => {
+    const path = '/v1/albums/' + spotifyAlbumId;
+    const spotifyApiResponse = await fetch(spotifyApiUrl + path, { headers: authHeader })
+    const spotifyApiResponseJson = spotifyApiResponse.json();
+    // @ts-ignore
+    return spotifyApiResponseJson as SpotifyAlbum;
 }
 
 const getSpotifyTracksAudioFeatures = async (spotifyAlbum: any, authHeader: {}) : Promise<AudioFeaturesCollection|null> => {
@@ -83,13 +107,28 @@ const getSpotifyTracksAudioFeatures = async (spotifyAlbum: any, authHeader: {}) 
 
 const spotifyApiHandler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
     if (req.query['title'] && req.query['artist']){
+        const discogsSearchData : DiscogsSearchData = {
+            title: req.query['title'].toString(),
+            artist: req.query['title'].toString(),
+            year: req.query['year']?.toString(),
+            trackCount: Number(req.query['trackCount']?.toString()),
+        }
+
         const token = await refreshToken();
         if (token === ''){
             res.status(500).json({error: 'Something went wrong with the Spotify token refresh. Please try again later.'});
         }
         const authHeader = {'Authorization': 'Bearer ' + token};
         const spotifySearchResponse = await spotifySearch(req.query['title'] as string, req.query['artist'] as string, authHeader);
-        const spotifyAlbum = await getSpotifyAlbum(spotifySearchResponse, authHeader);  
+        if (!spotifySearchResponse){
+            res.status(404).json({error: 'No match found'});        
+        }
+        const spotifyAlbumId = matchAlbumToDiscogsRelease(discogsSearchData, spotifySearchResponse)
+        if (spotifyAlbumId === ''){
+            res.status(404).json({error: 'No match found'});
+            return;
+        }
+        const spotifyAlbum = await getSpotifyAlbum(spotifyAlbumId, authHeader);  
         if (spotifyAlbum === null){
             res.status(404).json({error: 'No match found'});
         } else {

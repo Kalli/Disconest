@@ -103,7 +103,8 @@ export default function Home() {
                 try {
                     const query = (
                         `title=${encodeURIComponent(selectedRelease.title.replace("'", ""))}&` + 
-                        `artist=${encodeURIComponent(createArtistDisplayName(selectedRelease.artists))}`
+                        `artist=${encodeURIComponent(createArtistDisplayName(selectedRelease.artists))}&` +
+                        `year=${selectedRelease.year}&trackCount=${selectedRelease.tracklist.length}`
                     );
                     const response = await fetch(`/api/spotify?${query}`, {
                         method: 'GET',
