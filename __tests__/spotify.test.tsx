@@ -29,7 +29,7 @@ describe('Spotify and Discogs Matching', () => {
     });
 
     it('Should match even if special characters do not match', () => {
-        const titleWithSpecialCharacters = 'Title with (special characters".,)'
+        const titleWithSpecialCharacters = 'Title with (special characters".,\')'
         const titleWithNoSpecialCharacters = 'Title with special characters'
         discogsTrack.title = titleWithSpecialCharacters;
         spotifyTrack.name = titleWithNoSpecialCharacters;
@@ -60,12 +60,24 @@ describe('Spotify and Discogs Matching', () => {
         expect(tracks[1].spotify?.name).toBe('a title');
     });
 
-    it('Should filter punctuation and non ascii characters  ', () => {
+    it('Should filter punctuation and non ascii characters', () => {
         discogsTrack.title = 'What About This Love (Dub Version)';
         spotifyTrack.name = 'What About This Love - Dub Version';
-        spotifyTrack.duration_ms = 2320000
+        spotifyTrack.duration_ms = 2320000;
         // @ts-ignore
         const tracks = matchDiscogsAndSpotifyTracks([discogsRelease.tracklist[1], discogsTrack], [SpotifySearchResponse.tracks.items[1], spotifyTrack]);
+        expect(tracks.length).toBe(2);
+        expect(tracks[1].spotify !== undefined).toBe(true);
+        expect(tracks[1].spotify?.name).toBe(spotifyTrack.name);
+    });
+
+    it('Should pick the best match not just the first ', () => {
+        const spotifyFirstTrack = SpotifySearchResponse.tracks.items[1];
+        spotifyFirstTrack.name = 'Title match';
+        discogsTrack.title = 'Title match (but its the remix)';
+        spotifyTrack.name = 'Title match (but its the remix)';
+        // @ts-ignore
+        const tracks = matchDiscogsAndSpotifyTracks([discogsRelease.tracklist[1], discogsTrack], [spotifyFirstTrack, spotifyTrack]);
         expect(tracks.length).toBe(2);
         expect(tracks[1].spotify !== undefined).toBe(true);
         expect(tracks[1].spotify?.name).toBe(spotifyTrack.name);

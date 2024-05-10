@@ -7,55 +7,26 @@ import unidecode from 'unidecode';
 const keys = ['C', 'C#', 'D', 'E♭', 'E', 'F', 'F#', 'G', 'A♭', 'A', 'B♭', 'B'];
 const mode = ['Minor', 'Major'];
 
-
+const timeDurationRegex = /^\d{1,2}:\d{2}$/;
 export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[], spotifyTracks: TrackWithAudioFeatures[]) => {
     if (!spotifyTracks){
         return discogsTracks
     };
-    const timeDurationRegex = /^\d{1,2}:\d{2}$/
-    return discogsTracks.map((discogsTrack, discogsTrackIndex) => {
-        const discogsName = discogsTrack.title.toLowerCase().replace(/[.,()"]/g, '')
-        let spotifyTrack = spotifyTracks.find(spotifyTrack => {
-            // replace punctuation, parentheses and case to compare track names
-            const spotifyName = spotifyTrack.name.toLowerCase().replace(/[.,()"]/g, '')
-            const name = spotifyName.indexOf(discogsName) != -1 || discogsName.indexOf(spotifyName) != -1
-            return name;
-        })
-        // take another stab at trying to find a match, less precise matching, but might be good enough
-        if (!spotifyTrack) {
-            spotifyTrack = spotifyTracks.find((spotifyTrack, spotifyTrackIndex) => {
-                // compare the ascii versions of both tracks
-                const spotifyName = filterTrackTitle(spotifyTrack.name);
-                const discogsNameFiltered = filterTrackTitle(discogsName);
-                const name = spotifyName.indexOf(discogsNameFiltered) != -1 || discogsNameFiltered.indexOf(spotifyName) != -1
-                if (name){
-                    return name;
-                }
-                // check for track position, duration match and levenshtein distance
-                const distance = levenshteinDistance(spotifyName, discogsNameFiltered);
-                const likelyNameMatch = distance === 1 || distance/spotifyName.length < 0.05;
-                const indexMatch = spotifyTrackIndex === discogsTrackIndex;
-                let likelyTimeMatch = false;
-                if (discogsTrack.duration && timeDurationRegex.test(discogsTrack.duration)){
-                    const [minutes, seconds] = discogsTrack.duration.split(':').map(num => parseInt(num));
-                    const durationInSeconds = minutes * 60 + seconds;
-                    likelyTimeMatch = Math.abs(durationInSeconds - spotifyTrack.duration_ms/1000) < 2
-                }
-                // if two of these matches are true, we likely have a match
-                if ((+indexMatch + +likelyTimeMatch + +likelyNameMatch) >= 2){
-                    return true;
-                }
-                return false;
-            })
-        }
-        // if we still haven't found a match, return the original track
-        if (!spotifyTrack) {
+    const matches = discogsTracks.map((discogsTrack, discogsTrackIndex) => {
+        const { spotifyBestMatch } = spotifyTracks.reduce<{ spotifyBestMatch: TrackWithAudioFeatures | null, score: number }>((bestMatch, spotifyTrack, spotifyTrackIndex) => {
+            const score = discogsSpotifyTrackMatchScore(discogsTrack, spotifyTrack, discogsTrackIndex, spotifyTrackIndex);
+            if (score > 0 && score > bestMatch.score) {
+                return { spotifyBestMatch: spotifyTrack, score: score };
+            }
+            return bestMatch;
+        }, { spotifyBestMatch: null, score: -Infinity })
+        if (spotifyBestMatch === null){
             return {
                 ...discogsTrack
             }
         }
         // we need to rename "key" to "musicalKey" because "key" is a reserved word in JSX
-        const { key, ...spotifyTrackAttributes } = spotifyTrack;
+        const { key, ...spotifyTrackAttributes } = spotifyBestMatch;
         return {
             ...discogsTrack,
             spotify: {
@@ -63,14 +34,47 @@ export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[],
                 ...(key != null ? {musicalKey: keys[key]}:{}),
             },
         }
-    })
+
+    });
+    return matches;
+}
+
+const discogsSpotifyTrackMatchScore = (
+    discogsTrack: DiscogsTrackProps, spotifyTrack: TrackWithAudioFeatures,
+    discogsTrackIndex: number, spotifyTrackIndex: number,    
+) : number => {
+    // exact title match should get the highest score
+    const exactTitleMatch = discogsTrack.title === spotifyTrack.name ? 100 : 0;
+    
+    // matching after normalizing and removing non-ascii / non letter characters
+    const discogsName = filterTrackTitle(discogsTrack.title);
+    const spotifyName = filterTrackTitle(spotifyTrack.name);
+    const discogsNameSubstring = spotifyName.indexOf(discogsName) != -1 ? 10 : 0;
+    const spotifyNameSubstring = discogsName.indexOf(spotifyName) != -1 ? 10 : 0;
+
+    // normalized Levenshtein distance, more likely to be a match
+    const distance = levenshteinDistance(spotifyName, discogsName);
+    const closeMatch = distance/spotifyName.length > 0.2? 8 : 0;
+
+    // same position in the tracklist
+    const indexMatch = spotifyTrackIndex === discogsTrackIndex? 15 : 0;
+
+    // duration of the tracks being roughly similar
+    let likelyTimeMatch = 0;
+    if (discogsTrack.duration && timeDurationRegex.test(discogsTrack.duration)){
+        const [minutes, seconds] = discogsTrack.duration.split(':').map(num => parseInt(num));
+        const durationInSeconds = minutes * 60 + seconds;
+        likelyTimeMatch = Math.abs(durationInSeconds - spotifyTrack.duration_ms/1000) < 2? 5:0;
+    }
+    
+    return exactTitleMatch + discogsNameSubstring + spotifyNameSubstring + indexMatch + closeMatch + likelyTimeMatch;
 }
 
 function filterTrackTitle(trackTitle: string): string {
     const filteredTitle = trackTitle.
         toLowerCase().
         // punctuation characters
-        replace(/[.,()?\-"]/g, '').
+        replace(/[.,()?\-'"]/g, '').
         // & and ands 
         replace(' & ', ' ').replace(' and ', ' ').
         // remove double spaces or more
