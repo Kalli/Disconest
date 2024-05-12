@@ -200,6 +200,9 @@ const AboutText : React.FC = () => {
                     </div>
                 }
             </p>
+            <p>
+                Want to get Disconest information for your entire collection? <a href="mailto:info@disconest.com">Contact us</a> for details.
+            </p>
         </div>
     )
 }
