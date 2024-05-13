@@ -29,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script defer src="https://api.pirsch.io/pa.js" id="pianjs" data-code="NKp6czLJYFAYtLSKSgARgm3LIxGlhMLg"></script>
         <title>Disconest - Musical metadata for your Records</title>
       </head>
       {/* ToDo refactor useSearchParams so we don't need to wrap entire body in suspense */}
