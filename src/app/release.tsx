@@ -236,7 +236,7 @@ const msToTime = (duration: number|undefined) : string => {
     }
     const seconds = Math.floor((duration / 1000) % 60);
     const minutes = Math.floor((duration / (1000 * 60)));
-    return minutes + ':' + seconds;
+    return minutes + ':' + String(seconds).padStart(2, '0');
 }
 
 const DiscogsTrack : React.FC<DiscogsTrackProps> = (props) => {
