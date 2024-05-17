@@ -13,14 +13,16 @@ export const matchDiscogsAndSpotifyTracks = (discogsTracks: DiscogsTrackProps[],
         return discogsTracks
     };
     const matches = discogsTracks.map((discogsTrack, discogsTrackIndex) => {
-        const { spotifyBestMatch } = spotifyTracks.reduce<{ spotifyBestMatch: TrackWithAudioFeatures | null, score: number }>((bestMatch, spotifyTrack, spotifyTrackIndex) => {
+        const { spotifyBestMatch, score } = spotifyTracks.reduce<{ spotifyBestMatch: TrackWithAudioFeatures | null, score: number }>((bestMatch, spotifyTrack, spotifyTrackIndex) => {
             const score = discogsSpotifyTrackMatchScore(discogsTrack, spotifyTrack, discogsTrackIndex, spotifyTrackIndex);
             if (score > 0 && score > bestMatch.score) {
                 return { spotifyBestMatch: spotifyTrack, score: score };
             }
             return bestMatch;
-        }, { spotifyBestMatch: null, score: -Infinity })
-        if (spotifyBestMatch === null){
+        }, { spotifyBestMatch: null, score: -Infinity });
+        // if no match was found or if it is unlikely to be an actual match
+        // just return discogs information
+        if (spotifyBestMatch === null || score <= 10){
             return {
                 ...discogsTrack
             }
@@ -54,10 +56,10 @@ const discogsSpotifyTrackMatchScore = (
 
     // normalized Levenshtein distance, more likely to be a match
     const distance = levenshteinDistance(spotifyName, discogsName);
-    const closeMatch = distance/spotifyName.length > 0.2? 8 : 0;
+    const closeMatch = distance/spotifyName.length < 0.2? 8 : 0;
 
     // same position in the tracklist
-    const indexMatch = spotifyTrackIndex === discogsTrackIndex? 15 : 0;
+    const indexMatch = spotifyTrackIndex === discogsTrackIndex? 10 : 0;
 
     // duration of the tracks being roughly similar
     let likelyTimeMatch = 0;
