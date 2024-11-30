@@ -80,16 +80,17 @@ export const Banner: React.FC = () => {
         },
     ]
     const banner = banners[Math.floor(Math.random() * banners.length)];
-    return (<div className="row banner">
-        <div className="text-center" >
-            <a href={banner.href} target="_blank">
-                <Image src={banner.src} alt={banner.alt} width={468} height={60} style={{display: 'inline-block', verticalAlign: 'middle'}} className='center text-center'/>
-            </a>
-        </div>
-        <div className="text-center" >
-            <a href={banner.href} target="_blank">
-                <small>Support Disconest by shopping from Juno</small>
-            </a>
-        </div>
-    </div>)
+    return (<></>)
+    // return (<div className="row banner">
+    //     <div className="text-center" >
+    //         <a href={banner.href} target="_blank">
+    //             <Image src={banner.src} alt={banner.alt} width={468} height={60} style={{display: 'inline-block', verticalAlign: 'middle'}} className='center text-center'/>
+    //         </a>
+    //     </div>
+    //     <div className="text-center" >
+    //         <a href={banner.href} target="_blank">
+    //             <small>Support Disconest by shopping from Juno</small>
+    //         </a>
+    //     </div>
+    // </div>)
 }

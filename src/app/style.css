@@ -144,6 +144,7 @@ thead{
   margin-right: 5px;
 }
 .link a.yt{
+  display: none;
   background: url('/img/youtube.png') no-repeat 0 0;
 }
 .link a.sp{
