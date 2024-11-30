@@ -182,7 +182,7 @@ const AboutText : React.FC = () => {
     return (
         <div id="info" className="row">            
             <p>
-                Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="http://the.echonest.com/">The Echonest</a> music database to find this information about records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 
+                Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="https://developer.spotify.com/documentation/web-api">Spotify API</a> to find this information about the songs on records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 
             </p>    
             <p>    
                 Enter a search term or a Discogs url in the box above to try it out or drag this 
