@@ -173,14 +173,29 @@ export default function Home() {
 
 const AboutText : React.FC = () => {
     const [showVideoModal, setShowVideoModal] = useState(false);
+    const [showAlert, setShowAlert] = useState(true);
     const showModal = (e: React.MouseEvent) => {
         e.preventDefault();
         setShowVideoModal(true);
     }
     const closeModal = () => setShowVideoModal(false);
-
+    const hideAlert = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setShowAlert(false);
+    }
     return (
-        <div id="info" className="row">            
+        <div id="info" className="row">
+            {showAlert && (<div className="alert alert-dismissible alert-danger" role="alert">
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close" >
+                    <span onClick={hideAlert} aria-hidden="true">&times;</span>
+                </button>
+                <p>
+                    <small>
+                        As of November 2024 Spotify removed access to api endpoints used by Disconest and many other indie apps. 
+                        Without these apis Disconests functionality is limited. See the <a href="https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api">Spotify Developer blog</a> for more details.
+                    </small>
+                </p>
+            </div>)}     
             <p>
                 Vinyl sounds better, looks better, feels better and even smells better. But digital does have its benefits, musical metadata is one of them. Having the <em>key</em>, <em>tempo</em> and other musical metadata for your records at a glance would be useful! Disconest uses <a target="_blank" href="https://developer.spotify.com/documentation/web-api">Spotify API</a> to find this information about the songs on records and cds registered on <a target="_blank" href="http://www.discogs.com">Discogs</a>. 
             </p>    
@@ -199,9 +214,6 @@ const AboutText : React.FC = () => {
                         </div>
                     </div>
                 }
-            </p>
-            <p>
-                Want to get Disconest information for your entire collection? <a href="mailto:info@disconest.com">Contact us</a> for details.
             </p>
         </div>
     )
